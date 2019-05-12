@@ -52,9 +52,39 @@ namespace scp035
 			return pickups[rand.Next(pickups.Count)];
 		}
 
+		private void RefreshItems()
+		{
+			if (spawnNewItems)
+			{
+				RemovePossessedItems();
+				for (int i = 0; i < possessedItemCount; i++)
+				{
+					Pickup p = GetRandomItem();
+					Pickup a = PlayerManager.singleton.players[0]
+						.GetComponent<Inventory>().SetPickup(possibleItems[rand.Next(possibleItems.Count)],
+						-4.65664672E+11f,
+						new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
+						new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
+						0, 0, 0).GetComponent<Pickup>();
+					scpPickups.Add(a, a.info.durability);
+					a.info.durability = dur;
+				}
+			}
+			else
+			{
+				ResetItemDurability();
+				for (int i = 0; i < possessedItemCount; i++)
+				{
+					Pickup p = GetRandomValidItem();
+					scpPickups.Add(p, p.info.durability);
+					p.info.durability = dur;
+				}
+			}
+		}
+
 		private void InfectPlayer(Player player, Smod2.API.Item pItem)
 		{
-			List<Player> pList = instance.Server.GetPlayers().Where(x => x.TeamRole.Team == Smod2.API.Team.SPECTATOR).ToList();
+			List<Player> pList = instance.Server.GetPlayers().Where(x => x.TeamRole.Team == Smod2.API.Team.SPECTATOR && !x.OverwatchMode).ToList();
 			if (pList.Count > 0)
 			{
 				pItem.Remove();
@@ -84,32 +114,7 @@ namespace scp035
 			{
 				if (isRotating)
 				{
-					if (spawnNewItems)
-					{
-						RemovePossessedItems();
-						for (int i = 0; i < possessedItemCount; i++)
-						{
-							Pickup p = GetRandomItem();
-							Pickup a = PlayerManager.singleton.players[0]
-								.GetComponent<Inventory>().SetPickup(possibleItems[rand.Next(possibleItems.Count)],
-								-4.65664672E+11f,
-								new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
-								new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
-								0, 0, 0).GetComponent<Pickup>();
-							scpPickups.Add(a, a.info.durability);
-							a.info.durability = dur;
-						}
-					}
-					else
-					{
-						ResetItemDurability();
-						for (int i = 0; i < possessedItemCount; i++)
-						{
-							Pickup p = GetRandomValidItem();
-							scpPickups.Add(p, p.info.durability);
-							p.info.durability = dur;
-						}
-					}
+					RefreshItems();
 				}
 				yield return Timing.WaitForSeconds(scpInterval);
 			}

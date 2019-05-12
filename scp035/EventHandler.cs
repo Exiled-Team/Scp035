@@ -9,7 +9,8 @@ using MEC;
 namespace scp035
 {
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
-		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter
+		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
+		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape
 	{
 		private Plugin instance;
 
@@ -86,6 +87,7 @@ namespace scp035
 				scpPlayer.SetRank("default", " ");
 				scpPlayer = null;
 				isRotating = true;
+				RefreshItems();
 			}
 		}
 
@@ -96,6 +98,25 @@ namespace scp035
 				ev.Damage = 0;
 				ev.TargetPosition = ev.LastPosition;
 			}
+		}
+
+		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
+		{
+			List< Smod2.API.Team> pList = ev.Server.GetPlayers().Select(x => x.TeamRole.Team).ToList();
+			if (!pList.Contains(Smod2.API.Team.CHAOS_INSURGENCY) &&
+				!pList.Contains(Smod2.API.Team.CLASSD) &&
+				!pList.Contains(Smod2.API.Team.NINETAILFOX) &&
+				!pList.Contains(Smod2.API.Team.SCIENTIST) &&
+				pList.Contains(Smod2.API.Team.SCP) &&
+				scpPlayer != null)
+			{
+				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
+			}
+		}
+
+		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
+		{
+			if (ev.Player.PlayerId == scpPlayer.PlayerId) ev.AllowEscape = false;
 		}
 	}
 }
