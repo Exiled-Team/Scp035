@@ -5,8 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
-using ServerMod2.API;
-using Smod2.EventSystem.Events;
 
 namespace scp035
 {
@@ -28,6 +26,7 @@ namespace scp035
 		private float scpInterval;
 		private bool is035FriendlyFire;
 		private int possessedItemCount;
+		private bool spawnNewItems;
 
 		public EventHandler(Plugin plugin)
 		{

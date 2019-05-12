@@ -18,6 +18,7 @@ namespace scp035
 			scpInterval = instance.GetConfigFloat("035_rotate_interval");
 			is035FriendlyFire = instance.GetConfigBool("035_scp_friendly_fire");
 			possessedItemCount = instance.GetConfigInt("035_infected_item_count");
+			spawnNewItems = instance.GetConfigBool("035_spawn_new_items");
 		}
 
 		private void ResetItemDurability()
@@ -30,12 +31,26 @@ namespace scp035
 			scpPickups.Clear();
 		}
 
+		private void RemovePossessedItems()
+		{
+			for (int i = 0; i < scpPickups.Count; i++)
+			{
+				scpPickups.ElementAt(i).Key.Delete();
+			}
+			scpPickups.Clear();
+		}
+
 		private Pickup GetRandomValidItem()
 		{
 			//if (scpPickup != null) scpPickup.info.durability = 0;
 			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => possibleItems.Contains(x.info.itemId) && !scpPickups.ContainsKey(x)).ToList();
-			Pickup p = pickups[rand.Next(pickups.Count)];
-			return p;
+			return pickups[rand.Next(pickups.Count)];
+		}
+
+		private Pickup GetRandomItem()
+		{
+			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => !scpPickups.ContainsKey(x)).ToList();
+			return pickups[rand.Next(pickups.Count)];
 		}
 
 		private void InfectPlayer(Player player, Smod2.API.Item pItem)
@@ -56,7 +71,8 @@ namespace scp035
 				p035.PersonalBroadcast(10, $"You are <color=\"red\">SCP-035!</color> You have infected a body and have gained control over it!", false);
 				scpPlayer = p035;
 				isRotating = false;
-				ResetItemDurability();
+
+				if (spawnNewItems) RemovePossessedItems(); else ResetItemDurability();
 
 				player.ChangeRole(Role.SPECTATOR);
 				player.PersonalBroadcast(10, $"You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.", false);
@@ -69,12 +85,35 @@ namespace scp035
 			{
 				if (isRotating)
 				{
-					ResetItemDurability();
-					for (int i = 0; i < possessedItemCount; i++)
+					// Possessing items
+					if (spawnNewItems)
 					{
-						Pickup p = GetRandomValidItem();
-						scpPickups.Add(p, p.info.durability);
-						p.info.durability = dur;
+						RemovePossessedItems();
+						for (int i = 0; i < possessedItemCount; i++)
+						{
+							Pickup p = GetRandomItem();
+							Pickup a = PlayerManager.singleton.players[0]
+								.GetComponent<Inventory>().SetPickup(possibleItems[rand.Next(possibleItems.Count)],
+								-4.65664672E+11f,
+								new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
+								new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
+								0, 0, 0).GetComponent<Pickup>();
+							scpPickups.Add(a, a.info.durability);
+							a.info.durability = dur;
+						}
+					}
+					else
+					{
+						ResetItemDurability();
+						for (int i = 0; i < possessedItemCount; i++)
+						{
+							Pickup p = GetRandomValidItem();
+							scpPickups.Add(p, p.info.durability);
+							p.info.durability = dur;
+							instance.Info(new SmodItem(p.info.itemId, p).ItemType.ToString());
+							if (i == 1) new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
+							else if (i == 2) new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.ToLower().Contains("redd")).GetPosition());
+						}
 					}
 				}
 				yield return Timing.WaitForSeconds(scpInterval);
