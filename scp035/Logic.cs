@@ -85,7 +85,6 @@ namespace scp035
 			{
 				if (isRotating)
 				{
-					// Possessing items
 					if (spawnNewItems)
 					{
 						RemovePossessedItems();
@@ -110,9 +109,6 @@ namespace scp035
 							Pickup p = GetRandomValidItem();
 							scpPickups.Add(p, p.info.durability);
 							p.info.durability = dur;
-							instance.Info(new SmodItem(p.info.itemId, p).ItemType.ToString());
-							if (i == 1) new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
-							else if (i == 2) new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.ToLower().Contains("redd")).GetPosition());
 						}
 					}
 				}
