@@ -42,7 +42,6 @@ namespace scp035
 
 		private Pickup GetRandomValidItem()
 		{
-			//if (scpPickup != null) scpPickup.info.durability = 0;
 			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => possibleItems.Contains(x.info.itemId) && !scpPickups.ContainsKey(x)).ToList();
 			return pickups[rand.Next(pickups.Count)];
 		}
@@ -68,7 +67,7 @@ namespace scp035
 				p035.SetAmmo(AmmoType.DROPPED_7, player.GetAmmo(AmmoType.DROPPED_7));
 				p035.SetAmmo(AmmoType.DROPPED_9, player.GetAmmo(AmmoType.DROPPED_9));
 				p035.SetRank("red", "SCP-035");
-				p035.PersonalBroadcast(10, $"You are <color=\"red\">SCP-035!</color> You have infected a body and have gained control over it!", false);
+				p035.PersonalBroadcast(10, $"You are <color=\"red\">SCP-035!</color> You have infected a body and have gained control over it, use it to help the other SCPs!", false);
 				scpPlayer = p035;
 				isRotating = false;
 
