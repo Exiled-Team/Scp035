@@ -28,6 +28,9 @@ namespace scp035
 			}, false, true, "The possible item IDs SCP-035 can disguise as."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_health", 300, false, true, "The amount of health SCP-035 should have."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_rotate_interval", 120f, false, true, "The time in seconds before the item representing SCP-035 will refresh."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_scp_friendly_fire", false, false, true, "If SCP-035 is allowed to damage other SCPs."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_infected_item_count", 1, false, true, "The number of items at a time that are possessed by SCP-035."));
+
 		}
 	}
 }

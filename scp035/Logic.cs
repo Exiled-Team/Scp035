@@ -16,14 +16,15 @@ namespace scp035
 			possibleItems = instance.GetConfigIntList("035_possible_items").ToList();
 			scpHealth = instance.GetConfigInt("035_health");
 			scpInterval = instance.GetConfigFloat("035_rotate_interval");
+			is035FriendlyFire = instance.GetConfigBool("035_scp_friendly_fire");
+			possessedItemCount = instance.GetConfigInt("035_infected_item_count");
 		}
 
-		private Pickup GetNext035()
+		private Pickup GetRandomValidItem()
 		{
-			if (scpPickup != null) scpPickup.info.durability = 0;
-			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => possibleItems.Contains(x.info.itemId)).ToList();
+			//if (scpPickup != null) scpPickup.info.durability = 0;
+			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => possibleItems.Contains(x.info.itemId) && !scpPickups.ContainsKey(x)).ToList();
 			Pickup p = pickups[rand.Next(pickups.Count)];
-			p.info.durability = dur;
 			return p;
 		}
 
@@ -55,7 +56,21 @@ namespace scp035
 		{
 			while (isRoundStarted)
 			{
-				if (isRotating) scpPickup = GetNext035();
+				if (isRotating)
+				{
+					for (int i = 0; i < scpPickups.Count; i++)
+					{
+						Pickup p = scpPickups.ElementAt(i).Key;
+						p.info.durability = scpPickups[p];
+					}
+					scpPickups.Clear();
+					for (int i = 0; i < possessedItemCount; i++)
+					{
+						Pickup p = GetRandomValidItem();
+						scpPickups.Add(p, p.info.durability);
+						p.info.durability = dur;
+					}
+				}
 				yield return Timing.WaitForSeconds(scpInterval);
 			}
 		}
