@@ -1,6 +1,6 @@
 # SCP-035
 
-Adds a passive SCP to the game. One item at a time will randomly be selected to be SCP-035 from a configurable list of item types. If a player picks up the item that SCP-035 is disguised as, the player will be killed and a random spectator will be assigned their possessed body. Once SCP-035 dies, he will return to disguising into items until his next victim picks him up.
+Adds a passive SCP to the game. A certain amount of items will randomly be selected to be SCP-035 from a configurable list of item types. If a player picks up the item that SCP-035 is disguised as, the player will be killed and a random spectator will be assigned their possessed body. Once SCP-035 dies, he will return to disguising into items until his next victim picks him up.
 
 # Installation
 
