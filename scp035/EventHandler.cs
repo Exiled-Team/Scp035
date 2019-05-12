@@ -9,7 +9,7 @@ using MEC;
 namespace scp035
 {
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
-		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt
+		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter
 	{
 		private Plugin instance;
 
@@ -86,6 +86,15 @@ namespace scp035
 				scpPlayer.SetRank("default", " ");
 				scpPlayer = null;
 				isRotating = true;
+			}
+		}
+
+		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
+		{
+			if (!is035FriendlyFire)
+			{
+				ev.Damage = 0;
+				ev.TargetPosition = ev.LastPosition;
 			}
 		}
 	}
