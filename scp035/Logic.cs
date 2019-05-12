@@ -20,6 +20,16 @@ namespace scp035
 			possessedItemCount = instance.GetConfigInt("035_infected_item_count");
 		}
 
+		private void ResetItemDurability()
+		{
+			for (int i = 0; i < scpPickups.Count; i++)
+			{
+				Pickup p = scpPickups.ElementAt(i).Key;
+				p.info.durability = scpPickups[p];
+			}
+			scpPickups.Clear();
+		}
+
 		private Pickup GetRandomValidItem()
 		{
 			//if (scpPickup != null) scpPickup.info.durability = 0;
@@ -46,6 +56,7 @@ namespace scp035
 				p035.PersonalBroadcast(10, $"You are <color=\"red\">SCP-035!</color> You have infected a body and have gained control over it!", false);
 				scpPlayer = p035;
 				isRotating = false;
+				ResetItemDurability();
 
 				player.ChangeRole(Role.SPECTATOR);
 				player.PersonalBroadcast(10, $"You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.", false);
@@ -58,12 +69,7 @@ namespace scp035
 			{
 				if (isRotating)
 				{
-					for (int i = 0; i < scpPickups.Count; i++)
-					{
-						Pickup p = scpPickups.ElementAt(i).Key;
-						p.info.durability = scpPickups[p];
-					}
-					scpPickups.Clear();
+					ResetItemDurability();
 					for (int i = 0; i < possessedItemCount; i++)
 					{
 						Pickup p = GetRandomValidItem();
