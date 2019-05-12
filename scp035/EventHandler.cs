@@ -116,7 +116,7 @@ namespace scp035
 
 		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
 		{
-			if (ev.Player.PlayerId == scpPlayer.PlayerId) ev.AllowEscape = false;
+			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId) ev.AllowEscape = false;
 		}
 	}
 }
