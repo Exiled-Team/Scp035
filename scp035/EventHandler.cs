@@ -10,7 +10,7 @@ namespace scp035
 {
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
-		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape
+		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole
 	{
 		private Plugin instance;
 
@@ -66,17 +66,22 @@ namespace scp035
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
-			if (scpPlayer != null &&
-				(ev.Attacker.PlayerId == scpPlayer.PlayerId || 
-				ev.Player.PlayerId == scpPlayer.PlayerId) && 
-				ev.Attacker.PlayerId != ev.Player.PlayerId)
+			if (scpPlayer != null)
 			{
-				ev.Player.SetHealth(ev.Player.GetHealth() - (int)ev.Damage);
-			}
-			if (is035FriendlyFire && ((ev.Attacker.PlayerId == scpPlayer.PlayerId && ev.Player.TeamRole.Team == Smod2.API.Team.SCP) ||
-				(ev.Player.PlayerId == scpPlayer.PlayerId && ev.Attacker.TeamRole.Team == Smod2.API.Team.SCP)))
-			{
-				ev.Damage = 0;
+				if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
+					ev.Player.PlayerId == scpPlayer.PlayerId) &&
+					ev.Attacker.PlayerId != ev.Player.PlayerId)
+				{
+					ev.Player.SetHealth(ev.Player.GetHealth() - (int)ev.Damage);
+				}
+				if (is035FriendlyFire &&
+					((ev.Attacker.PlayerId == scpPlayer.PlayerId &&
+					ev.Player.TeamRole.Team == Smod2.API.Team.SCP) ||
+					(ev.Player.PlayerId == scpPlayer.PlayerId &&
+					ev.Attacker.TeamRole.Team == Smod2.API.Team.SCP)))
+				{
+					ev.Damage = 0;
+				}
 			}
 		}
 
@@ -84,10 +89,16 @@ namespace scp035
 		{
 			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId)
 			{
-				scpPlayer.SetRank("default", " ");
-				scpPlayer = null;
-				isRotating = true;
-				RefreshItems();
+				KillScp035();
+			}
+		}
+
+		public void OnSetRole(PlayerSetRoleEvent ev)
+		{
+			// Counter admins changing roles through RA
+			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId)
+			{
+				KillScp035();
 			}
 		}
 
@@ -103,12 +114,15 @@ namespace scp035
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
 			List< Smod2.API.Team> pList = ev.Server.GetPlayers().Select(x => x.TeamRole.Team).ToList();
+			if (scpPlayer != null) pList.Remove(pList.FirstOrDefault(x => x == scpPlayer.TeamRole.Team));
 			if (!pList.Contains(Smod2.API.Team.CHAOS_INSURGENCY) &&
 				!pList.Contains(Smod2.API.Team.CLASSD) &&
 				!pList.Contains(Smod2.API.Team.NINETAILFOX) &&
 				!pList.Contains(Smod2.API.Team.SCIENTIST) &&
-				pList.Contains(Smod2.API.Team.SCP) &&
-				scpPlayer != null)
+				((pList.Contains(Smod2.API.Team.SCP) &&
+				scpPlayer != null) ||
+				!pList.Contains(Smod2.API.Team.SCP) &&
+				scpPlayer != null))
 			{
 				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
 			}

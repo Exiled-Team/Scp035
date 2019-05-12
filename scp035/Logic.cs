@@ -78,8 +78,17 @@ namespace scp035
 					Pickup p = GetRandomValidItem();
 					scpPickups.Add(p, p.info.durability);
 					p.info.durability = dur;
+					new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
 				}
 			}
+		}
+
+		private void KillScp035()
+		{
+			scpPlayer.SetRank("default", " ");
+			scpPlayer = null;
+			isRotating = true;
+			RefreshItems();
 		}
 
 		private void InfectPlayer(Player player, Smod2.API.Item pItem)
