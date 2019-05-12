@@ -78,7 +78,6 @@ namespace scp035
 					Pickup p = GetRandomValidItem();
 					scpPickups.Add(p, p.info.durability);
 					p.info.durability = dur;
-					new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
 				}
 			}
 		}

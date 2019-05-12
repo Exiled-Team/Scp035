@@ -10,7 +10,7 @@ namespace scp035
 {
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
-		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole
+		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect
 	{
 		private Plugin instance;
 
@@ -131,6 +131,11 @@ namespace scp035
 		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
 		{
 			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId) ev.AllowEscape = false;
+		}
+
+		public void OnDisconnect(DisconnectEvent ev)
+		{
+
 		}
 	}
 }
