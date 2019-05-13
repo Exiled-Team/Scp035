@@ -28,6 +28,7 @@ namespace scp035
 		private bool is035FriendlyFire;
 		private int possessedItemCount;
 		private bool spawnNewItems;
+		private bool useDamageOverride;
 
 		public EventHandler(Plugin plugin)
 		{
@@ -68,11 +69,14 @@ namespace scp035
 		{
 			if (scpPlayer != null)
 			{
-				if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
-					ev.Player.PlayerId == scpPlayer.PlayerId) &&
-					ev.Attacker.PlayerId != ev.Player.PlayerId)
+				if (useDamageOverride)
 				{
-					ev.Player.SetHealth(ev.Player.GetHealth() - (int)ev.Damage);
+					if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
+						ev.Player.PlayerId == scpPlayer.PlayerId) &&
+						ev.Attacker.PlayerId != ev.Player.PlayerId)
+					{
+						ev.Player.SetHealth(ev.Player.GetHealth() - (int)ev.Damage);
+					}
 				}
 				if (is035FriendlyFire &&
 					((ev.Attacker.PlayerId == scpPlayer.PlayerId &&

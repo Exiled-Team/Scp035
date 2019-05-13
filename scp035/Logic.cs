@@ -19,6 +19,7 @@ namespace scp035
 			is035FriendlyFire = instance.GetConfigBool("035_scp_friendly_fire");
 			possessedItemCount = instance.GetConfigInt("035_infected_item_count");
 			spawnNewItems = instance.GetConfigBool("035_spawn_new_items");
+			useDamageOverride = instance.GetConfigBool("035_use_damage_override");
 		}
 
 		private void ResetItemDurability()
@@ -78,6 +79,7 @@ namespace scp035
 					Pickup p = GetRandomValidItem();
 					scpPickups.Add(p, p.info.durability);
 					p.info.durability = dur;
+					new SmodItem(p.info.itemId, p).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
 				}
 			}
 		}

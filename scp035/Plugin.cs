@@ -21,7 +21,7 @@ namespace scp035
 		public override void Register()
 		{
 			// Laser don't yell at me this is to override friendly fire blockers
-			AddEventHandlers(new EventHandler(this), Smod2.Events.Priority.High);
+			AddEventHandlers(new EventHandler(this));
 
 			AddConfig(new Smod2.Config.ConfigSetting("035_possible_items", new[] {
 				0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 30
@@ -31,6 +31,7 @@ namespace scp035
 			AddConfig(new Smod2.Config.ConfigSetting("035_scp_friendly_fire", false, false, true, "If SCP-035 is allowed to damage other SCPs."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_infected_item_count", 1, false, true, "The number of items at a time that are possessed by SCP-035."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_spawn_new_items", false, false, true, "If the plugin should spawn a new item on top of a randomly selected item rather than possessing already existing items."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_use_damage_override", false, false, true, "If the plugin should override AdmintoolBox's damage blockers."));
 		}
 	}
 }
