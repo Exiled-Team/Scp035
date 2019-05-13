@@ -16,3 +16,4 @@ Place the "scp035.dll" file in your sm_plugins folder.
 | 035_scp_friendly_fire | Boolean | False | If SCP-035 is allowed to damage other SCPs. |
 | 035_infected_item_count | Integer | 1 | The number of items every refresh that are possessed by SCP-035. |
 | 035_spawn_new_items | Boolean | False | If the plugin should spawn a new item from the possible items list on top of a randomly selected item rather than possessing already existing possible items. |
+| 035_use_damage_override | Boolean | False | If the plugin should override AdmintoolBox's damage blockers. |
