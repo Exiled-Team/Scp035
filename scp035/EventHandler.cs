@@ -139,9 +139,16 @@ namespace scp035
 
 		public void OnDisconnect(DisconnectEvent ev)
 		{
-			Player player = instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId);
+			if (scpPlayer != null)
 			{
-				if (player == null) scpPlayer = null;
+				Player player = instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId);
+				{
+					if (player == null)
+					{
+						scpPlayer = null;
+						isRotating = true;
+					}
+				}
 			}
 		}
 	}
