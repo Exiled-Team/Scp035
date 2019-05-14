@@ -141,12 +141,9 @@ namespace scp035
 		{
 			if (scpPlayer != null)
 			{
-				Player player = instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId);
+				if (instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId) == null)
 				{
-					if (player == null)
-					{
-						KillScp035(false);
-					}
+					KillScp035(false);
 				}
 			}
 		}
