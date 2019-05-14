@@ -84,9 +84,9 @@ namespace scp035
 			}
 		}
 
-		private void KillScp035()
+		private void KillScp035(bool setRank = true)
 		{
-			scpPlayer.SetRank("default", " ");
+			if (setRank) scpPlayer.SetRank("default", " ");
 			scpPlayer = null;
 			isRotating = true;
 			RefreshItems();

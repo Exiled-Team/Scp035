@@ -145,8 +145,7 @@ namespace scp035
 				{
 					if (player == null)
 					{
-						scpPlayer = null;
-						isRotating = true;
+						KillScp035(false);
 					}
 				}
 			}
