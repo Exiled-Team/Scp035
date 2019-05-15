@@ -108,7 +108,7 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
 		{
-			if (!is035FriendlyFire)
+			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId && !is035FriendlyFire)
 			{
 				ev.Damage = 0;
 				ev.TargetPosition = ev.LastPosition;
