@@ -20,7 +20,7 @@ namespace scp035
 
 		public override void Register()
 		{
-			AddEventHandlers(new EventHandler(this));
+			AddEventHandlers(new EventHandler(this), Smod2.Events.Priority.High);
 
 			AddConfig(new Smod2.Config.ConfigSetting("035_possible_items", new[] {
 				0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 30
