@@ -7,7 +7,7 @@ namespace scp035
 	name = "SCP-035",
 	description = "Adds SCP-035 to the game.",
 	id = "cyan.scp035",
-	version = "1.2.1",
+	version = "1.2.3",
 	SmodMajor = 3,
 	SmodMinor = 0,
 	SmodRevision = 0
@@ -20,6 +20,7 @@ namespace scp035
 
 		public override void Register()
 		{
+			// This is for the damage override, don't AngryLaserBoi me
 			AddEventHandlers(new EventHandler(this), Smod2.Events.Priority.High);
 
 			AddConfig(new Smod2.Config.ConfigSetting("035_possible_items", new[] {
@@ -31,6 +32,7 @@ namespace scp035
 			AddConfig(new Smod2.Config.ConfigSetting("035_infected_item_count", 1, false, true, "The number of items at a time that are possessed by SCP-035."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_spawn_new_items", false, false, true, "If the plugin should spawn a new item on top of a randomly selected item rather than possessing already existing items."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_use_damage_override", false, false, true, "If the plugin should override AdmintoolBox's damage blockers."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_win_with_tutorial", false, false, true, "If SCP-035 should win with tutorials."));
 		}
 	}
 }

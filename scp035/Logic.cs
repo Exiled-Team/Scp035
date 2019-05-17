@@ -20,6 +20,7 @@ namespace scp035
 			possessedItemCount = instance.GetConfigInt("035_infected_item_count");
 			spawnNewItems = instance.GetConfigBool("035_spawn_new_items");
 			useDamageOverride = instance.GetConfigBool("035_use_damage_override");
+			winWithTutorials = instance.GetConfigBool("035_win_with_tutorial");
 		}
 
 		private void ResetItemDurability()
@@ -69,7 +70,7 @@ namespace scp035
 						0, 0, 0).GetComponent<Pickup>();
 					scpPickups.Add(a, a.info.durability);
 					a.info.durability = dur;
-					//new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
+					new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
 				}
 			}
 			else
