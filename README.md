@@ -17,3 +17,6 @@ Place the "scp035.dll" file in your sm_plugins folder.
 | 035_infected_item_count | Integer | 1 | The number of items every refresh that are possessed by SCP-035. |
 | 035_spawn_new_items | Boolean | False | If the plugin should spawn a new item from the possible items list on top of a randomly selected item rather than possessing already existing possible items. |
 | 035_use_damage_override | Boolean | False | If the plugin should override AdmintoolBox's damage blockers. |
+| 035_win_with_tutorial | Boolean | False | If SCP-035 should win with tutorials. |
+| 035_change_to_zombie | Boolean | False | If SCP-035 should change to a zombie when the SCP team should win. This may fix round lingering issues due to conflicting end conditions. |
+| 035_tutorial_friendly_fire | Boolean | False | If friendly fire between SCP-035 and tutorials is enabled. |
