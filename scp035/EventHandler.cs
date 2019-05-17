@@ -10,7 +10,8 @@ namespace scp035
 {
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
-		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect
+		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect,
+		IEventHandlerContain106
 	{
 		private Plugin instance;
 
@@ -177,6 +178,14 @@ namespace scp035
 				{
 					KillScp035(false);
 				}
+			}
+		}
+
+		public void OnContain106(PlayerContain106Event ev)
+		{
+			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId && !is035FriendlyFire)
+			{
+				ev.ActivateContainment = false;
 			}
 		}
 	}
