@@ -31,6 +31,7 @@ namespace scp035
 		private bool useDamageOverride;
 		private bool winWithTutorials;
 		private bool changeToZombie;
+		private bool isTutorialFriendlyFire;
 
 		public EventHandler(Plugin plugin)
 		{
@@ -79,7 +80,15 @@ namespace scp035
 				{
 					ev.Damage = 0;
 				}
-				if (useDamageOverride && ev.Damage > 0)
+				if (!isTutorialFriendlyFire &&
+					((ev.Attacker.PlayerId == scpPlayer.PlayerId &&
+					ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL) ||
+					(ev.Player.PlayerId == scpPlayer.PlayerId &&
+					ev.Attacker.TeamRole.Team == Smod2.API.Team.TUTORIAL)))
+				{
+					ev.Damage = 0;
+				}
+					if (useDamageOverride && ev.Damage > 0)
 				{
 					if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
 						ev.Player.PlayerId == scpPlayer.PlayerId) &&

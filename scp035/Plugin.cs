@@ -34,6 +34,7 @@ namespace scp035
 			AddConfig(new Smod2.Config.ConfigSetting("035_use_damage_override", false, false, true, "If the plugin should override AdmintoolBox's damage blockers."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_win_with_tutorial", false, false, true, "If SCP-035 should win with tutorials."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_change_to_zombie", false, false, true, "If SCP-035 should change to a zombie when the SCP team should win. This may fix round lingering issues due to conflicting end conditions."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_tutorial_friendly_fire", false, false, true, "If friendly fire between SCP-035 and tutorials is enabled."));
 		}
 	}
 }
