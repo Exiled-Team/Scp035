@@ -30,6 +30,7 @@ namespace scp035
 		private bool spawnNewItems;
 		private bool useDamageOverride;
 		private bool winWithTutorials;
+		private bool changeToZombie;
 
 		public EventHandler(Plugin plugin)
 		{
@@ -122,27 +123,30 @@ namespace scp035
 			if (scpPlayer != null) pList.Remove(pList.FirstOrDefault(x => x == scpPlayer.TeamRole.Team));
 
 			// If everyone but SCPs and 035 or just 035 is alive, end the round
-			if (!pList.Contains(Smod2.API.Team.CHAOS_INSURGENCY) &&
+			if ((!pList.Contains(Smod2.API.Team.CHAOS_INSURGENCY) &&
 				!pList.Contains(Smod2.API.Team.CLASSD) &&
 				!pList.Contains(Smod2.API.Team.NINETAILFOX) &&
 				!pList.Contains(Smod2.API.Team.SCIENTIST) &&
 				((pList.Contains(Smod2.API.Team.SCP) &&
 				scpPlayer != null) ||
 				!pList.Contains(Smod2.API.Team.SCP) &&
-				scpPlayer != null))
-			{
-				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
-			}
-			// If Tutorials are alive and 035 is alive end the round
-			else if (winWithTutorials && 
+				scpPlayer != null)) || 
+				(winWithTutorials &&
 				!pList.Contains(Smod2.API.Team.CHAOS_INSURGENCY) &&
 				!pList.Contains(Smod2.API.Team.CLASSD) &&
 				!pList.Contains(Smod2.API.Team.NINETAILFOX) &&
 				!pList.Contains(Smod2.API.Team.SCIENTIST) &&
 				pList.Contains(Smod2.API.Team.TUTORIAL) &&
-				scpPlayer != null)
+				scpPlayer != null))
 			{
-				ev.Status = ROUND_END_STATUS.SCP_VICTORY;
+				if (changeToZombie)
+				{
+					scpPlayer.ChangeRole(Role.SCP_049_2);
+				}
+				else
+				{
+					ev.Status = ROUND_END_STATUS.SCP_VICTORY;
+				}
 			}
 			// If 035 is the only scp alive keep the round going
 			else if (scpPlayer != null && !pList.Contains(Smod2.API.Team.SCP))

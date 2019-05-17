@@ -21,6 +21,7 @@ namespace scp035
 			spawnNewItems = instance.GetConfigBool("035_spawn_new_items");
 			useDamageOverride = instance.GetConfigBool("035_use_damage_override");
 			winWithTutorials = instance.GetConfigBool("035_win_with_tutorial");
+			changeToZombie = instance.GetConfigBool("035_change_to_zombie");
 		}
 
 		private void ResetItemDurability()
