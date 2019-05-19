@@ -11,10 +11,9 @@ namespace scp035
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
 		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect,
-		IEventHandlerContain106
+		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet
 	{
 		private Plugin instance;
-
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
 		private Player scpPlayer;
 		private bool isRoundStarted;
@@ -103,7 +102,7 @@ namespace scp035
 
 		public void OnPlayerDie(PlayerDeathEvent ev)
 		{
-			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId)
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId)
 			{
 				KillScp035();
 			}
@@ -112,7 +111,7 @@ namespace scp035
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
 			// Counter admins changing roles through RA
-			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId)
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId)
 			{
 				KillScp035();
 			}
@@ -120,7 +119,7 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
 		{
-			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId && !is035FriendlyFire)
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.Damage = 0;
 				ev.TargetPosition = ev.LastPosition;
@@ -130,7 +129,7 @@ namespace scp035
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
 			List< Smod2.API.Team> pList = ev.Server.GetPlayers().Select(x => x.TeamRole.Team).ToList();
-			if (scpPlayer != null) pList.Remove(pList.FirstOrDefault(x => x == scpPlayer.TeamRole.Team));
+			pList.Remove(pList.FirstOrDefault(x => x == scpPlayer?.TeamRole.Team));
 
 			// If everyone but SCPs and 035 or just 035 is alive, end the round
 			if ((!pList.Contains(Smod2.API.Team.CHAOS_INSURGENCY) &&
@@ -167,25 +166,30 @@ namespace scp035
 
 		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
 		{
-			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId) ev.AllowEscape = false;
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId) ev.AllowEscape = false;
 		}
 
 		public void OnDisconnect(DisconnectEvent ev)
 		{
-			if (scpPlayer != null)
+			if (instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer?.PlayerId) == null)
 			{
-				if (instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId) == null)
-				{
-					KillScp035(false);
-				}
+				KillScp035(false);
 			}
 		}
 
 		public void OnContain106(PlayerContain106Event ev)
 		{
-			if (scpPlayer != null && ev.Player.PlayerId == scpPlayer.PlayerId && !is035FriendlyFire)
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.ActivateContainment = false;
+			}
+		}
+
+		public void OnGeneratorInsertTablet(PlayerGeneratorInsertTabletEvent ev)
+		{
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
+			{
+				ev.Allow = false;
 			}
 		}
 	}
