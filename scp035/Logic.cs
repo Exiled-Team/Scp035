@@ -39,7 +39,7 @@ namespace scp035
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
-				scpPickups.ElementAt(i).Key.Delete();
+				scpPickups.ElementAt(i).Key?.Delete();
 			}
 			scpPickups.Clear();
 		}
@@ -98,9 +98,9 @@ namespace scp035
 		private void InfectPlayer(Player player, Smod2.API.Item pItem)
 		{
 			List<Player> pList = instance.Server.GetPlayers().Where(x => x.TeamRole.Team == Smod2.API.Team.SPECTATOR && !x.OverwatchMode).ToList();
-			if (pList.Count > 0)
+			if (pList.Count > 0 && scpPlayer != null)
 			{
-				pItem.Remove();
+				pItem?.Remove();
 				Player p035 = pList[rand.Next(pList.Count)];
 				p035.ChangeRole(player.TeamRole.Role);
 				p035.Teleport(player.GetPosition());

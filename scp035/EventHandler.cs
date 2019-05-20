@@ -8,7 +8,7 @@ using MEC;
 
 namespace scp035
 {
-	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
+	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItem,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
 		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect,
 		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet
@@ -58,7 +58,7 @@ namespace scp035
 			isRoundStarted = false;
 		}
 
-		public void OnPlayerPickupItemLate(PlayerPickupItemLateEvent ev)
+		public void OnPlayerPickupItem(PlayerPickupItemEvent ev)
 		{
 			Inventory.SyncItemInfo? item = ((GameObject)ev.Player.GetGameObject()).GetComponent<Inventory>().items.Last();
 
@@ -150,7 +150,9 @@ namespace scp035
 			{
 				if (changeToZombie)
 				{
+					Vector pos = scpPlayer.GetPosition();
 					scpPlayer.ChangeRole(Role.SCP_049_2);
+					scpPlayer.Teleport(pos);
 				}
 				else
 				{
