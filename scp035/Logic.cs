@@ -79,7 +79,7 @@ namespace scp035
 							0, 0, 0).GetComponent<Pickup>();
 						scpPickups.Add(a, a.info.durability);
 						a.info.durability = dur;
-						//new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
+						new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
 					}
 				}
 				else
@@ -143,18 +143,26 @@ namespace scp035
 
 		private void CorrodePlayer(Player player)
 		{
-			if (useDamageOverride)
+			int curHP = player.GetHealth();
+			if (curHP - corrodeDamage <= 0)
 			{
-				player.SetHealth(player.GetHealth() - corrodeDamage, DamageType.POCKET);
+				player.Kill(DamageType.POCKET);
 			}
 			else
 			{
-				player.Damage(corrodeDamage, DamageType.POCKET);
+				if (useDamageOverride)
+				{
+					player.SetHealth(curHP - corrodeDamage, DamageType.POCKET);
+				}
+				else
+				{
+					player.Damage(corrodeDamage, DamageType.POCKET);
+				}
 			}
 			if (corrodeLifeSteal && scpPlayer != null)
 			{
-				int curHP = scpPlayer.GetHealth();
-				scpPlayer.SetHealth(curHP + corrodeDamage > scpHealth ? scpHealth : curHP + corrodeDamage);
+				int currHP = scpPlayer.GetHealth();
+				scpPlayer.SetHealth(currHP + corrodeDamage > scpHealth ? scpHealth : currHP + corrodeDamage);
 			}
 		}
 	}
