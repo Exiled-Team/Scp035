@@ -37,7 +37,7 @@ namespace scp035
 		private float corrodeRange;
 		private int corrodeDamage;
 		private float corrodeInterval;
-		private bool corrodeLiftSteal;
+		private bool corrodeLifeSteal;
 
 		public EventHandler(Plugin plugin)
 		{
