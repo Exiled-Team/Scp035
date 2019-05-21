@@ -94,7 +94,7 @@ namespace scp035
 				{
 					ev.Damage = 0;
 				}
-					if (useDamageOverride && ev.Damage > 0)
+				if (useDamageOverride && ev.Damage > 0)
 				{
 					if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
 						ev.Player.PlayerId == scpPlayer.PlayerId) &&
@@ -209,9 +209,10 @@ namespace scp035
 				GameObject scp035 = (GameObject)scpPlayer?.GetGameObject();
 				if (scp035 != null)
 				{
-					foreach (Player player in instance.Server.GetPlayers().Where(x => x.TeamRole.Team != Smod2.API.Team.SCP &&
-					x.PlayerId != scpPlayer?.PlayerId &&
-					Vector3.Distance(scp035.transform.position, ((GameObject)x.GetGameObject()).transform.position) <= corrodeRange))
+					IEnumerable<Player> pList = instance.Server.GetPlayers().Where(x => x.PlayerId != scpPlayer?.PlayerId);
+					if (!is035FriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.SCP);
+					if (!isTutorialFriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.TUTORIAL);
+					foreach (Player player in pList.Where(x => Vector3.Distance(scp035.transform.position, ((GameObject)x.GetGameObject()).transform.position) <= corrodeRange))
 					{
 						CorrodePlayer(player);
 					}
