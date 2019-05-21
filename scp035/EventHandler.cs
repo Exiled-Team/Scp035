@@ -201,7 +201,7 @@ namespace scp035
 		DateTime updateTimer = DateTime.Now;
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (updateTimer < DateTime.Now)
+			if (updateTimer < DateTime.Now && isCorroding)
 			{
 				updateTimer = DateTime.Now.AddSeconds(corrodeInterval);
 
