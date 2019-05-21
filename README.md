@@ -20,3 +20,7 @@ Place the "scp035.dll" file in your sm_plugins folder.
 | 035_win_with_tutorial | Boolean | False | If SCP-035 should win with tutorials. |
 | 035_change_to_zombie | Boolean | False | If SCP-035 should change to a zombie when the SCP team should win. This may fix round lingering issues due to conflicting end conditions. |
 | 035_tutorial_friendly_fire | Boolean | False | If friendly fire between SCP-035 and tutorials is enabled. |
+| 035_corrode_players | Boolean | True | If SCP-035 should do passive damage to players within a range of him. |
+| 035_corrode_distance | Float | 1 | The distance in which a player will take corrosion damage from SCP-035. |
+| 035_corrode_damage | Integer | 5 | The amount of damage to do to a player within range of corrosion. |
+| 035_corrode_interval | Float | 2 | The interval in seconds for corrosion damage. |
