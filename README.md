@@ -23,4 +23,4 @@ Place the "scp035.dll" file in your sm_plugins folder.
 | 035_corrode_players | Boolean | True | If SCP-035 should do passive damage to players within a range of him. |
 | 035_corrode_distance | Float | 1.5 | The distance in which a player will take corrosion damage from SCP-035. |
 | 035_corrode_damage | Integer | 5 | The amount of damage to do to a player within range of corrosion. |
-| 035_corrode_interval | Float | 2 | The interval in seconds for corrosion damage. |
+| 035_corrode_interval | Float | 1 | The interval in seconds for corrosion damage. |
