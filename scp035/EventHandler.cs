@@ -5,13 +5,14 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
+using System;
 
 namespace scp035
 {
-	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItem,
+	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
 		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect,
-		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet
+		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet, IEventHandlerUpdate
 	{
 		private Plugin instance;
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
@@ -32,6 +33,10 @@ namespace scp035
 		private bool winWithTutorials;
 		private bool changeToZombie;
 		private bool isTutorialFriendlyFire;
+		private bool isCorroding;
+		private float corrodeRange;
+		private int corrodeDamage;
+		private float corrodeInterval;
 
 		public EventHandler(Plugin plugin)
 		{
@@ -58,7 +63,7 @@ namespace scp035
 			isRoundStarted = false;
 		}
 
-		public void OnPlayerPickupItem(PlayerPickupItemEvent ev)
+		public void OnPlayerPickupItemLate(PlayerPickupItemLateEvent ev)
 		{
 			Inventory.SyncItemInfo? item = ((GameObject)ev.Player.GetGameObject()).GetComponent<Inventory>().items.Last();
 
@@ -150,9 +155,7 @@ namespace scp035
 			{
 				if (changeToZombie)
 				{
-					Vector pos = scpPlayer.GetPosition();
-					scpPlayer.ChangeRole(Role.SCP_049_2);
-					scpPlayer.Teleport(pos);
+					scpPlayer.ChangeRole(Role.SCP_049_2, true, false);
 				}
 				else
 				{
@@ -192,6 +195,26 @@ namespace scp035
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.Allow = false;
+			}
+		}
+
+		DateTime updateTimer = DateTime.Now;
+		public void OnUpdate(UpdateEvent ev)
+		{
+			if (updateTimer < DateTime.Now)
+			{
+				updateTimer = DateTime.Now.AddSeconds(corrodeInterval);
+
+				GameObject scp035 = (GameObject)scpPlayer?.GetGameObject();
+				if (scp035 != null)
+				{
+					foreach (Player player in instance.Server.GetPlayers().Where(x => x.TeamRole.Team != Smod2.API.Team.SCP &&
+					x.PlayerId != scpPlayer?.PlayerId &&
+					Vector3.Distance(scp035.transform.position, ((GameObject)x.GetGameObject()).transform.position) <= corrodeRange))
+					{
+						CorrodePlayer(player);
+					}
+				}
 			}
 		}
 	}

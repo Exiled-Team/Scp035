@@ -23,6 +23,10 @@ namespace scp035
 			winWithTutorials = instance.GetConfigBool("035_win_with_tutorial");
 			changeToZombie = instance.GetConfigBool("035_change_to_zombie");
 			isTutorialFriendlyFire = instance.GetConfigBool("035_tutorial_friendly_fire");
+			isCorroding = instance.GetConfigBool("035_corrode_players");
+			corrodeRange = instance.GetConfigFloat("035_corrode_distance");
+			corrodeDamage = instance.GetConfigInt("035_corrode_damage");
+			corrodeInterval = instance.GetConfigFloat("035_corrode_interval");
 		}
 
 		private void ResetItemDurability()
@@ -39,7 +43,7 @@ namespace scp035
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
-				scpPickups.ElementAt(i).Key?.Delete();
+				scpPickups.ElementAt(i).Key.Delete();
 			}
 			scpPickups.Clear();
 		}
@@ -58,31 +62,34 @@ namespace scp035
 
 		private void RefreshItems()
 		{
-			if (spawnNewItems)
+			if (instance.Server.GetPlayers().Where(x => x.TeamRole.Team == Smod2.API.Team.SPECTATOR && !x.OverwatchMode).ToList().Count > 0)
 			{
-				RemovePossessedItems();
-				for (int i = 0; i < possessedItemCount; i++)
+				if (spawnNewItems)
 				{
-					Pickup p = GetRandomItem();
-					Pickup a = PlayerManager.singleton.players[0]
-						.GetComponent<Inventory>().SetPickup(possibleItems[rand.Next(possibleItems.Count)],
-						-4.65664672E+11f,
-						new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
-						new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
-						0, 0, 0).GetComponent<Pickup>();
-					scpPickups.Add(a, a.info.durability);
-					a.info.durability = dur;
-					//new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
+					RemovePossessedItems();
+					for (int i = 0; i < possessedItemCount; i++)
+					{
+						Pickup p = GetRandomItem();
+						Pickup a = PlayerManager.singleton.players[0]
+							.GetComponent<Inventory>().SetPickup(possibleItems[rand.Next(possibleItems.Count)],
+							-4.65664672E+11f,
+							new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
+							new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
+							0, 0, 0).GetComponent<Pickup>();
+						scpPickups.Add(a, a.info.durability);
+						a.info.durability = dur;
+						new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
+					}
 				}
-			}
-			else
-			{
-				ResetItemDurability();
-				for (int i = 0; i < possessedItemCount; i++)
+				else
 				{
-					Pickup p = GetRandomValidItem();
-					scpPickups.Add(p, p.info.durability);
-					p.info.durability = dur;
+					ResetItemDurability();
+					for (int i = 0; i < possessedItemCount; i++)
+					{
+						Pickup p = GetRandomValidItem();
+						scpPickups.Add(p, p.info.durability);
+						p.info.durability = dur;
+					}
 				}
 			}
 		}
@@ -98,9 +105,9 @@ namespace scp035
 		private void InfectPlayer(Player player, Smod2.API.Item pItem)
 		{
 			List<Player> pList = instance.Server.GetPlayers().Where(x => x.TeamRole.Team == Smod2.API.Team.SPECTATOR && !x.OverwatchMode).ToList();
-			if (pList.Count > 0 && scpPlayer != null)
+			if (pList.Count > 0 && scpPlayer == null)
 			{
-				pItem?.Remove();
+				pItem.Remove();
 				Player p035 = pList[rand.Next(pList.Count)];
 				p035.ChangeRole(player.TeamRole.Role);
 				p035.Teleport(player.GetPosition());
@@ -114,10 +121,10 @@ namespace scp035
 				scpPlayer = p035;
 				isRotating = false;
 
-				if (spawnNewItems) RemovePossessedItems(); else ResetItemDurability();
-
 				player.ChangeRole(Role.SPECTATOR);
 				player.PersonalBroadcast(10, $"You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.", false);
+
+				if (spawnNewItems) RemovePossessedItems(); else ResetItemDurability();
 			}
 		}
 
@@ -130,6 +137,18 @@ namespace scp035
 					RefreshItems();
 				}
 				yield return Timing.WaitForSeconds(scpInterval);
+			}
+		}
+
+		private void CorrodePlayer(Player player)
+		{
+			if (useDamageOverride)
+			{
+				player.SetHealth(player.GetHealth() - corrodeDamage);
+			}
+			else
+			{
+				player.Damage(corrodeDamage, DamageType.POCKET);
 			}
 		}
 	}

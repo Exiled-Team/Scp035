@@ -27,7 +27,7 @@ namespace scp035
 				0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 30
 			}, false, true, "The possible item IDs SCP-035 can disguise as."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_health", 300, false, true, "The amount of health SCP-035 should have."));
-			AddConfig(new Smod2.Config.ConfigSetting("035_rotate_interval", 120f, false, true, "The time in seconds before the item representing SCP-035 will refresh."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_rotate_interval", 10f, false, true, "The time in seconds before the item representing SCP-035 will refresh."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_scp_friendly_fire", false, false, true, "If SCP-035 is allowed to damage other SCPs."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_infected_item_count", 1, false, true, "The number of items at a time that are possessed by SCP-035."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_spawn_new_items", false, false, true, "If the plugin should spawn a new item on top of a randomly selected item rather than possessing already existing items."));
@@ -35,6 +35,10 @@ namespace scp035
 			AddConfig(new Smod2.Config.ConfigSetting("035_win_with_tutorial", false, false, true, "If SCP-035 should win with tutorials."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_change_to_zombie", false, false, true, "If SCP-035 should change to a zombie when the SCP team should win. This may fix round lingering issues due to conflicting end conditions."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_tutorial_friendly_fire", false, false, true, "If friendly fire between SCP-035 and tutorials is enabled."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_players", true, false, true, "If SCP-035 should do passive damage to players within a range of him."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_distance", 1f, false, true, "The distance in which a player will take corrosion damage from SCP-035."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_damage", 5, false, true, "The amount of damage to do to a player within range of corrosion."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_interval", 2f, false, true, "The interval in seconds for corrosion damage."));
 		}
 	}
 }
