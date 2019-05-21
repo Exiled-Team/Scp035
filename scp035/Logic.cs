@@ -35,7 +35,7 @@ namespace scp035
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
 				Pickup p = scpPickups.ElementAt(i).Key;
-				p.info.durability = scpPickups[p];
+				if (p != null) p.info.durability = scpPickups[p];
 			}
 			scpPickups.Clear();
 		}
@@ -44,7 +44,7 @@ namespace scp035
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
-				scpPickups.ElementAt(i).Key.Delete();
+				scpPickups.ElementAt(i).Key?.Delete();
 			}
 			scpPickups.Clear();
 		}
