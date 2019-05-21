@@ -143,22 +143,15 @@ namespace scp035
 
 		private void CorrodePlayer(Player player)
 		{
-			int curHP = player.GetHealth();
-			if (curHP - corrodeDamage <= 0)
+			if (useDamageOverride)
 			{
-				player.Kill(DamageType.POCKET);
+				player.SetHealth(player.GetHealth() - corrodeDamage, DamageType.NONE);
 			}
 			else
 			{
-				if (useDamageOverride)
-				{
-					player.SetHealth(curHP - corrodeDamage, DamageType.POCKET);
-				}
-				else
-				{
-					player.Damage(corrodeDamage, DamageType.POCKET);
-				}
+				player.Damage(corrodeDamage, DamageType.NONE);
 			}
+
 			if (corrodeLifeSteal && scpPlayer != null)
 			{
 				int currHP = scpPlayer.GetHealth();

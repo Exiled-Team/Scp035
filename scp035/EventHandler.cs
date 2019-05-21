@@ -17,6 +17,7 @@ namespace scp035
 		private Plugin instance;
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
 		private Player scpPlayer;
+		DateTime updateTimer;
 		private bool isRoundStarted;
 		private bool isRotating;
 		private const float dur = 327;
@@ -55,6 +56,8 @@ namespace scp035
 			isRotating = true;
 			scpPickups.Clear();
 			scpPlayer = null;
+
+			updateTimer = DateTime.Now;
 
 			Timing.RunCoroutine(RotatePickup());
 		}
@@ -177,7 +180,7 @@ namespace scp035
 
 		public void OnDisconnect(DisconnectEvent ev)
 		{
-			if (instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer?.PlayerId) == null)
+			if (scpPlayer != null && instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId) == null)
 			{
 				KillScp035(false);
 			}
@@ -199,23 +202,19 @@ namespace scp035
 			}
 		}
 
-		DateTime updateTimer = DateTime.Now;
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (updateTimer < DateTime.Now && isCorroding)
+			if (isRoundStarted && scpPlayer != null && updateTimer < DateTime.Now && isCorroding)
 			{
 				updateTimer = DateTime.Now.AddSeconds(corrodeInterval);
+				GameObject scp035 = (GameObject)scpPlayer.GetGameObject();
 
-				GameObject scp035 = (GameObject)scpPlayer?.GetGameObject();
-				if (scp035 != null)
+				IEnumerable<Player> pList = instance.Server.GetPlayers().Where(x => x.PlayerId != scpPlayer.PlayerId);
+				if (!is035FriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.SCP);
+				if (!isTutorialFriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.TUTORIAL);
+				foreach (Player player in pList.Where(x => Vector3.Distance(scp035.transform.position, ((GameObject)x.GetGameObject()).transform.position) <= corrodeRange))
 				{
-					IEnumerable<Player> pList = instance.Server.GetPlayers().Where(x => x.PlayerId != scpPlayer?.PlayerId);
-					if (!is035FriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.SCP);
-					if (!isTutorialFriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.TUTORIAL);
-					foreach (Player player in pList.Where(x => Vector3.Distance(scp035.transform.position, ((GameObject)x.GetGameObject()).transform.position) <= corrodeRange))
-					{
-						CorrodePlayer(player);
-					}
+					CorrodePlayer(player);
 				}
 			}
 		}
