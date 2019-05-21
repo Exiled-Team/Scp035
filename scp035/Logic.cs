@@ -27,6 +27,7 @@ namespace scp035
 			corrodeRange = instance.GetConfigFloat("035_corrode_distance");
 			corrodeDamage = instance.GetConfigInt("035_corrode_damage");
 			corrodeInterval = instance.GetConfigFloat("035_corrode_interval");
+			corrodeLiftSteal = instance.GetConfigBool("035_corrode_life_steal");
 		}
 
 		private void ResetItemDurability()
@@ -144,11 +145,16 @@ namespace scp035
 		{
 			if (useDamageOverride)
 			{
-				player.SetHealth(player.GetHealth() - corrodeDamage);
+				player.SetHealth(player.GetHealth() - corrodeDamage, DamageType.POCKET);
 			}
 			else
 			{
 				player.Damage(corrodeDamage, DamageType.POCKET);
+			}
+			if (corrodeLiftSteal && scpPlayer != null)
+			{
+				int curHP = scpPlayer.GetHealth();
+				scpPlayer.SetHealth(curHP + corrodeDamage > scpHealth ? scpHealth : curHP + corrodeDamage);
 			}
 		}
 	}

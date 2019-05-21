@@ -36,9 +36,10 @@ namespace scp035
 			AddConfig(new Smod2.Config.ConfigSetting("035_change_to_zombie", false, false, true, "If SCP-035 should change to a zombie when the SCP team should win. This may fix round lingering issues due to conflicting end conditions."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_tutorial_friendly_fire", false, false, true, "If friendly fire between SCP-035 and tutorials is enabled."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_players", true, false, true, "If SCP-035 should do passive damage to players within a range of him."));
-			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_distance", 1f, false, true, "The distance in which a player will take corrosion damage from SCP-035."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_distance", 1.5f, false, true, "The distance in which a player will take corrosion damage from SCP-035."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_damage", 5, false, true, "The amount of damage to do to a player within range of corrosion."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_interval", 2f, false, true, "The interval in seconds for corrosion damage."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_life_steal", true, false, true, "If SCP-035 should steal any health taken from other players by corrosion."));
 		}
 	}
 }
