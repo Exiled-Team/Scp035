@@ -99,8 +99,15 @@ namespace scp035
 				}
 				if (useDamageOverride && ev.Damage > 0)
 				{
-					if (ev.Attacker.PlayerId == scpPlayer.PlayerId ||
-						ev.Player.PlayerId == scpPlayer.PlayerId)
+					if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
+						ev.Player.PlayerId == scpPlayer.PlayerId) &&
+						ev.Attacker.PlayerId != ev.Player.PlayerId &&
+						ev.DamageType != DamageType.FALLDOWN &&
+						ev.DamageType != DamageType.NUKE &&
+						ev.DamageType != DamageType.TESLA &&
+						ev.DamageType != DamageType.WALL &&
+						ev.DamageType != DamageType.DECONT &&
+						ev.DamageType != DamageType.FALLDOWN)
 					{
 						ev.Player.SetHealth(ev.Player.GetHealth() - (int)ev.Damage);
 					}
