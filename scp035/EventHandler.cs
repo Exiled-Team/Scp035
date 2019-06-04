@@ -99,9 +99,8 @@ namespace scp035
 				}
 				if (useDamageOverride && ev.Damage > 0)
 				{
-					if ((ev.Attacker.PlayerId == scpPlayer.PlayerId ||
-						ev.Player.PlayerId == scpPlayer.PlayerId) &&
-						ev.Attacker.PlayerId != ev.Player.PlayerId)
+					if (ev.Attacker.PlayerId == scpPlayer.PlayerId ||
+						ev.Player.PlayerId == scpPlayer.PlayerId)
 					{
 						ev.Player.SetHealth(ev.Player.GetHealth() - (int)ev.Damage);
 					}
@@ -204,7 +203,7 @@ namespace scp035
 
 		public void OnUpdate(UpdateEvent ev)
 		{
-			if (isRoundStarted && scpPlayer != null && updateTimer < DateTime.Now && isCorroding)
+			if (isRoundStarted && scpPlayer != null && updateTimer != null && updateTimer < DateTime.Now && isCorroding)
 			{
 				updateTimer = DateTime.Now.AddSeconds(corrodeInterval);
 				GameObject scp035 = (GameObject)scpPlayer.GetGameObject();
