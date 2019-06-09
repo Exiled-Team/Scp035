@@ -186,7 +186,7 @@ namespace scp035
 
 		public void OnDisconnect(DisconnectEvent ev)
 		{
-			if (scpPlayer != null && instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer.PlayerId) == null)
+			if (instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer?.PlayerId) == null)
 			{
 				KillScp035(false);
 			}
