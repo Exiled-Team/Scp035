@@ -7,7 +7,7 @@ namespace scp035
 	name = "SCP-035",
 	description = "Adds SCP-035 to the game.",
 	id = "cyan.scp035",
-	version = "1.5.0",
+	version = "1.5.1",
 	SmodMajor = 3,
 	SmodMinor = 0,
 	SmodRevision = 0
