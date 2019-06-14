@@ -218,9 +218,12 @@ namespace scp035
 				IEnumerable<Player> pList = instance.Server.GetPlayers().Where(x => x.PlayerId != scpPlayer.PlayerId);
 				if (!is035FriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.SCP);
 				if (!isTutorialFriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.TUTORIAL);
-				foreach (Player player in pList.Where(x => Vector3.Distance(scp035.transform.position, ((GameObject)x.GetGameObject()).transform.position) <= corrodeRange))
+				foreach (Player player in pList)
 				{
-					CorrodePlayer(player);
+					if (Vector3.Distance(scp035.transform.position, ((GameObject)player.GetGameObject()).transform.position) <= corrodeRange)
+					{
+						CorrodePlayer(player);
+					}
 				}
 			}
 		}
