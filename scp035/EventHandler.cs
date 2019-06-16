@@ -16,7 +16,7 @@ namespace scp035
 	{
 		private Plugin instance;
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
-		private Player scpPlayer;
+		internal static Player scpPlayer;
 		DateTime updateTimer;
 		private bool isRoundStarted;
 		private bool isRotating;
