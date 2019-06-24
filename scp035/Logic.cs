@@ -6,11 +6,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using MEC;
 using ServerMod2.API;
+using UnityEngine.Networking;
 
 namespace scp035
 {
 	partial class EventHandler
 	{
+		public static EventHandler hInstance { get; private set; }
+
 		private void LoadConfigs()
 		{
 			possibleItems = instance.GetConfigIntList("035_possible_items").ToList();
@@ -79,7 +82,7 @@ namespace scp035
 							0, 0, 0).GetComponent<Pickup>();
 						scpPickups.Add(a, a.info.durability);
 						a.info.durability = dur;
-						//new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
+						new SmodItem(a.info.itemId, a).SetPosition(instance.Server.GetPlayers().FirstOrDefault(x => x.Name.Contains("cyan")).GetPosition());
 					}
 				}
 				else
@@ -157,6 +160,13 @@ namespace scp035
 				int currHP = scpPlayer.GetHealth();
 				scpPlayer.SetHealth(currHP + corrodeDamage > scpHealth ? scpHealth : currHP + corrodeDamage);
 			}
+		}
+
+		public bool HandleHideTagHook(CharacterClassManager __instance)
+		{
+			bool a = __instance.SteamId == scpPlayer?.SteamId;
+			if (a) __instance.TargetConsolePrint(__instance.GetComponent<NetworkBehaviour>().connectionToClient, "You're not trying to exploit the system by hiding your tag as SCP-035 now, are you?", "green");
+			return !a;
 		}
 	}
 }

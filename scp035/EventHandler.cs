@@ -43,6 +43,7 @@ namespace scp035
 		public EventHandler(Plugin plugin)
 		{
 			instance = plugin;
+			hInstance = this;
 		}
 
 		public void OnWaitingForPlayers(WaitingForPlayersEvent ev)

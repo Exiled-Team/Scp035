@@ -1,4 +1,5 @@
 ﻿using Smod2.Attributes;
+using Harmony;
 
 namespace scp035
 {
@@ -20,6 +21,8 @@ namespace scp035
 
 		public override void Register()
 		{
+			HarmonyInstance.Create(Details.id).PatchAll();
+
 			// This is for the damage override, don't AngryLaserBoi me
 			AddEventHandlers(new EventHandler(this), Smod2.Events.Priority.High);
 
