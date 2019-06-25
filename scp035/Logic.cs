@@ -165,7 +165,7 @@ namespace scp035
 		public bool HandleHideTagHook(CharacterClassManager __instance)
 		{
 			bool a = __instance.SteamId == scpPlayer?.SteamId;
-			if (a) __instance.TargetConsolePrint(__instance.GetComponent<NetworkBehaviour>().connectionToClient, "You're not trying to exploit the system by hiding your tag as SCP-035 now, are you?", "green");
+			if (a) __instance.TargetConsolePrint(__instance.connectionToClient, "You're not trying to exploit the system by hiding your tag as SCP-035 now, are you?", "green");
 			return !a;
 		}
 	}
