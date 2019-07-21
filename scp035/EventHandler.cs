@@ -91,6 +91,7 @@ namespace scp035
 					ev.Damage = 0;
 				}
 				if (!isTutorialFriendlyFire &&
+					ev.Attacker.PlayerId != ev.Player.PlayerId &&
 					((ev.Attacker.PlayerId == scpPlayer.PlayerId &&
 					ev.Player.TeamRole.Team == Smod2.API.Team.TUTORIAL) ||
 					(ev.Player.PlayerId == scpPlayer.PlayerId &&
