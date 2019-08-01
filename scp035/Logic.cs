@@ -47,7 +47,8 @@ namespace scp035
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
-				scpPickups.ElementAt(i).Key?.Delete();
+				Pickup p = scpPickups.ElementAt(i).Key;
+				if (p != null) p.Delete();
 			}
 			scpPickups.Clear();
 		}
