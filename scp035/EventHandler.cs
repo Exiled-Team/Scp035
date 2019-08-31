@@ -12,7 +12,7 @@ namespace scp035
 	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
 		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
 		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect,
-		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet, IEventHandlerUpdate
+		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet, IEventHandlerUpdate, IEventHandlerPocketDimensionDie
 	{
 		private Plugin instance;
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
@@ -207,6 +207,15 @@ namespace scp035
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.Allow = false;
+			}
+		}
+
+		public void OnPocketDimensionDie(PlayerPocketDimensionDieEvent ev)
+		{
+			if (ev.Player.PlayerId == scpPlayer?.PlayerId)
+			{
+				ev.Die = false;
+				ev.Player.Teleport(instance.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
 			}
 		}
 
