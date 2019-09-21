@@ -31,6 +31,7 @@ namespace scp035
 			corrodeDamage = instance.GetConfigInt("035_corrode_damage");
 			corrodeInterval = instance.GetConfigFloat("035_corrode_interval");
 			corrodeLifeSteal = instance.GetConfigBool("035_corrode_life_steal");
+			isEnabled = instance.GetConfigBool("035_enabled");
 		}
 
 		private void ResetItemDurability()

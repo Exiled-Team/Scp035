@@ -39,6 +39,7 @@ namespace scp035
 		private int corrodeDamage;
 		private float corrodeInterval;
 		private bool corrodeLifeSteal;
+		private bool isEnabled;
 
 		public EventHandler(Plugin plugin)
 		{
@@ -53,6 +54,8 @@ namespace scp035
 
 		public void OnRoundStart(RoundStartEvent ev)
 		{
+			if (!isEnabled) return;
+
 			isRoundStarted = true;
 			isRotating = true;
 			scpPickups.Clear();
@@ -65,11 +68,15 @@ namespace scp035
 
 		public void OnRoundEnd(RoundEndEvent ev)
 		{
+			if (!isEnabled) return;
+
 			isRoundStarted = false;
 		}
 
 		public void OnPlayerPickupItemLate(PlayerPickupItemLateEvent ev)
 		{
+			if (!isEnabled) return;
+
 			Inventory.SyncItemInfo? item = ((GameObject)ev.Player.GetGameObject()).GetComponent<Inventory>().items.Last();
 
 			if (item.Value.durability == dur)
@@ -80,6 +87,8 @@ namespace scp035
 
 		public void OnPlayerHurt(PlayerHurtEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (scpPlayer != null)
 			{
 				if (!is035FriendlyFire &&
@@ -119,6 +128,8 @@ namespace scp035
 
 		public void OnPlayerDie(PlayerDeathEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId)
 			{
 				KillScp035();
@@ -127,6 +138,8 @@ namespace scp035
 
 		public void OnSetRole(PlayerSetRoleEvent ev)
 		{
+			if (!isEnabled) return;
+
 			// Counter admins changing roles through RA
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId)
 			{
@@ -136,6 +149,8 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PlayerPocketDimensionEnterEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.Damage = 0;
@@ -145,6 +160,8 @@ namespace scp035
 
 		public void OnCheckRoundEnd(CheckRoundEndEvent ev)
 		{
+			if (!isEnabled) return;
+
 			List< Smod2.API.Team> pList = ev.Server.GetPlayers().Select(x => x.TeamRole.Team).ToList();
 			pList.Remove(pList.FirstOrDefault(x => x == scpPlayer?.TeamRole.Team));
 
@@ -183,11 +200,15 @@ namespace scp035
 
 		public void OnCheckEscape(PlayerCheckEscapeEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId) ev.AllowEscape = false;
 		}
 
 		public void OnDisconnect(DisconnectEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (instance.Server.GetPlayers().FirstOrDefault(x => x.PlayerId == scpPlayer?.PlayerId) == null)
 			{
 				KillScp035(false);
@@ -196,6 +217,8 @@ namespace scp035
 
 		public void OnContain106(PlayerContain106Event ev)
 		{
+			if (!isEnabled) return;
+
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.ActivateContainment = false;
@@ -204,6 +227,8 @@ namespace scp035
 
 		public void OnGeneratorInsertTablet(PlayerGeneratorInsertTabletEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId && !is035FriendlyFire)
 			{
 				ev.Allow = false;
@@ -212,6 +237,8 @@ namespace scp035
 
 		public void OnPocketDimensionDie(PlayerPocketDimensionDieEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (ev.Player.PlayerId == scpPlayer?.PlayerId)
 			{
 				ev.Die = false;
@@ -221,6 +248,8 @@ namespace scp035
 
 		public void OnUpdate(UpdateEvent ev)
 		{
+			if (!isEnabled) return;
+
 			if (isRoundStarted && scpPlayer != null && updateTimer != null && updateTimer < DateTime.Now && isCorroding)
 			{
 				updateTimer = DateTime.Now.AddSeconds(corrodeInterval);

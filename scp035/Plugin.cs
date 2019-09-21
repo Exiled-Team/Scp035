@@ -43,6 +43,7 @@ namespace scp035
 			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_damage", 5, false, true, "The amount of damage to do to a player within range of corrosion."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_interval", 1f, false, true, "The interval in seconds for corrosion damage."));
 			AddConfig(new Smod2.Config.ConfigSetting("035_corrode_life_steal", true, false, true, "If SCP-035 should steal any health taken from other players by corrosion."));
+			AddConfig(new Smod2.Config.ConfigSetting("035_enabled", true, false, true, "If SCP-035 is enabled."));
 		}
 	}
 }
