@@ -255,14 +255,17 @@ namespace scp035
 				updateTimer = DateTime.Now.AddSeconds(corrodeInterval);
 				GameObject scp035 = (GameObject)scpPlayer.GetGameObject();
 
-				IEnumerable<Player> pList = instance.Server.GetPlayers().Where(x => x.PlayerId != scpPlayer.PlayerId);
-				if (!is035FriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.SCP);
-				if (!isTutorialFriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.TUTORIAL);
-				foreach (Player player in pList)
+				if (scp035 != null)
 				{
-					if (Vector3.Distance(scp035.transform.position, ((GameObject)player.GetGameObject()).transform.position) <= corrodeRange)
+					IEnumerable<Player> pList = instance.Server.GetPlayers().Where(x => x.PlayerId != scpPlayer.PlayerId);
+					if (!is035FriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.SCP);
+					if (!isTutorialFriendlyFire) pList = pList.Where(x => x.TeamRole.Team != Smod2.API.Team.TUTORIAL);
+					foreach (Player player in pList)
 					{
-						CorrodePlayer(player);
+						if (player != null && Vector3.Distance(scp035.transform.position, ((GameObject)player.GetGameObject()).transform.position) <= corrodeRange)
+						{
+							CorrodePlayer(player);
+						}
 					}
 				}
 			}
