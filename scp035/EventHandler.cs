@@ -1,6 +1,4 @@
-﻿using Smod2.API;
-using Smod2.EventHandlers;
-using Smod2.Events;
+﻿using EXILED;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,10 +7,7 @@ using System;
 
 namespace scp035
 {
-	partial class EventHandler : IEventHandlerWaitingForPlayers, IEventHandlerRoundStart, IEventHandlerPlayerPickupItemLate,
-		IEventHandlerRoundEnd, IEventHandlerPlayerDie, IEventHandlerPlayerHurt, IEventHandlerPocketDimensionEnter,
-		IEventHandlerCheckRoundEnd, IEventHandlerCheckEscape, IEventHandlerSetRole, IEventHandlerDisconnect,
-		IEventHandlerContain106, IEventHandlerGeneratorInsertTablet, IEventHandlerUpdate, IEventHandlerPocketDimensionDie
+	partial class EventHandler
 	{
 		private Plugin instance;
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
