@@ -1,6 +1,5 @@
 ﻿using EXILED;
 using Harmony;
-using System.Collections.Generic;
 
 namespace scp035
 {

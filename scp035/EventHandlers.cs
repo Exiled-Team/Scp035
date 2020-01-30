@@ -17,7 +17,7 @@ namespace scp035
 		private bool isRoundStarted;
 		private bool isRotating;
 		private const float dur = 327;
-		private System.Random rand = new System.Random();
+		private Random rand = new Random();
 
 		public void OnWaitingForPlayers()
 		{
