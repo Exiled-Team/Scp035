@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using EXILED;
 using MEC;
 
@@ -60,7 +58,7 @@ namespace scp035
 
 		public void OnPlayerDie(ref PlayerDeathEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
 			{
 				KillScp035();
 			}
@@ -68,7 +66,7 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId && !Configs.scpFriendlyFire)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() && !Configs.scpFriendlyFire)
 			{
 				ev.Allow = false;
 			}
@@ -81,12 +79,12 @@ namespace scp035
 
 		public void OnCheckEscape(ref CheckEscapeEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId) ev.Allow = false;
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId()) ev.Allow = false;
 		}
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
 			{
 				KillScp035();
 			}
@@ -94,7 +92,7 @@ namespace scp035
 
 		public void OnPlayerLeave(PlayerLeaveEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
 			{
 				KillScp035(false);
 			}
@@ -102,7 +100,7 @@ namespace scp035
 
 		public void OnContain106(Scp106ContainEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId && !Configs.scpFriendlyFire)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() && !Configs.scpFriendlyFire)
 			{
 				ev.Allow = false;
 			}
@@ -110,7 +108,7 @@ namespace scp035
 
 		public void OnInsertTablet(ref GeneratorInsertTabletEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId && !Configs.scpFriendlyFire)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() && !Configs.scpFriendlyFire)
 			{
 				ev.Allow = false;
 			}
@@ -118,7 +116,7 @@ namespace scp035
 
 		public void OnPocketDimensionDie(PocketDimDeathEvent ev)
 		{
-			if (ev.Player.characterClassManager.UserId == scpPlayer?.characterClassManager.UserId)
+			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
 			{
 				ev.Allow = false;
 				// Teleport player to 096 room via assembly
