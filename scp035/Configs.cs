@@ -17,7 +17,6 @@ namespace scp035
 		internal static bool changeToZombie;
 		internal static bool corrodePlayers;
 		internal static bool corrodeLifeSteal;
-		internal static bool enabled;
 
 		internal static float corrodeDistance;
 		internal static float rotateInterval;
@@ -38,7 +37,6 @@ namespace scp035
 			Configs.corrodeDamage = Plugin.Config.GetInt("035_corrode_damage", 5);
 			Configs.corrodeInterval = Plugin.Config.GetFloat("035_corrode_interval", 1f);
 			Configs.corrodeLifeSteal = Plugin.Config.GetBool("035_corrode_life_steal", true);
-			Configs.enabled = Plugin.Config.GetBool("035_enabled", true);
 			Configs.possibleItems = Plugin.Config.GetIntList("035_possible_items");
 			if (Configs.possibleItems == null)
 			{

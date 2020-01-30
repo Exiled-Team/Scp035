@@ -8,9 +8,15 @@ namespace scp035
 	{
 		private EventHandlers EventHandlers;
 
+		private bool enabled;
+
 		public override void OnEnable()
 		{
 			HarmonyInstance.Create("scp035").PatchAll();
+
+			enabled = Config.GetBool("035_enabled", true);
+
+			if (!enabled) return;
 
 			// Register events
 			Events.WaitingForPlayersEvent += EventHandlers.OnWaitingForPlayers;

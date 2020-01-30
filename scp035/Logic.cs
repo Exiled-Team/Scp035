@@ -1,16 +1,12 @@
-﻿using Smod2.API;
-using Smod2.EventHandlers;
-using Smod2.Events;
-using System.Linq;
+﻿using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
-using ServerMod2.API;
 using UnityEngine.Networking;
 
 namespace scp035
 {
-	partial class EventHandler
+	partial class EventHandlers
 	{
 		public static EventHandler hInstance { get; private set; }
 
@@ -108,7 +104,7 @@ namespace scp035
 			RefreshItems();
 		}
 
-		private void InfectPlayer(Player player, Smod2.API.Item pItem)
+		private void InfectPlayer(ReferenceHub player, Pickup pItem)
 		{
 			List<Player> pList = instance.Server.GetPlayers().Where(x => x.TeamRole.Team == Smod2.API.Team.SPECTATOR && !x.OverwatchMode).ToList();
 			if (pList.Count > 0 && scpPlayer == null)
