@@ -7,7 +7,9 @@ namespace scp035.Harmony
 	{
 		private static bool Prefix(CharacterClassManager __instance)
 		{
-			return EventHandler.hInstance.HandleHideTagHook(__instance);
+			bool a = Plugin.GetPlayer(__instance.gameObject).GetPlayerId() == EventHandlers.scpPlayer?.GetPlayerId();
+			if (a) __instance.TargetConsolePrint(__instance.connectionToClient, "You're not trying to exploit the system by hiding your tag as SCP-035 now, are you?", "green");
+			return !a;
 		}
 	}
 }

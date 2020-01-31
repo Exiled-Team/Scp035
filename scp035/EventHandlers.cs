@@ -12,8 +12,8 @@ namespace scp035
 		public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
+		private List<int> ffPlayers = new List<int>();
 		internal static ReferenceHub scpPlayer;
-		DateTime updateTimer;
 		private bool isRoundStarted;
 		private bool isRotating;
 		private const float dur = 327;
@@ -31,9 +31,10 @@ namespace scp035
 			scpPickups.Clear();
 			scpPlayer = null;
 
-			updateTimer = DateTime.Now;
+			Plugin.Info("round started");
 
 			Timing.RunCoroutine(RotatePickup());
+			Timing.RunCoroutine(CorrodeUpdate());
 		}
 
 		public void OnRoundEnd()
@@ -43,17 +44,66 @@ namespace scp035
 
 		public void OnPickupItem(ref PickupItemEvent ev)
 		{
-			Inventory.SyncItemInfo? item = ev.Player.gameObject.GetComponent<Inventory>().items.Last();
-
-			if (item.Value.durability == dur)
+			PickupItemEvent pie = ev;
+			Timing.RunCoroutine(DelayAction(0.1f, () =>
 			{
-				InfectPlayer(ev.Player, ev.Item);
-			}
+				Inventory.SyncItemInfo? item = pie.Player.GetInventory().Last();
+				Plugin.Info(item.Value.durability.ToString());
+				if (item.Value.durability == dur)
+				{
+					InfectPlayer(pie.Player, pie.Item);
+				}
+			}));
 		}
 
 		public void OnPlayerHurt(ref PlayerHurtEvent ev)
 		{
-			// to do
+			// Remove friendly fire
+			if (ffPlayers.Contains(ev.Attacker.GetPlayerId()))
+			{
+				GrantFF(ev.Attacker);
+			}
+
+
+			if (scpPlayer != null)
+			{
+				if (!Configs.scpFriendlyFire &&
+					((ev.Attacker.GetPlayerId() == scpPlayer?.GetPlayerId() &&
+					ev.Player.GetTeam() == Team.SCP) ||
+					(ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() &&
+					ev.Attacker.GetTeam() == Team.SCP)))
+				{
+					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
+				}
+
+				if (!Configs.tutorialFriendlyFire &&
+					ev.Attacker.GetPlayerId() != ev.Player.GetPlayerId() &&
+					((ev.Attacker.GetPlayerId() == scpPlayer?.GetPlayerId() &&
+					ev.Player.GetTeam() == Team.TUT) ||
+					(ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() &&
+					ev.Attacker.GetTeam() == Team.TUT)))
+				{
+					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
+				}
+			}
+		}
+
+		public void OnShoot(ref ShootEvent ev)
+		{
+			if (ev.Target == null) return;
+			ReferenceHub target = Plugin.GetPlayer(ev.Target);
+			// If the attacker is 035 and the victim is on their team
+			if (ev.Shooter.GetPlayerId() == scpPlayer?.GetPlayerId() && target.GetTeam() == scpPlayer?.GetTeam())
+			{
+				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
+				ffPlayers.Add(ev.Shooter.GetPlayerId());
+			}
+
+			// If the target is 035 and the attacker is on their team
+			if (target.GetPlayerId() == scpPlayer?.GetPlayerId() && ev.Shooter.GetTeam() == scpPlayer?.GetTeam())
+			{
+
+			}
 		}
 
 		public void OnPlayerDie(ref PlayerDeathEvent ev)
@@ -74,7 +124,41 @@ namespace scp035
 
 		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev)
 		{
-			// to do
+			List<Team> pList = Plugin.GetHubs().Select(x => x.GetTeam()).ToList();
+			pList.Remove(pList.FirstOrDefault(x => x == scpPlayer?.GetTeam()));
+
+			// If everyone but SCPs and 035 or just 035 is alive, end the round
+			if ((!pList.Contains(Team.CHI) &&
+				!pList.Contains(Team.CDP) &&
+				!pList.Contains(Team.MTF) &&
+				!pList.Contains(Team.RSC) &&
+				((pList.Contains(Team.SCP) &&
+				scpPlayer != null) ||
+				!pList.Contains(Team.SCP) &&
+				scpPlayer != null)) ||
+				(Configs.winWithTutorial &&
+				!pList.Contains(Team.CHI) &&
+				!pList.Contains(Team.CDP) &&
+				!pList.Contains(Team.MTF) &&
+				!pList.Contains(Team.RSC) &&
+				pList.Contains(Team.TUT) &&
+				scpPlayer != null))
+			{
+				if (Configs.changeToZombie)
+				{
+					scpPlayer.ChangeRole(RoleType.Scp0492, false);
+				}
+				else
+				{
+					ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+					ev.ForceEnd = true;
+				}
+			}
+			// If 035 is the only scp alive keep the round going
+			else if (scpPlayer != null && !pList.Contains(Team.SCP))
+			{
+				ev.ForceEnd = false;
+			}
 		}
 
 		public void OnCheckEscape(ref CheckEscapeEvent ev)
@@ -123,7 +207,5 @@ namespace scp035
 				//ev.Player.Teleport(instance.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
 			}
 		}
-
-		// Make a coroutine for corrode damage
 	}
 }

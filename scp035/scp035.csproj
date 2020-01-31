@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>scp035</RootNamespace>
     <AssemblyName>scp035</AssemblyName>
-    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -72,8 +73,8 @@
   <ItemGroup>
     <Compile Include="API\Scp035Data.cs" />
     <Compile Include="Configs.cs" />
-    <Compile Include="EventHandler.cs" />
     <Compile Include="EventHandlers.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="Harmony\HideTagPatch.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="Plugin.cs" />

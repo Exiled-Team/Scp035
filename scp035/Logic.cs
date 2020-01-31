@@ -2,23 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
+using System;
 
 namespace scp035
 {
 	partial class EventHandlers
 	{
-		public static EventHandler hInstance { get; private set; }
-
-		private void ResetItemDurability()
-		{
-			for (int i = 0; i < scpPickups.Count; i++)
-			{
-				Pickup p = scpPickups.ElementAt(i).Key;
-				if (p != null) p.info.durability = scpPickups[p];
-			}
-			scpPickups.Clear();
-		}
-
 		private void RemovePossessedItems()
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
@@ -31,13 +20,13 @@ namespace scp035
 
 		private Pickup GetRandomValidItem()
 		{
-			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => Configs.possibleItems.Contains((int)x.info.itemId) && !scpPickups.ContainsKey(x)).ToList();
+			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => Configs.possibleItems.Contains((int)x.info.itemId) && !scpPickups.ContainsKey(x)).ToList();
 			return pickups[rand.Next(pickups.Count)];
 		}
 
 		private Pickup GetRandomItem()
 		{
-			List<Pickup> pickups = Object.FindObjectsOfType<Pickup>().Where(x => !scpPickups.ContainsKey(x)).ToList();
+			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => !scpPickups.ContainsKey(x)).ToList();
 			return pickups[rand.Next(pickups.Count)];
 		}
 
@@ -50,9 +39,9 @@ namespace scp035
 				for (int i = 0; i < Configs.infectedItemCount; i++)
 				{
 					Pickup p = GetRandomItem();
-					Pickup a = PlayerManager.players[0]
+					Pickup a = PlayerManager.localPlayer
 						.GetComponent<Inventory>().SetPickup((ItemType)Configs.possibleItems[rand.Next(Configs.possibleItems.Count)],
-						-4.65664672E+11f,
+						-4.656647E+11f,
 						new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
 						new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
 						0, 0, 0).GetComponent<Pickup>();
@@ -60,6 +49,7 @@ namespace scp035
 					a.info.durability = dur;
 				}
 			}
+			Plugin.Info("finished");
 		}
 
 		private void KillScp035(bool setRank = true)
@@ -73,9 +63,12 @@ namespace scp035
 		private void InfectPlayer(ReferenceHub player, Pickup pItem)
 		{
 			// Check if player is in Overwatch mode, don't let them in the list if they are
+			Plugin.Info("1");
 			List<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.characterClassManager.CurClass != RoleType.Spectator).ToList();
+			Plugin.Info("2");
 			if (pList.Count > 0 && scpPlayer == null)
 			{
+				Plugin.Info("3");
 				pItem.Delete();
 				ReferenceHub p035 = pList[rand.Next(pList.Count)];
 				p035.ChangeRole(player.characterClassManager.CurClass, false);
@@ -101,27 +94,44 @@ namespace scp035
 		{
 			while (isRoundStarted)
 			{
+				Plugin.Info("rotate");
+				Plugin.Info(Configs.rotateInterval.ToString());
 				if (isRotating)
 				{
+					Plugin.Info("refreshing");
 					RefreshItems();
 				}
 				yield return Timing.WaitForSeconds(Configs.rotateInterval);
 			}
 		}
 
+		private IEnumerator<float> CorrodeUpdate()
+		{
+			while (isRoundStarted && scpPlayer != null && Configs.corrodePlayers)
+			{
+				IEnumerable<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.GetPlayerId() != scpPlayer.GetPlayerId());
+				if (!Configs.scpFriendlyFire) pList = pList.Where(x => x.GetTeam() != Team.SCP);
+				if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => x.GetTeam() != Team.TUT);
+				foreach (ReferenceHub player in pList)
+				{
+					if (player != null && Vector3.Distance(scpPlayer.GetPosition(), player.transform.position) <= Configs.corrodeDistance)
+					{
+						CorrodePlayer(player);
+					}
+				}
+				yield return Timing.WaitForSeconds(Configs.corrodeInterval);
+			}
+		}
+
+		private IEnumerator<float> DelayAction(float delay, Action x)
+		{
+			yield return Timing.WaitForSeconds(delay);
+			x();
+		}
+
 		private void CorrodePlayer(ReferenceHub player)
 		{
 			// redo this part using new damage system
-
-			if (useDamageOverride)
-			{
-				player.SetHealth(player.GetHealth() - Configs.corrodeDamage);
-			}
-			else
-			{
-				player.Damage(Configs.corrodeDamage, DamageTypes.Nuke);
-			}
-
 			if (Configs.corrodeLifeSteal && scpPlayer != null)
 			{
 				int currHP = scpPlayer.GetHealth();
@@ -129,11 +139,10 @@ namespace scp035
 			}
 		}
 
-		public bool HandleHideTagHook(CharacterClassManager __instance)
+		private void GrantFF(ReferenceHub player)
 		{
-			bool a = Plugin.GetPlayer(__instance.gameObject).GetPlayerId() == scpPlayer?.GetPlayerId();
-			if (a) __instance.TargetConsolePrint(__instance.connectionToClient, "You're not trying to exploit the system by hiding your tag as SCP-035 now, are you?", "green");
-			return !a;
+			player.weaponManager.NetworkfriendlyFire = false;
+			ffPlayers.Remove(player.GetPlayerId());
 		}
 	}
 }

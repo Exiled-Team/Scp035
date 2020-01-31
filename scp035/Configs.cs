@@ -25,9 +25,11 @@ namespace scp035
 		internal static void ReloadConfig()
 		{
 			Configs.health = Plugin.Config.GetInt("035_health", 300);
-			Configs.rotateInterval = Plugin.Config.GetFloat("035_rotate_interval", 120f);
+			//Configs.rotateInterval = Plugin.Config.GetFloat("035_rotate_interval", 120f);
+			Configs.rotateInterval = Plugin.Config.GetFloat("035_rotate_interval", 10f);
 			Configs.scpFriendlyFire = Plugin.Config.GetBool("035_scp_friendly_fire", false);
-			Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 1);
+			//Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 1);
+			Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 10);
 			Configs.useDamageOverride = Plugin.Config.GetBool("035_use_damage_override", false);
 			Configs.winWithTutorial = Plugin.Config.GetBool("035_win_with_tutorial", false);
 			Configs.changeToZombie = Plugin.Config.GetBool("035_change_to_zombie", false);
@@ -38,7 +40,7 @@ namespace scp035
 			Configs.corrodeInterval = Plugin.Config.GetFloat("035_corrode_interval", 1f);
 			Configs.corrodeLifeSteal = Plugin.Config.GetBool("035_corrode_life_steal", true);
 			Configs.possibleItems = Plugin.Config.GetIntList("035_possible_items");
-			if (Configs.possibleItems == null)
+			if (Configs.possibleItems == null || Configs.possibleItems.Count == 0)
 			{
 				Configs.possibleItems = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 30 };
 			}
