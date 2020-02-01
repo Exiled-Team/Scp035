@@ -48,7 +48,21 @@ namespace scp035
 
 		private void KillScp035(bool setRank = true)
 		{
-			if (setRank) scpPlayer.SetRank("default", " ");
+			if (setRank)
+			{
+				scpPlayer.serverRoles.HiddenBadge = null;
+				scpPlayer.serverRoles.RpcResetFixed();
+				scpPlayer.serverRoles.RefreshPermissions(true);
+				if (isHidden)
+				{
+					scpPlayer.serverRoles.HiddenBadge = scpPlayer.serverRoles.MyText;
+					scpPlayer.serverRoles.NetworkGlobalBadge = null;
+					scpPlayer.serverRoles.SetText(null);
+					scpPlayer.serverRoles.SetColor(null);
+					scpPlayer.serverRoles.GlobalSet = false;
+					scpPlayer.serverRoles.RefreshHiddenTag();
+				}
+			}
 			scpPlayer = null;
 			isRotating = true;
 			RefreshItems();
@@ -70,7 +84,9 @@ namespace scp035
 				p035.SetAmmo(AmmoType.DROPPED_5, player.GetAmmo(AmmoType.DROPPED_5));
 				p035.SetAmmo(AmmoType.DROPPED_7, player.GetAmmo(AmmoType.DROPPED_7));
 				p035.SetAmmo(AmmoType.DROPPED_9, player.GetAmmo(AmmoType.DROPPED_9));
-				p035.SetRank("red", "SCP-035");
+				isHidden = p035.serverRoles.HiddenBadge != null;
+				p035.serverRoles.HiddenBadge = null;
+				p035.SetRank("SCP-035", "red");
 				p035.Broadcast("<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>\nYou have infected a body and have gained control over it, use it to help the other SCPs!", 10);
 				scpPlayer = p035;
 				isRotating = false;

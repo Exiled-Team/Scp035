@@ -20,8 +20,8 @@ namespace scp035
 
 		public static void SetRank(this ReferenceHub player, string rank, string color = "default")
 		{
-			player.serverRoles.SetColor(color);
-			player.serverRoles.SetText(rank);
+			player.serverRoles.NetworkMyText = rank;
+			player.serverRoles.NetworkMyColor = color;
 		}
 
 		public static Vector3 GetPosition(this ReferenceHub player)
@@ -74,7 +74,6 @@ namespace scp035
 		{
 			if (!spawnTeleport)
 			{
-				Plugin.Info("trying");
 				Vector3 pos = player.GetPosition();
 				Plugin.Info(pos.ToString());
 				player.characterClassManager.SetClassID(role);
@@ -88,7 +87,8 @@ namespace scp035
 
 		public static void SetAmmo(this ReferenceHub player, AmmoType type, int amount)
 		{
-			player.ammoBox.SetOneAmount((int)type, amount.ToString());
+			//player.ammoBox.SetOneAmount((int)type, amount.ToString());
+			//player.ammoBox.SetAmmoAmount();
 		}
 
 		public static int GetAmmo(this ReferenceHub player, AmmoType type)

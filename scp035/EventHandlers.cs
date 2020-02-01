@@ -14,6 +14,7 @@ namespace scp035
 		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
 		private List<int> ffPlayers = new List<int>();
 		internal static ReferenceHub scpPlayer;
+		private bool isHidden;
 		private bool isRoundStarted;
 		private bool isRotating;
 		private const float dur = 327;
