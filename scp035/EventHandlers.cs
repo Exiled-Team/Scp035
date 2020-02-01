@@ -31,9 +31,7 @@ namespace scp035
 			scpPickups.Clear();
 			scpPlayer = null;
 
-			Plugin.Info("round started");
-
-			Timing.RunCoroutine(RotatePickup());
+			Timing.RunCoroutine(DelayAction(1f, () => Timing.RunCoroutine(RotatePickup())));
 			Timing.RunCoroutine(CorrodeUpdate());
 		}
 
@@ -44,16 +42,11 @@ namespace scp035
 
 		public void OnPickupItem(ref PickupItemEvent ev)
 		{
-			PickupItemEvent pie = ev;
-			Timing.RunCoroutine(DelayAction(0.1f, () =>
+			if (ev.Item.info.durability == dur)
 			{
-				Inventory.SyncItemInfo? item = pie.Player.GetInventory().Last();
-				Plugin.Info(item.Value.durability.ToString());
-				if (item.Value.durability == dur)
-				{
-					InfectPlayer(pie.Player, pie.Item);
-				}
-			}));
+				ev.Allow = false;
+				InfectPlayer(ev.Player, ev.Item);
+			}
 		}
 
 		public void OnPlayerHurt(ref PlayerHurtEvent ev)
@@ -92,17 +85,11 @@ namespace scp035
 		{
 			if (ev.Target == null) return;
 			ReferenceHub target = Plugin.GetPlayer(ev.Target);
-			// If the attacker is 035 and the victim is on their team
-			if (ev.Shooter.GetPlayerId() == scpPlayer?.GetPlayerId() && target.GetTeam() == scpPlayer?.GetTeam())
+
+			if ((ev.Shooter.GetPlayerId() == scpPlayer?.GetPlayerId() && target.GetTeam() == scpPlayer?.GetTeam()) || (target.GetPlayerId() == scpPlayer?.GetPlayerId() && ev.Shooter.GetTeam() == scpPlayer?.GetTeam()))
 			{
 				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
 				ffPlayers.Add(ev.Shooter.GetPlayerId());
-			}
-
-			// If the target is 035 and the attacker is on their team
-			if (target.GetPlayerId() == scpPlayer?.GetPlayerId() && ev.Shooter.GetTeam() == scpPlayer?.GetTeam())
-			{
-
 			}
 		}
 

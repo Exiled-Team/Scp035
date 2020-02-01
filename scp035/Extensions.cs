@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using MEC;
+using UnityEngine;
 
 namespace scp035
 {
@@ -71,11 +72,13 @@ namespace scp035
 
 		public static void ChangeRole(this ReferenceHub player, RoleType role, bool spawnTeleport = true)
 		{
-			if (spawnTeleport)
+			if (!spawnTeleport)
 			{
+				Plugin.Info("trying");
 				Vector3 pos = player.GetPosition();
+				Plugin.Info(pos.ToString());
 				player.characterClassManager.SetClassID(role);
-				player.SetPosition(pos);
+				Timing.RunCoroutine(EventHandlers.DelayAction(0.5f, () => player.SetPosition(pos)));
 			}
 			else
 			{

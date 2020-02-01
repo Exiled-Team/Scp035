@@ -18,12 +18,6 @@ namespace scp035
 			scpPickups.Clear();
 		}
 
-		private Pickup GetRandomValidItem()
-		{
-			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => Configs.possibleItems.Contains((int)x.info.itemId) && !scpPickups.ContainsKey(x)).ToList();
-			return pickups[rand.Next(pickups.Count)];
-		}
-
 		private Pickup GetRandomItem()
 		{
 			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => !scpPickups.ContainsKey(x)).ToList();
@@ -63,23 +57,21 @@ namespace scp035
 		private void InfectPlayer(ReferenceHub player, Pickup pItem)
 		{
 			// Check if player is in Overwatch mode, don't let them in the list if they are
-			Plugin.Info("1");
-			List<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.characterClassManager.CurClass != RoleType.Spectator).ToList();
-			Plugin.Info("2");
+			List<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator).ToList();
 			if (pList.Count > 0 && scpPlayer == null)
 			{
-				Plugin.Info("3");
 				pItem.Delete();
 				ReferenceHub p035 = pList[rand.Next(pList.Count)];
-				p035.ChangeRole(player.characterClassManager.CurClass, false);
-				p035.SetPosition(player.GetPosition());
+				Vector3 pos = player.GetPosition();
+				p035.ChangeRole(player.characterClassManager.CurClass);
+				Timing.RunCoroutine(DelayAction(0.2f, () => p035.SetPosition(pos)));
 				foreach (Inventory.SyncItemInfo item in player.GetInventory()) p035.GiveItem(item.id);
 				p035.SetHealth(Configs.health);
 				p035.SetAmmo(AmmoType.DROPPED_5, player.GetAmmo(AmmoType.DROPPED_5));
 				p035.SetAmmo(AmmoType.DROPPED_7, player.GetAmmo(AmmoType.DROPPED_7));
 				p035.SetAmmo(AmmoType.DROPPED_9, player.GetAmmo(AmmoType.DROPPED_9));
 				p035.SetRank("red", "SCP-035");
-				p035.Broadcast("You are <color=\"red\">SCP-035!</color> You have infected a body and have gained control over it, use it to help the other SCPs!", 10);
+				p035.Broadcast("<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>\nYou have infected a body and have gained control over it, use it to help the other SCPs!", 10);
 				scpPlayer = p035;
 				isRotating = false;
 
@@ -94,11 +86,8 @@ namespace scp035
 		{
 			while (isRoundStarted)
 			{
-				Plugin.Info("rotate");
-				Plugin.Info(Configs.rotateInterval.ToString());
 				if (isRotating)
 				{
-					Plugin.Info("refreshing");
 					RefreshItems();
 				}
 				yield return Timing.WaitForSeconds(Configs.rotateInterval);
@@ -123,7 +112,7 @@ namespace scp035
 			}
 		}
 
-		private IEnumerator<float> DelayAction(float delay, Action x)
+		public static IEnumerator<float> DelayAction(float delay, Action x)
 		{
 			yield return Timing.WaitForSeconds(delay);
 			x();
