@@ -13,9 +13,24 @@ namespace scp035
 
 	public static class Extensions
 	{
-		public static void Broadcast(this ReferenceHub player, string message, uint time, bool monospaced = false)
+		public static void ChangeRole(this ReferenceHub player, RoleType role, bool spawnTeleport = true)
 		{
-			player.GetComponent<Broadcast>().TargetAddElement(player.scp079PlayerScript.connectionToClient, message, time, monospaced);
+			if (!spawnTeleport)
+			{
+				Vector3 pos = player.transform.position;
+				Plugin.Info(pos.ToString());
+				player.characterClassManager.SetClassID(role);
+				Timing.RunCoroutine(EventHandlers.DelayAction(0.5f, () => player.plyMovementSync.OverridePosition(pos, 0)));
+			}
+			else
+			{
+				player.characterClassManager.SetClassID(role);
+			}
+		}
+
+		public static void Damage(this ReferenceHub player, int amount, DamageTypes.DamageType damageType)
+		{
+			player.playerStats.HurtPlayer(new PlayerStats.HitInfo(amount, "WORLD", damageType, player.queryProcessor.PlayerId), player.gameObject);
 		}
 
 		public static void SetRank(this ReferenceHub player, string rank, string color = "default")
@@ -24,86 +39,26 @@ namespace scp035
 			player.serverRoles.NetworkMyColor = color;
 		}
 
-		public static Vector3 GetPosition(this ReferenceHub player)
+		public static void RefreshTag(this ReferenceHub player)
 		{
-			return player.transform.position;
+			player.serverRoles.HiddenBadge = null;
+			player.serverRoles.RpcResetFixed();
+			player.serverRoles.RefreshPermissions(true);
 		}
 
-		public static void SetPosition(this ReferenceHub player, Vector3 pos, float rot = 0, bool forceGround = false)
+		public static void HideTag(this ReferenceHub player)
 		{
-			player.plyMovementSync.OverridePosition(pos, rot, forceGround);
+			player.serverRoles.HiddenBadge = player.serverRoles.MyText;
+			player.serverRoles.NetworkGlobalBadge = null;
+			player.serverRoles.SetText(null);
+			player.serverRoles.SetColor(null);
+			player.serverRoles.GlobalSet = false;
+			player.serverRoles.RefreshHiddenTag();
 		}
 
-		public static void SetHealth(this ReferenceHub player, int health)
+		public static void Broadcast(this ReferenceHub player, string message, uint time, bool monospaced = false)
 		{
-			player.playerStats.health = health;
-		}
-
-		public static int GetHealth(this ReferenceHub player)
-		{
-			return (int)player.playerStats.health;
-		}
-
-		public static int GetPlayerId(this ReferenceHub player)
-		{
-			return player.queryProcessor.PlayerId;
-		}
-
-		public static void SetOverwatch(this ReferenceHub player, bool value)
-		{
-			player.serverRoles.TargetSetOverwatch(player.scp079PlayerScript.connectionToClient, value);
-		}
-
-		public static bool GetOverwatch(this ReferenceHub player)
-		{
-			// to do
-			return false;
-		}
-
-		public static Inventory.SyncListItemInfo GetInventory(this ReferenceHub player)
-		{
-			return player.inventory.items;
-		}
-
-		public static void GiveItem(this ReferenceHub player, ItemType item)
-		{
-			player.inventory.AddNewItem(item);
-		}
-
-		public static void ChangeRole(this ReferenceHub player, RoleType role, bool spawnTeleport = true)
-		{
-			if (!spawnTeleport)
-			{
-				Vector3 pos = player.GetPosition();
-				Plugin.Info(pos.ToString());
-				player.characterClassManager.SetClassID(role);
-				Timing.RunCoroutine(EventHandlers.DelayAction(0.5f, () => player.SetPosition(pos)));
-			}
-			else
-			{
-				player.characterClassManager.SetClassID(role);
-			}
-		}
-
-		public static void SetAmmo(this ReferenceHub player, AmmoType type, int amount)
-		{
-			//player.ammoBox.SetOneAmount((int)type, amount.ToString());
-			//player.ammoBox.SetAmmoAmount();
-		}
-
-		public static int GetAmmo(this ReferenceHub player, AmmoType type)
-		{
-			return player.ammoBox.GetAmmo((int)type);
-		}
-
-		public static void Damage(this ReferenceHub player, int amount, DamageTypes.DamageType damageType)
-		{
-			player.playerStats.HurtPlayer(new PlayerStats.HitInfo(amount, "WORLD", damageType, player.GetPlayerId()), player.gameObject);
-		}
-
-		public static Team GetTeam(this ReferenceHub player)
-		{
-			return Plugin.GetTeam(player.characterClassManager.CurClass);
+			player.GetComponent<Broadcast>().TargetAddElement(player.scp079PlayerScript.connectionToClient, message, time, monospaced);
 		}
 	}
 }

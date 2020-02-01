@@ -27,7 +27,7 @@ namespace scp035
 		private void RefreshItems()
 		{
 			// Check if player is in Overwatch mode, don't let them in the list if they are
-			if (Plugin.GetHubs().Where(x => x.GetTeam() == Team.RIP).ToList().Count > 0)
+			if (Plugin.GetHubs().Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) == Team.RIP).ToList().Count > 0)
 			{
 				RemovePossessedItems();
 				for (int i = 0; i < Configs.infectedItemCount; i++)
@@ -43,24 +43,16 @@ namespace scp035
 					a.info.durability = dur;
 				}
 			}
-			Plugin.Info("finished");
 		}
 
 		private void KillScp035(bool setRank = true)
 		{
 			if (setRank)
 			{
-				scpPlayer.serverRoles.HiddenBadge = null;
-				scpPlayer.serverRoles.RpcResetFixed();
-				scpPlayer.serverRoles.RefreshPermissions(true);
+				scpPlayer.RefreshTag();
 				if (isHidden)
 				{
-					scpPlayer.serverRoles.HiddenBadge = scpPlayer.serverRoles.MyText;
-					scpPlayer.serverRoles.NetworkGlobalBadge = null;
-					scpPlayer.serverRoles.SetText(null);
-					scpPlayer.serverRoles.SetColor(null);
-					scpPlayer.serverRoles.GlobalSet = false;
-					scpPlayer.serverRoles.RefreshHiddenTag();
+					scpPlayer.HideTag();
 				}
 			}
 			scpPlayer = null;
@@ -75,18 +67,20 @@ namespace scp035
 			if (pList.Count > 0 && scpPlayer == null)
 			{
 				pItem.Delete();
+
 				ReferenceHub p035 = pList[rand.Next(pList.Count)];
-				Vector3 pos = player.GetPosition();
+				Vector3 pos = player.transform.position;
 				p035.ChangeRole(player.characterClassManager.CurClass);
-				Timing.RunCoroutine(DelayAction(0.2f, () => p035.SetPosition(pos)));
-				foreach (Inventory.SyncItemInfo item in player.GetInventory()) p035.GiveItem(item.id);
-				p035.SetHealth(Configs.health);
-				p035.SetAmmo(AmmoType.DROPPED_5, player.GetAmmo(AmmoType.DROPPED_5));
-				p035.SetAmmo(AmmoType.DROPPED_7, player.GetAmmo(AmmoType.DROPPED_7));
-				p035.SetAmmo(AmmoType.DROPPED_9, player.GetAmmo(AmmoType.DROPPED_9));
+				Timing.RunCoroutine(DelayAction(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0)));
+
+				foreach (Inventory.SyncItemInfo item in player.inventory.items) p035.inventory.AddNewItem(item.id);
+				p035.playerStats.health = Configs.health;
+				p035.ammoBox.Networkamount = "250:250:250";
+
 				isHidden = p035.serverRoles.HiddenBadge != null;
-				p035.serverRoles.HiddenBadge = null;
+				p035.RefreshTag();
 				p035.SetRank("SCP-035", "red");
+
 				p035.Broadcast("<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>\nYou have infected a body and have gained control over it, use it to help the other SCPs!", 10);
 				scpPlayer = p035;
 				isRotating = false;
@@ -114,12 +108,12 @@ namespace scp035
 		{
 			while (isRoundStarted && scpPlayer != null && Configs.corrodePlayers)
 			{
-				IEnumerable<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.GetPlayerId() != scpPlayer.GetPlayerId());
-				if (!Configs.scpFriendlyFire) pList = pList.Where(x => x.GetTeam() != Team.SCP);
-				if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => x.GetTeam() != Team.TUT);
+				IEnumerable<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer.queryProcessor.PlayerId);
+				if (!Configs.scpFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.SCP);
+				if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.TUT);
 				foreach (ReferenceHub player in pList)
 				{
-					if (player != null && Vector3.Distance(scpPlayer.GetPosition(), player.transform.position) <= Configs.corrodeDistance)
+					if (player != null && Vector3.Distance(scpPlayer.transform.position, player.transform.position) <= Configs.corrodeDistance)
 					{
 						CorrodePlayer(player);
 					}
@@ -136,18 +130,18 @@ namespace scp035
 
 		private void CorrodePlayer(ReferenceHub player)
 		{
-			// redo this part using new damage system
 			if (Configs.corrodeLifeSteal && scpPlayer != null)
 			{
-				int currHP = scpPlayer.GetHealth();
-				scpPlayer.SetHealth(currHP + Configs.corrodeDamage > Configs.health ? Configs.health : currHP + Configs.corrodeDamage);
+				int currHP = (int)scpPlayer.playerStats.health;
+				scpPlayer.playerStats.health = currHP + Configs.corrodeDamage > Configs.health ? Configs.health : currHP + Configs.corrodeDamage;
 			}
+			scpPlayer.Damage(Configs.corrodeDamage, DamageTypes.Nuke);
 		}
 
 		private void GrantFF(ReferenceHub player)
 		{
 			player.weaponManager.NetworkfriendlyFire = false;
-			ffPlayers.Remove(player.GetPlayerId());
+			ffPlayers.Remove(player.queryProcessor.PlayerId);
 		}
 	}
 }

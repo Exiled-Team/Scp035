@@ -53,7 +53,7 @@ namespace scp035
 		public void OnPlayerHurt(ref PlayerHurtEvent ev)
 		{
 			// Remove friendly fire
-			if (ffPlayers.Contains(ev.Attacker.GetPlayerId()))
+			if (ffPlayers.Contains(ev.Attacker.queryProcessor.PlayerId))
 			{
 				GrantFF(ev.Attacker);
 			}
@@ -62,20 +62,20 @@ namespace scp035
 			if (scpPlayer != null)
 			{
 				if (!Configs.scpFriendlyFire &&
-					((ev.Attacker.GetPlayerId() == scpPlayer?.GetPlayerId() &&
-					ev.Player.GetTeam() == Team.SCP) ||
-					(ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() &&
-					ev.Attacker.GetTeam() == Team.SCP)))
+					((ev.Attacker.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
+					Plugin.GetTeam(ev.Player.characterClassManager.CurClass) == Team.SCP) ||
+					(ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
+					Plugin.GetTeam(ev.Attacker.characterClassManager.CurClass) == Team.SCP)))
 				{
 					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
 				}
 
 				if (!Configs.tutorialFriendlyFire &&
-					ev.Attacker.GetPlayerId() != ev.Player.GetPlayerId() &&
-					((ev.Attacker.GetPlayerId() == scpPlayer?.GetPlayerId() &&
-					ev.Player.GetTeam() == Team.TUT) ||
-					(ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() &&
-					ev.Attacker.GetTeam() == Team.TUT)))
+					ev.Attacker.queryProcessor.PlayerId != ev.Player.queryProcessor.PlayerId &&
+					((ev.Attacker.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
+					Plugin.GetTeam(ev.Player.characterClassManager.CurClass) == Team.TUT) ||
+					(ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
+					Plugin.GetTeam(ev.Attacker.characterClassManager.CurClass) == Team.TUT)))
 				{
 					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
 				}
@@ -84,19 +84,19 @@ namespace scp035
 
 		public void OnShoot(ref ShootEvent ev)
 		{
-			if (ev.Target == null) return;
+			if (ev.Target == null || scpPlayer == null) return;
 			ReferenceHub target = Plugin.GetPlayer(ev.Target);
 
-			if ((ev.Shooter.GetPlayerId() == scpPlayer?.GetPlayerId() && target.GetTeam() == scpPlayer?.GetTeam()) || (target.GetPlayerId() == scpPlayer?.GetPlayerId() && ev.Shooter.GetTeam() == scpPlayer?.GetTeam()))
+			if ((ev.Shooter.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && Plugin.GetTeam(target.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)) || (target.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)))
 			{
 				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
-				ffPlayers.Add(ev.Shooter.GetPlayerId());
+				ffPlayers.Add(ev.Shooter.queryProcessor.PlayerId);
 			}
 		}
 
 		public void OnPlayerDie(ref PlayerDeathEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId)
 			{
 				KillScp035();
 			}
@@ -104,7 +104,7 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() && !Configs.scpFriendlyFire)
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && !Configs.scpFriendlyFire)
 			{
 				ev.Allow = false;
 			}
@@ -112,8 +112,8 @@ namespace scp035
 
 		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev)
 		{
-			List<Team> pList = Plugin.GetHubs().Select(x => x.GetTeam()).ToList();
-			pList.Remove(pList.FirstOrDefault(x => x == scpPlayer?.GetTeam()));
+			List<Team> pList = Plugin.GetHubs().Select(x => Plugin.GetTeam(x.characterClassManager.CurClass)).ToList();
+			pList.Remove(pList.FirstOrDefault(x => x == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)));
 
 			// If everyone but SCPs and 035 or just 035 is alive, end the round
 			if ((!pList.Contains(Team.CHI) &&
@@ -142,6 +142,7 @@ namespace scp035
 					ev.ForceEnd = true;
 				}
 			}
+
 			// If 035 is the only scp alive keep the round going
 			else if (scpPlayer != null && !pList.Contains(Team.SCP))
 			{
@@ -151,12 +152,12 @@ namespace scp035
 
 		public void OnCheckEscape(ref CheckEscapeEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId()) ev.Allow = false;
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId) ev.Allow = false;
 		}
 
 		public void OnSetClass(SetClassEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId)
 			{
 				KillScp035();
 			}
@@ -164,7 +165,7 @@ namespace scp035
 
 		public void OnPlayerLeave(PlayerLeaveEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId)
 			{
 				KillScp035(false);
 			}
@@ -172,7 +173,7 @@ namespace scp035
 
 		public void OnContain106(Scp106ContainEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() && !Configs.scpFriendlyFire)
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && !Configs.scpFriendlyFire)
 			{
 				ev.Allow = false;
 			}
@@ -180,7 +181,7 @@ namespace scp035
 
 		public void OnInsertTablet(ref GeneratorInsertTabletEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId() && !Configs.scpFriendlyFire)
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && !Configs.scpFriendlyFire)
 			{
 				ev.Allow = false;
 			}
@@ -188,7 +189,7 @@ namespace scp035
 
 		public void OnPocketDimensionDie(PocketDimDeathEvent ev)
 		{
-			if (ev.Player.GetPlayerId() == scpPlayer?.GetPlayerId())
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId)
 			{
 				ev.Allow = false;
 				// Teleport player to 096 room via assembly
