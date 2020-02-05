@@ -25,14 +25,11 @@ namespace scp035
 		internal static void ReloadConfig()
 		{
 			Configs.health = Plugin.Config.GetInt("035_health", 300);
-			//Configs.rotateInterval = Plugin.Config.GetFloat("035_rotate_interval", 120f);
-			Configs.rotateInterval = Plugin.Config.GetFloat("035_rotate_interval", 10f);
+			Configs.rotateInterval = Plugin.Config.GetFloat("035_rotate_interval", 120f);
 			Configs.scpFriendlyFire = Plugin.Config.GetBool("035_scp_friendly_fire", false);
-			//Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 1);
-			Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 10);
+			Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 1);
 			Configs.useDamageOverride = Plugin.Config.GetBool("035_use_damage_override", false);
 			Configs.winWithTutorial = Plugin.Config.GetBool("035_win_with_tutorial", false);
-			//Configs.changeToZombie = Plugin.Config.GetBool("035_change_to_zombie", false);
 			//Configs.changeToZombie = Plugin.Config.GetBool("035_change_to_zombie", true);
 			Configs.tutorialFriendlyFire = Plugin.Config.GetBool("035_tutorial_friendly_fire", false);
 			Configs.corrodePlayers = Plugin.Config.GetBool("035_corrode_players", true);
