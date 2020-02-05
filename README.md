@@ -19,10 +19,11 @@ Place the "scp035.dll" file in your sm_plugins folder.
 | 035_spawn_new_items | Boolean | False | If the plugin should spawn a new item from the possible items list on top of a randomly selected item rather than possessing already existing possible items. |
 | 035_use_damage_override | Boolean | False | If the plugin should override AdmintoolBox's damage blockers. |
 | 035_win_with_tutorial | Boolean | False | If SCP-035 should win with tutorials. |
-| 035_change_to_zombie | Boolean | False | If SCP-035 should change to a zombie when the SCP team should win. This may fix round lingering issues due to conflicting end conditions. |
 | 035_tutorial_friendly_fire | Boolean | False | If friendly fire between SCP-035 and tutorials is enabled. |
 | 035_corrode_players | Boolean | True | If SCP-035 should do passive damage to players within a range of him. |
 | 035_corrode_distance | Float | 1.5 | The distance in which a player will take corrosion damage from SCP-035. |
 | 035_corrode_damage | Integer | 5 | The amount of damage to do to a player within range of corrosion. |
 | 035_corrode_interval | Float | 1 | The interval in seconds for corrosion damage. |
 | 035_corrode_life_steal | Boolean | True | If SCP-035 should steal any health taken from other players by corrosion. |
+| 035_corrode_trail | Boolean | True | If SCP-035 should leave behind a trail of corrosion when he walks. |
+| 035_corrode_trail_interval | Integer | 5 | The amount of steps inbetween each corrosion decal placement. |
