@@ -24,6 +24,7 @@ namespace scp035
 			Events.RoundStartEvent += EventHandlers.OnRoundStart;
 			Events.PickupItemEvent += EventHandlers.OnPickupItem;
 			Events.RoundEndEvent += EventHandlers.OnRoundEnd;
+			Events.RoundRestartEvent += EventHandlers.OnRoundRestart;
 			Events.PlayerDeathEvent += EventHandlers.OnPlayerDie;
 			Events.PlayerHurtEvent += EventHandlers.OnPlayerHurt;
 			Events.PocketDimEnterEvent += EventHandlers.OnPocketDimensionEnter;

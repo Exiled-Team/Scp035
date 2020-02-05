@@ -26,6 +26,7 @@ namespace scp035
 
 		private void RefreshItems()
 		{
+			Plugin.Info("refreshing");
 			// Check if player is in Overwatch mode, don't let them in the list if they are
 			if (Plugin.GetHubs().Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) == Team.RIP).ToList().Count > 0)
 			{
@@ -106,19 +107,25 @@ namespace scp035
 
 		private IEnumerator<float> CorrodeUpdate()
 		{
-			while (isRoundStarted && scpPlayer != null && Configs.corrodePlayers)
+			if (Configs.corrodePlayers)
 			{
-				IEnumerable<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer.queryProcessor.PlayerId);
-				if (!Configs.scpFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.SCP);
-				if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.TUT);
-				foreach (ReferenceHub player in pList)
+				while (isRoundStarted)
 				{
-					if (player != null && Vector3.Distance(scpPlayer.transform.position, player.transform.position) <= Configs.corrodeDistance)
+					if (scpPlayer != null)
 					{
-						CorrodePlayer(player);
+						IEnumerable<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer.queryProcessor.PlayerId);
+						if (!Configs.scpFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.SCP);
+						if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.TUT);
+						foreach (ReferenceHub player in pList)
+						{
+							if (player != null && Vector3.Distance(scpPlayer.transform.position, player.transform.position) <= Configs.corrodeDistance)
+							{
+								CorrodePlayer(player);
+							}
+						}
 					}
+					yield return Timing.WaitForSeconds(Configs.corrodeInterval);
 				}
-				yield return Timing.WaitForSeconds(Configs.corrodeInterval);
 			}
 		}
 
@@ -135,7 +142,7 @@ namespace scp035
 				int currHP = (int)scpPlayer.playerStats.health;
 				scpPlayer.playerStats.health = currHP + Configs.corrodeDamage > Configs.health ? Configs.health : currHP + Configs.corrodeDamage;
 			}
-			scpPlayer.Damage(Configs.corrodeDamage, DamageTypes.Nuke);
+			player.Damage(Configs.corrodeDamage, DamageTypes.Nuke);
 		}
 
 		private void GrantFF(ReferenceHub player)

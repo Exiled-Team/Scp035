@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EXILED;
 using MEC;
+using UnityEngine;
 
 namespace scp035
 {
@@ -18,7 +19,9 @@ namespace scp035
 		private bool isRoundStarted;
 		private bool isRotating;
 		private const float dur = 327;
-		private Random rand = new Random();
+		private System.Random rand = new System.Random();
+
+		private List<CoroutineHandle> coroutines = new List<CoroutineHandle>();
 
 		public void OnWaitingForPlayers()
 		{
@@ -32,13 +35,25 @@ namespace scp035
 			scpPickups.Clear();
 			scpPlayer = null;
 
-			Timing.RunCoroutine(DelayAction(1f, () => Timing.RunCoroutine(RotatePickup())));
-			Timing.RunCoroutine(CorrodeUpdate());
+			coroutines.Add(Timing.RunCoroutine(DelayAction(1f, () => Timing.RunCoroutine(RotatePickup()))));
+			coroutines.Add(Timing.RunCoroutine(CorrodeUpdate()));
 		}
 
 		public void OnRoundEnd()
 		{
 			isRoundStarted = false;
+		}
+
+		public void OnRoundRestart()
+		{
+			// In case the round is force restarted
+			isRoundStarted = false;
+
+			foreach (CoroutineHandle handle in coroutines)
+			{
+				Timing.KillCoroutines(handle);
+			}
+			coroutines.Clear();
 		}
 
 		public void OnPickupItem(ref PickupItemEvent ev)
@@ -112,41 +127,34 @@ namespace scp035
 
 		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev)
 		{
-			List<Team> pList = Plugin.GetHubs().Select(x => Plugin.GetTeam(x.characterClassManager.CurClass)).ToList();
-			pList.Remove(pList.FirstOrDefault(x => x == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)));
+			List<Team> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer?.queryProcessor.PlayerId).Select(x => Plugin.GetTeam(x.characterClassManager.CurClass)).ToList();
+
+			/*Plugin.Info("CHAOS " + (pList.Contains(Team.CHI)).ToString());
+			Plugin.Info("CLASSD " + (pList.Contains(Team.CDP)).ToString());
+			Plugin.Info("MTF " + (pList.Contains(Team.MTF)).ToString());
+			Plugin.Info("SCIENTISTS " + (pList.Contains(Team.RSC)).ToString());
+			Plugin.Info("SCP " + (pList.Contains(Team.SCP)).ToString());
+			Plugin.Info("035 " + (scpPlayer != null).ToString());*/
 
 			// If everyone but SCPs and 035 or just 035 is alive, end the round
-			if ((!pList.Contains(Team.CHI) &&
-				!pList.Contains(Team.CDP) &&
-				!pList.Contains(Team.MTF) &&
-				!pList.Contains(Team.RSC) &&
-				((pList.Contains(Team.SCP) &&
-				scpPlayer != null) ||
-				!pList.Contains(Team.SCP) &&
-				scpPlayer != null)) ||
-				(Configs.winWithTutorial &&
-				!pList.Contains(Team.CHI) &&
-				!pList.Contains(Team.CDP) &&
-				!pList.Contains(Team.MTF) &&
-				!pList.Contains(Team.RSC) &&
-				pList.Contains(Team.TUT) &&
-				scpPlayer != null))
+			if ((!pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && ((pList.Contains(Team.SCP) && scpPlayer != null) || !pList.Contains(Team.SCP) && scpPlayer != null)) ||
+				(Configs.winWithTutorial && !pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && pList.Contains(Team.TUT) && scpPlayer != null))
 			{
-				if (Configs.changeToZombie)
-				{
-					scpPlayer.ChangeRole(RoleType.Scp0492, false);
-				}
-				else
-				{
+				//if (Configs.changeToZombie)
+				//{
+				//	scpPlayer.ChangeRole(RoleType.Scp0492, false);
+				//}
+				//else
+				//{
 					ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
 					ev.ForceEnd = true;
-				}
+				//}
 			}
 
 			// If 035 is the only scp alive keep the round going
 			else if (scpPlayer != null && !pList.Contains(Team.SCP))
 			{
-				ev.ForceEnd = false;
+				ev.Allow = false;
 			}
 		}
 
@@ -192,8 +200,7 @@ namespace scp035
 			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId)
 			{
 				ev.Allow = false;
-				// Teleport player to 096 room via assembly
-				//ev.Player.Teleport(instance.Server.Map.GetRandomSpawnPoint(Role.SCP_096));
+				ev.Player.plyMovementSync.OverridePosition(GameObject.FindObjectOfType<SpawnpointManager>().GetRandomPosition(RoleType.Scp096).transform.position, 0);
 			}
 		}
 	}
