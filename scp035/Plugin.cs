@@ -7,15 +7,20 @@ namespace scp035
 	{
 		private EventHandlers EventHandlers;
 
+		public static HarmonyInstance harmonyInstance { private set; get; }
+		public static int harmonyCounter;
+
 		private bool enabled;
 
 		public override void OnEnable()
 		{
-			HarmonyInstance.Create("scp035").PatchAll();
-
 			enabled = Config.GetBool("035_enabled", true);
 
 			if (!enabled) return;
+
+			harmonyCounter++;
+			harmonyInstance = HarmonyInstance.Create($"cyanox.scp035{harmonyCounter}");
+			harmonyInstance.PatchAll();
 
 			EventHandlers = new EventHandlers(this);
 

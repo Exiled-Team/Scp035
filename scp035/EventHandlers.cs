@@ -67,12 +67,10 @@ namespace scp035
 
 		public void OnPlayerHurt(ref PlayerHurtEvent ev)
 		{
-			// Remove friendly fire
 			if (ffPlayers.Contains(ev.Attacker.queryProcessor.PlayerId))
 			{
 				GrantFF(ev.Attacker);
 			}
-
 
 			if (scpPlayer != null)
 			{
@@ -119,8 +117,10 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
 		{
+			Plugin.Info("enter");
 			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && !Configs.scpFriendlyFire)
 			{
+				Plugin.Info("nope");
 				ev.Allow = false;
 			}
 		}
@@ -128,13 +128,6 @@ namespace scp035
 		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev)
 		{
 			List<Team> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer?.queryProcessor.PlayerId).Select(x => Plugin.GetTeam(x.characterClassManager.CurClass)).ToList();
-
-			/*Plugin.Info("CHAOS " + (pList.Contains(Team.CHI)).ToString());
-			Plugin.Info("CLASSD " + (pList.Contains(Team.CDP)).ToString());
-			Plugin.Info("MTF " + (pList.Contains(Team.MTF)).ToString());
-			Plugin.Info("SCIENTISTS " + (pList.Contains(Team.RSC)).ToString());
-			Plugin.Info("SCP " + (pList.Contains(Team.SCP)).ToString());
-			Plugin.Info("035 " + (scpPlayer != null).ToString());*/
 
 			// If everyone but SCPs and 035 or just 035 is alive, end the round
 			if ((!pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && ((pList.Contains(Team.SCP) && scpPlayer != null) || !pList.Contains(Team.SCP) && scpPlayer != null)) ||

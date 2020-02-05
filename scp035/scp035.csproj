@@ -75,6 +75,7 @@
     <Compile Include="Configs.cs" />
     <Compile Include="EventHandlers.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="Harmony\FootstepSyncPatch.cs" />
     <Compile Include="Harmony\HideTagPatch.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="Plugin.cs" />

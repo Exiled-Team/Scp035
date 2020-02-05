@@ -60,5 +60,10 @@ namespace scp035
 		{
 			player.GetComponent<Broadcast>().TargetAddElement(player.scp079PlayerScript.connectionToClient, message, time, monospaced);
 		}
+
+		public static void PlaceCorrosion(this ReferenceHub player)
+		{
+			player.characterClassManager.RpcPlaceBlood(player.transform.position, 1, 2f);
+		}
 	}
 }
