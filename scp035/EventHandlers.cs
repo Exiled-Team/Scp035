@@ -117,10 +117,8 @@ namespace scp035
 
 		public void OnPocketDimensionEnter(PocketDimEnterEvent ev)
 		{
-			Plugin.Info("enter");
 			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && !Configs.scpFriendlyFire)
 			{
-				Plugin.Info("nope");
 				ev.Allow = false;
 			}
 		}
@@ -133,15 +131,8 @@ namespace scp035
 			if ((!pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && ((pList.Contains(Team.SCP) && scpPlayer != null) || !pList.Contains(Team.SCP) && scpPlayer != null)) ||
 				(Configs.winWithTutorial && !pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && pList.Contains(Team.TUT) && scpPlayer != null))
 			{
-				//if (Configs.changeToZombie)
-				//{
-				//	scpPlayer.ChangeRole(RoleType.Scp0492, false);
-				//}
-				//else
-				//{
-					ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
-					ev.ForceEnd = true;
-				//}
+				ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+				ev.ForceEnd = true;
 			}
 
 			// If 035 is the only scp alive keep the round going

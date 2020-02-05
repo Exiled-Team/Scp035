@@ -15,7 +15,6 @@ namespace scp035
 		internal static bool tutorialFriendlyFire;
 		internal static bool useDamageOverride;
 		internal static bool winWithTutorial;
-		//internal static bool changeToZombie;
 		internal static bool corrodePlayers;
 		internal static bool corrodeLifeSteal;
 		internal static bool corrodeTrail;
@@ -32,7 +31,6 @@ namespace scp035
 			Configs.infectedItemCount = Plugin.Config.GetInt("035_infected_item_count", 1);
 			Configs.useDamageOverride = Plugin.Config.GetBool("035_use_damage_override", false);
 			Configs.winWithTutorial = Plugin.Config.GetBool("035_win_with_tutorial", false);
-			//Configs.changeToZombie = Plugin.Config.GetBool("035_change_to_zombie", true);
 			Configs.tutorialFriendlyFire = Plugin.Config.GetBool("035_tutorial_friendly_fire", false);
 			Configs.corrodePlayers = Plugin.Config.GetBool("035_corrode_players", true);
 			Configs.corrodeDistance = Plugin.Config.GetFloat("035_corrode_distance", 1.5f);

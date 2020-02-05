@@ -26,7 +26,6 @@ namespace scp035
 
 		private void RefreshItems()
 		{
-			// Check if player is in Overwatch mode, don't let them in the list if they are
 			if (Plugin.GetHubs().Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) == Team.RIP && !x.serverRoles.OverwatchEnabled).ToList().Count > 0)
 			{
 				RemovePossessedItems();
@@ -62,7 +61,6 @@ namespace scp035
 
 		private void InfectPlayer(ReferenceHub player, Pickup pItem)
 		{
-			// Check if player is in Overwatch mode, don't let them in the list if they are
 			List<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled).ToList();
 			if (pList.Count > 0 && scpPlayer == null)
 			{
