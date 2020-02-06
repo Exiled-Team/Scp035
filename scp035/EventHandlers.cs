@@ -187,5 +187,13 @@ namespace scp035
 				ev.Player.plyMovementSync.OverridePosition(GameObject.FindObjectOfType<SpawnpointManager>().GetRandomPosition(RoleType.Scp096).transform.position, 0);
 			}
 		}
+
+		public void OnUseMedicalItem(MedicalItemEvent ev)
+		{
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit))
+			{
+				ev.Allow = false;
+			}
+		}
 	}
 }

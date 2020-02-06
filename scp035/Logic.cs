@@ -87,6 +87,20 @@ namespace scp035
 				player.Broadcast("You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.", 10);
 
 				RemovePossessedItems();
+
+				if (Configs.corrodeHost)
+				{
+					coroutines.Add(Timing.RunCoroutine(CorrodeHost()));
+				}
+			}
+		}
+
+		private IEnumerator<float> CorrodeHost()
+		{
+			while (scpPlayer != null)
+			{
+				scpPlayer.Damage(Configs.corrodeHostAmount, DamageTypes.Nuke);
+				yield return Timing.WaitForSeconds(Configs.corrodeHostInterval);
 			}
 		}
 

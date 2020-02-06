@@ -10,6 +10,7 @@ namespace scp035
 		internal static int infectedItemCount;
 		internal static int corrodeDamage;
 		internal static int corrodeTrailInterval;
+		internal static int corrodeHostAmount;
 
 		internal static bool scpFriendlyFire;
 		internal static bool tutorialFriendlyFire;
@@ -18,10 +19,12 @@ namespace scp035
 		internal static bool corrodePlayers;
 		internal static bool corrodeLifeSteal;
 		internal static bool corrodeTrail;
+		internal static bool corrodeHost;
 
 		internal static float corrodeDistance;
 		internal static float rotateInterval;
 		internal static float corrodeInterval;
+		internal static float corrodeHostInterval;
 
 		internal static void ReloadConfig()
 		{
@@ -40,6 +43,9 @@ namespace scp035
 			Configs.possibleItems = Plugin.Config.GetIntList("035_possible_items");
 			Configs.corrodeTrail = Plugin.Config.GetBool("035_corrode_trail", false);
 			Configs.corrodeTrailInterval = Plugin.Config.GetInt("035_corrode_trail_interval", 5);
+			Configs.corrodeHost = Plugin.Config.GetBool("035_corrode_host", false);
+			Configs.corrodeHostInterval = Plugin.Config.GetFloat("035_corrode_host_interval", 15);
+			Configs.corrodeHostAmount = Plugin.Config.GetInt("035_corrode_host_amount", 5);
 			if (Configs.possibleItems == null || Configs.possibleItems.Count == 0)
 			{
 				Configs.possibleItems = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 30 };

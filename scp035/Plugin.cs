@@ -41,6 +41,7 @@ namespace scp035
 			Events.GeneratorInsertedEvent += EventHandlers.OnInsertTablet;
 			Events.PocketDimDeathEvent += EventHandlers.OnPocketDimensionDie;
 			Events.ShootEvent += EventHandlers.OnShoot;
+			Events.UseMedicalItemEvent += EventHandlers.OnUseMedicalItem;
 		}
 
 		public override void OnDisable()
@@ -61,6 +62,7 @@ namespace scp035
 			Events.GeneratorInsertedEvent -= EventHandlers.OnInsertTablet;
 			Events.PocketDimDeathEvent -= EventHandlers.OnPocketDimensionDie;
 			Events.ShootEvent -= EventHandlers.OnShoot;
+			Events.UseMedicalItemEvent -= EventHandlers.OnUseMedicalItem;
 
 			EventHandlers = null;
 		}
