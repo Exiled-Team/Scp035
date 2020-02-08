@@ -2,7 +2,7 @@
 
 namespace scp035.Harmony
 {
-	[HarmonyPatch(typeof(CharacterClassManager), "CmdRequestHideTag")]
+	[HarmonyPatch(typeof(CharacterClassManager), nameof(CharacterClassManager.CallCmdRequestHideTag))]
 	class HideTagPatch
 	{
 		private static bool Prefix(CharacterClassManager __instance)
