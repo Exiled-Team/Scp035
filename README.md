@@ -27,3 +27,6 @@ Place the "scp035.dll" file in your sm_plugins folder.
 | 035_corrode_life_steal | Boolean | True | If SCP-035 should steal any health taken from other players by corrosion. |
 | 035_corrode_trail | Boolean | True | If SCP-035 should leave behind a trail of corrosion when he walks. |
 | 035_corrode_trail_interval | Integer | 5 | The amount of steps inbetween each corrosion decal placement. |
+| 035_corrode_host | Boolean | False | Whether or not 035 should slowly kill his host body. This will prevent him from using medical items. |
+| 035_corrode_host_interval | Float | 15 | How often to deal damage to 035's host. |
+| 035_corrode_host_amount | Integer | 5 | The amount of damage to deal every host corrosion. |
