@@ -3,14 +3,6 @@ using UnityEngine;
 
 namespace scp035
 {
-	public enum AmmoType
-	{
-		NONE = -1,
-		DROPPED_5 = 0,
-		DROPPED_7 = 1,
-		DROPPED_9 = 2
-	}
-
 	public static class Extensions
 	{
 		public static void ChangeRole(this ReferenceHub player, RoleType role, bool spawnTeleport = true)
