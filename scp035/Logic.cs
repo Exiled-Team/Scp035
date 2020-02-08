@@ -46,8 +46,10 @@ namespace scp035
 
 		private void KillScp035(bool setRank = true)
 		{
+			Plugin.Info("killing 035");
 			if (setRank)
 			{
+				scpPlayer.SetRank("", "default");
 				scpPlayer.RefreshTag();
 				if (isHidden)
 				{
@@ -99,7 +101,7 @@ namespace scp035
 		{
 			while (scpPlayer != null)
 			{
-				scpPlayer.Damage(Configs.corrodeHostAmount, DamageTypes.Nuke);
+				scpPlayer.playerStats.health -= Configs.corrodeHostAmount;
 				yield return Timing.WaitForSeconds(Configs.corrodeHostInterval);
 			}
 		}

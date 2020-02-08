@@ -18,6 +18,7 @@ namespace scp035
 		private bool isHidden;
 		private bool isRoundStarted;
 		private bool isRotating;
+		// Arbitrary number to keep track of items
 		private const float dur = 327;
 		private System.Random rand = new System.Random();
 
@@ -33,6 +34,7 @@ namespace scp035
 			isRoundStarted = true;
 			isRotating = true;
 			scpPickups.Clear();
+			ffPlayers.Clear();
 			scpPlayer = null;
 
 			coroutines.Add(Timing.RunCoroutine(DelayAction(1f, () => Timing.RunCoroutine(RotatePickup()))));
@@ -99,8 +101,23 @@ namespace scp035
 		{
 			if (ev.Target == null || scpPlayer == null) return;
 			ReferenceHub target = Plugin.GetPlayer(ev.Target);
+			if (target == null) return;
 
-			if ((ev.Shooter.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && Plugin.GetTeam(target.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)) || (target.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)))
+			if ((ev.Shooter.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
+				Plugin.GetTeam(target.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass))
+				|| (target.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
+				Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)))
+			{
+				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
+				ffPlayers.Add(ev.Shooter.queryProcessor.PlayerId);
+			}
+
+			// If friendly fire is off, to allow for chaos and dclass to hurt eachother
+			if ((ev.Shooter.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId || target.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId) &&
+				(((Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.CDP && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.CHI)
+				|| (Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.CHI && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.CDP)) || 
+				((Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.RSC && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.MTF)
+				|| (Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.MTF && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.RSC))))
 			{
 				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
 				ffPlayers.Add(ev.Shooter.queryProcessor.PlayerId);
@@ -136,7 +153,7 @@ namespace scp035
 			}
 
 			// If 035 is the only scp alive keep the round going
-			else if (scpPlayer != null && !pList.Contains(Team.SCP))
+			else if (scpPlayer != null && !pList.Contains(Team.SCP) && (pList.Contains(Team.CDP) || pList.Contains(Team.CHI) || pList.Contains(Team.MTF) || pList.Contains(Team.RSC)))
 			{
 				ev.Allow = false;
 			}

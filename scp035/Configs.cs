@@ -44,7 +44,7 @@ namespace scp035
 			Configs.corrodeTrail = Plugin.Config.GetBool("035_corrode_trail", false);
 			Configs.corrodeTrailInterval = Plugin.Config.GetInt("035_corrode_trail_interval", 5);
 			Configs.corrodeHost = Plugin.Config.GetBool("035_corrode_host", false);
-			Configs.corrodeHostInterval = Plugin.Config.GetFloat("035_corrode_host_interval", 15f);
+			Configs.corrodeHostInterval = Plugin.Config.GetFloat("035_corrode_host_interval", 6f);
 			Configs.corrodeHostAmount = Plugin.Config.GetInt("035_corrode_host_amount", 5);
 			if (Configs.possibleItems == null || Configs.possibleItems.Count == 0)
 			{
