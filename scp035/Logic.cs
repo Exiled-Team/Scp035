@@ -71,7 +71,7 @@ namespace scp035
 				ReferenceHub p035 = pList[rand.Next(pList.Count)];
 				Vector3 pos = player.transform.position;
 				p035.ChangeRole(player.characterClassManager.CurClass);
-				Timing.RunCoroutine(DelayAction(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0)));
+				Timing.CallDelayed(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0));
 
 				foreach (Inventory.SyncItemInfo item in player.inventory.items) p035.inventory.AddNewItem(item.id);
 				p035.playerStats.health = Configs.health;
@@ -102,6 +102,11 @@ namespace scp035
 			while (scpPlayer != null)
 			{
 				scpPlayer.playerStats.health -= Configs.corrodeHostAmount;
+				if (scpPlayer.playerStats.health <= 0)
+				{
+					scpPlayer.Damage(10000, DamageTypes.Nuke);
+					KillScp035();
+				}
 				yield return Timing.WaitForSeconds(Configs.corrodeHostInterval);
 			}
 		}
