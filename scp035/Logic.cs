@@ -35,8 +35,8 @@ namespace scp035
 					Pickup a = PlayerManager.localPlayer
 						.GetComponent<Inventory>().SetPickup((ItemType)Configs.possibleItems[rand.Next(Configs.possibleItems.Count)],
 						-4.656647E+11f,
-						new Vector3(p.transform.position.x, p.transform.position.y, p.transform.position.z),
-						new Quaternion(p.transform.rotation.x, p.transform.rotation.y, p.transform.rotation.z, p.transform.rotation.w),
+						p.transform.position,
+						p.transform.rotation,
 						0, 0, 0).GetComponent<Pickup>();
 					scpPickups.Add(a, a.info.durability);
 					a.info.durability = dur;

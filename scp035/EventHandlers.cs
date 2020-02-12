@@ -207,7 +207,7 @@ namespace scp035
 
 		public void OnUseMedicalItem(MedicalItemEvent ev)
 		{
-			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit))
+			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500))
 			{
 				ev.Allow = false;
 			}
