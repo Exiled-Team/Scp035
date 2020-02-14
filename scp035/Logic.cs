@@ -46,15 +46,11 @@ namespace scp035
 
 		private void KillScp035(bool setRank = true)
 		{
-			Plugin.Info("killing 035");
 			if (setRank)
 			{
 				scpPlayer.SetRank("", "default");
-				scpPlayer.RefreshTag();
-				if (isHidden)
-				{
-					scpPlayer.HideTag();
-				}
+				if (hasTag) scpPlayer.RefreshTag();
+				if (isHidden) scpPlayer.HideTag();
 			}
 			scpPlayer = null;
 			isRotating = true;
@@ -77,8 +73,9 @@ namespace scp035
 				p035.playerStats.health = Configs.health;
 				p035.ammoBox.Networkamount = "250:250:250";
 
-				isHidden = p035.serverRoles.HiddenBadge != null;
-				p035.RefreshTag();
+				hasTag = !string.IsNullOrEmpty(p035.serverRoles.NetworkMyText);
+				isHidden = !string.IsNullOrEmpty(p035.serverRoles.HiddenBadge);
+				if (isHidden) p035.RefreshTag();
 				p035.SetRank("SCP-035", "red");
 
 				p035.Broadcast("<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>\nYou have infected a body and have gained control over it, use it to help the other SCPs!", 10);
@@ -104,7 +101,7 @@ namespace scp035
 				scpPlayer.playerStats.health -= Configs.corrodeHostAmount;
 				if (scpPlayer.playerStats.health <= 0)
 				{
-					scpPlayer.Damage(10000, DamageTypes.Nuke);
+					scpPlayer.ChangeRole(RoleType.Spectator);
 					KillScp035();
 				}
 				yield return Timing.WaitForSeconds(Configs.corrodeHostInterval);

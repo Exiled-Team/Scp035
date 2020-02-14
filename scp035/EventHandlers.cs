@@ -16,6 +16,7 @@ namespace scp035
 		private List<int> ffPlayers = new List<int>();
 		internal static ReferenceHub scpPlayer;
 		private bool isHidden;
+		private bool hasTag;
 		private bool isRoundStarted;
 		private bool isRotating;
 		// Arbitrary number to keep track of items
@@ -37,13 +38,16 @@ namespace scp035
 			ffPlayers.Clear();
 			scpPlayer = null;
 
-			coroutines.Add(Timing.RunCoroutine(DelayAction(1f, () => Timing.RunCoroutine(RotatePickup()))));
+			coroutines.Add(Timing.CallDelayed(1f, () => Timing.RunCoroutine(RotatePickup())));
 			coroutines.Add(Timing.RunCoroutine(CorrodeUpdate()));
 		}
 
 		public void OnRoundEnd()
 		{
 			isRoundStarted = false;
+
+			Timing.KillCoroutines(coroutines);
+			coroutines.Clear();
 		}
 
 		public void OnRoundRestart()
@@ -51,10 +55,7 @@ namespace scp035
 			// In case the round is force restarted
 			isRoundStarted = false;
 
-			foreach (CoroutineHandle handle in coroutines)
-			{
-				Timing.KillCoroutines(handle);
-			}
+			Timing.KillCoroutines(coroutines);
 			coroutines.Clear();
 		}
 
