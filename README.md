@@ -16,7 +16,6 @@ Place the "scp035.dll" file in your Plugins folder.
 | 035_rotate_interval | Float | 120 | The amount of time in seconds before SCP-035 will choose a new item on the map to disguise as. |
 | 035_scp_friendly_fire | Boolean | False | If SCP-035 is allowed to damage other SCPs. |
 | 035_infected_item_count | Integer | 1 | The number of items every refresh that are possessed by SCP-035. |
-| 035_use_damage_override | Boolean | False | If the plugin should override AdmintoolBox's damage blockers. |
 | 035_win_with_tutorial | Boolean | False | If SCP-035 should win with tutorials. |
 | 035_tutorial_friendly_fire | Boolean | False | If friendly fire between SCP-035 and tutorials is enabled. |
 | 035_corrode_players | Boolean | True | If SCP-035 should do passive damage to players within a range of him. |
