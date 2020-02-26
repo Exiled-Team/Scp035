@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using MEC;
 using System;
+using EXILED.Extensions;
+using EXILED;
 
 namespace scp035
 {
@@ -26,7 +28,7 @@ namespace scp035
 
 		private void RefreshItems()
 		{
-			if (Plugin.GetHubs().Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) == Team.RIP && !x.serverRoles.OverwatchEnabled).ToList().Count > 0)
+			if (Player.GetHubs().Where(x => Player.GetTeam(x) == Team.RIP && !x.serverRoles.OverwatchEnabled).ToList().Count > 0)
 			{
 				RemovePossessedItems();
 				for (int i = 0; i < Configs.infectedItemCount; i++)
@@ -59,12 +61,15 @@ namespace scp035
 
 		private void InfectPlayer(ReferenceHub player, Pickup pItem)
 		{
-			List<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled).ToList();
+			List<ReferenceHub> pList = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled && x.characterClassManager.UserId != null && x.characterClassManager.UserId != string.Empty).ToList();
 			if (pList.Count > 0 && scpPlayer == null)
 			{
 				pItem.Delete();
 
 				ReferenceHub p035 = pList[rand.Next(pList.Count)];
+				Log.Info(p035.nicknameSync.Network_myNickSync);
+				Log.Info(p035.characterClassManager.UserId);
+				Log.Info(p035.characterClassManager.CurClass.ToString());
 				Vector3 pos = player.transform.position;
 				p035.ChangeRole(player.characterClassManager.CurClass);
 				Timing.CallDelayed(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0));
@@ -128,9 +133,9 @@ namespace scp035
 				{
 					if (scpPlayer != null)
 					{
-						IEnumerable<ReferenceHub> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer.queryProcessor.PlayerId);
-						if (!Configs.scpFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.SCP);
-						if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => Plugin.GetTeam(x.characterClassManager.CurClass) != Team.TUT);
+						IEnumerable<ReferenceHub> pList = Player.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer.queryProcessor.PlayerId);
+						if (!Configs.scpFriendlyFire) pList = pList.Where(x => Player.GetTeam(x) != Team.SCP);
+						if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => Player.GetTeam(x) != Team.TUT);
 						foreach (ReferenceHub player in pList)
 						{
 							if (player != null && Vector3.Distance(scpPlayer.transform.position, player.transform.position) <= Configs.corrodeDistance)

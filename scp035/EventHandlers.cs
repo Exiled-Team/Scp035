@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using EXILED;
+using EXILED.Extensions;
 using MEC;
 using UnityEngine;
 
@@ -32,11 +32,11 @@ namespace scp035
 
 		public void OnRoundStart()
 		{
+			scpPlayer = null;
 			isRoundStarted = true;
 			isRotating = true;
 			scpPickups.Clear();
 			ffPlayers.Clear();
-			scpPlayer = null;
 
 			coroutines.Add(Timing.CallDelayed(1f, () => Timing.RunCoroutine(RotatePickup())));
 			coroutines.Add(Timing.RunCoroutine(CorrodeUpdate()));
@@ -79,9 +79,9 @@ namespace scp035
 			{
 				if (!Configs.scpFriendlyFire &&
 					((ev.Attacker.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
-					Plugin.GetTeam(ev.Player.characterClassManager.CurClass) == Team.SCP) ||
+					Player.GetTeam(ev.Player) == Team.SCP) ||
 					(ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
-					Plugin.GetTeam(ev.Attacker.characterClassManager.CurClass) == Team.SCP)))
+					Player.GetTeam(ev.Attacker) == Team.SCP)))
 				{
 					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
 				}
@@ -89,9 +89,9 @@ namespace scp035
 				if (!Configs.tutorialFriendlyFire &&
 					ev.Attacker.queryProcessor.PlayerId != ev.Player.queryProcessor.PlayerId &&
 					((ev.Attacker.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
-					Plugin.GetTeam(ev.Player.characterClassManager.CurClass) == Team.TUT) ||
+					Player.GetTeam(ev.Player) == Team.TUT) ||
 					(ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
-					Plugin.GetTeam(ev.Attacker.characterClassManager.CurClass) == Team.TUT)))
+					Player.GetTeam(ev.Attacker) == Team.TUT)))
 				{
 					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
 				}
@@ -101,13 +101,13 @@ namespace scp035
 		public void OnShoot(ref ShootEvent ev)
 		{
 			if (ev.Target == null || scpPlayer == null) return;
-			ReferenceHub target = Plugin.GetPlayer(ev.Target);
+			ReferenceHub target = Player.GetPlayer(ev.Target);
 			if (target == null) return;
 
 			if ((ev.Shooter.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
-				Plugin.GetTeam(target.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass))
+				Player.GetTeam(target) == Player.GetTeam(scpPlayer))
 				|| (target.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
-				Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Plugin.GetTeam(scpPlayer.characterClassManager.CurClass)))
+				Player.GetTeam(ev.Shooter) == Player.GetTeam(scpPlayer)))
 			{
 				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
 				ffPlayers.Add(ev.Shooter.queryProcessor.PlayerId);
@@ -115,10 +115,10 @@ namespace scp035
 
 			// If friendly fire is off, to allow for chaos and dclass to hurt eachother
 			if ((ev.Shooter.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId || target.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId) &&
-				(((Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.CDP && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.CHI)
-				|| (Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.CHI && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.CDP)) || 
-				((Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.RSC && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.MTF)
-				|| (Plugin.GetTeam(ev.Shooter.characterClassManager.CurClass) == Team.MTF && Plugin.GetTeam(target.characterClassManager.CurClass) == Team.RSC))))
+				(((Player.GetTeam(ev.Shooter) == Team.CDP && Player.GetTeam(target) == Team.CHI)
+				|| (Player.GetTeam(ev.Shooter) == Team.CHI && Player.GetTeam(target) == Team.CDP)) || 
+				((Player.GetTeam(ev.Shooter) == Team.RSC && Player.GetTeam(target) == Team.MTF)
+				|| (Player.GetTeam(ev.Shooter) == Team.MTF && Player.GetTeam(target) == Team.RSC))))
 			{
 				ev.Shooter.weaponManager.NetworkfriendlyFire = true;
 				ffPlayers.Add(ev.Shooter.queryProcessor.PlayerId);
@@ -143,7 +143,7 @@ namespace scp035
 
 		public void OnCheckRoundEnd(ref CheckRoundEndEvent ev)
 		{
-			List<Team> pList = Plugin.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer?.queryProcessor.PlayerId).Select(x => Plugin.GetTeam(x.characterClassManager.CurClass)).ToList();
+			List<Team> pList = Player.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer?.queryProcessor.PlayerId).Select(x => Player.GetTeam(x)).ToList();
 
 			// If everyone but SCPs and 035 or just 035 is alive, end the round
 			if ((!pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && ((pList.Contains(Team.SCP) && scpPlayer != null) || !pList.Contains(Team.SCP) && scpPlayer != null)) ||
