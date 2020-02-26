@@ -45,7 +45,6 @@ namespace scp035
 		public void OnRoundEnd()
 		{
 			isRoundStarted = false;
-			scpPlayer = null;
 
 			Timing.KillCoroutines(coroutines);
 			coroutines.Clear();
@@ -55,7 +54,6 @@ namespace scp035
 		{
 			// In case the round is force restarted
 			isRoundStarted = false;
-			scpPlayer = null;
 
 			Timing.KillCoroutines(coroutines);
 			coroutines.Clear();
