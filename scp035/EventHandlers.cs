@@ -32,11 +32,11 @@ namespace scp035
 
 		public void OnRoundStart()
 		{
-			scpPlayer = null;
 			isRoundStarted = true;
 			isRotating = true;
 			scpPickups.Clear();
 			ffPlayers.Clear();
+			scpPlayer = null;
 
 			coroutines.Add(Timing.CallDelayed(1f, () => Timing.RunCoroutine(RotatePickup())));
 			coroutines.Add(Timing.RunCoroutine(CorrodeUpdate()));
@@ -45,6 +45,7 @@ namespace scp035
 		public void OnRoundEnd()
 		{
 			isRoundStarted = false;
+			scpPlayer = null;
 
 			Timing.KillCoroutines(coroutines);
 			coroutines.Clear();
@@ -54,6 +55,7 @@ namespace scp035
 		{
 			// In case the round is force restarted
 			isRoundStarted = false;
+			scpPlayer = null;
 
 			Timing.KillCoroutines(coroutines);
 			coroutines.Clear();
