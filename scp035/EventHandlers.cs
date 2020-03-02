@@ -12,18 +12,18 @@ namespace scp035
 		public Plugin plugin;
 		public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
-		private Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
+		private static Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
 		private List<int> ffPlayers = new List<int>();
 		internal static ReferenceHub scpPlayer;
-		private bool isHidden;
-		private bool hasTag;
+		private static bool isHidden;
+		private static bool hasTag;
 		private bool isRoundStarted;
-		private bool isRotating;
+		private static bool isRotating;
 		// Arbitrary number to keep track of items
 		private const float dur = 327;
-		private System.Random rand = new System.Random();
+		private static System.Random rand = new System.Random();
 
-		private List<CoroutineHandle> coroutines = new List<CoroutineHandle>();
+		private static List<CoroutineHandle> coroutines = new List<CoroutineHandle>();
 
 		public void OnWaitingForPlayers()
 		{
@@ -83,7 +83,7 @@ namespace scp035
 					(ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
 					Player.GetTeam(ev.Attacker) == Team.SCP)))
 				{
-					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
+					ev.Amount = 0f;
 				}
 
 				if (!Configs.tutorialFriendlyFire &&
@@ -93,7 +93,7 @@ namespace scp035
 					(ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId &&
 					Player.GetTeam(ev.Attacker) == Team.TUT)))
 				{
-					ev.Info = new PlayerStats.HitInfo(0f, ev.Attacker.nicknameSync.name, ev.Info.GetDamageType(), ev.Attacker.queryProcessor.PlayerId);
+					ev.Amount = 0f;
 				}
 			}
 		}

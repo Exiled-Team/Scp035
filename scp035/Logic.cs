@@ -10,7 +10,7 @@ namespace scp035
 {
 	partial class EventHandlers
 	{
-		private void RemovePossessedItems()
+		private static void RemovePossessedItems()
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
@@ -20,13 +20,13 @@ namespace scp035
 			scpPickups.Clear();
 		}
 
-		private Pickup GetRandomItem()
+		private static Pickup GetRandomItem()
 		{
 			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => !scpPickups.ContainsKey(x)).ToList();
 			return pickups[rand.Next(pickups.Count)];
 		}
 
-		private void RefreshItems()
+		private static void RefreshItems()
 		{
 			if (Player.GetHubs().Where(x => Player.GetTeam(x) == Team.RIP && !x.serverRoles.OverwatchEnabled).ToList().Count > 0)
 			{
@@ -46,7 +46,7 @@ namespace scp035
 			}
 		}
 
-		private void KillScp035(bool setRank = true)
+		private static void KillScp035(bool setRank = true)
 		{
 			if (setRank)
 			{
@@ -59,12 +59,15 @@ namespace scp035
 			RefreshItems();
 		}
 
-		private void InfectPlayer(ReferenceHub player, Pickup pItem)
+		public static void InfectPlayer(ReferenceHub player, Pickup pItem = null)
 		{
 			List<ReferenceHub> pList = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled && x.characterClassManager.UserId != null && x.characterClassManager.UserId != string.Empty).ToList();
 			if (pList.Count > 0 && scpPlayer == null)
 			{
-				pItem.Delete();
+				if (pItem != null)
+				{
+					pItem.Delete();
+				}
 
 				ReferenceHub p035 = pList[rand.Next(pList.Count)];
 				Log.Info(p035.nicknameSync.Network_myNickSync);
@@ -99,7 +102,7 @@ namespace scp035
 			}
 		}
 
-		private IEnumerator<float> CorrodeHost()
+		private static IEnumerator<float> CorrodeHost()
 		{
 			while (scpPlayer != null)
 			{
