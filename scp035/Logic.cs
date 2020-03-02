@@ -61,8 +61,9 @@ namespace scp035
 
 		public static void InfectPlayer(ReferenceHub player, Pickup pItem = null)
 		{
+			scpPlayer = null;
 			List<ReferenceHub> pList = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled && x.characterClassManager.UserId != null && x.characterClassManager.UserId != string.Empty).ToList();
-			if (pList.Count > 0 && scpPlayer == null)
+			if (pList.Count > 0)
 			{
 				if (pItem != null)
 				{
