@@ -61,9 +61,6 @@ namespace scp035
 
 		public static void Spawn035(ReferenceHub p035, ReferenceHub player = null, bool full = true)
 		{
-			Log.Info(p035.nicknameSync.Network_myNickSync);
-			Log.Info(p035.characterClassManager.UserId);
-			Log.Info(p035.characterClassManager.CurClass.ToString());
 			if (full)
 			{
 				if (player != null)
