@@ -7,9 +7,9 @@
 			return EventHandlers.scpPlayer;
 		}
 
-		public static void Make035(ReferenceHub player)
+		public static void Spawn035(ReferenceHub player)
 		{
-			EventHandlers.InfectPlayer(player);
+			EventHandlers.Spawn035(player, null, false);
 		}
 	}
 }

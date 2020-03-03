@@ -59,36 +59,44 @@ namespace scp035
 			RefreshItems();
 		}
 
-		public static void InfectPlayer(ReferenceHub player, Pickup pItem = null)
+		public static void Spawn035(ReferenceHub p035, ReferenceHub player = null, bool full = true)
 		{
-			scpPlayer = null;
-			List<ReferenceHub> pList = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled && x.characterClassManager.UserId != null && x.characterClassManager.UserId != string.Empty).ToList();
-			if (pList.Count > 0)
+			Log.Info(p035.nicknameSync.Network_myNickSync);
+			Log.Info(p035.characterClassManager.UserId);
+			Log.Info(p035.characterClassManager.CurClass.ToString());
+			if (full)
 			{
-				if (pItem != null)
+				if (player != null)
 				{
-					pItem.Delete();
+					Vector3 pos = player.transform.position;
+					p035.ChangeRole(player.characterClassManager.CurClass);
+					Timing.CallDelayed(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0));
+
+					foreach (Inventory.SyncItemInfo item in player.inventory.items) p035.inventory.AddNewItem(item.id);
 				}
-
-				ReferenceHub p035 = pList[rand.Next(pList.Count)];
-				Log.Info(p035.nicknameSync.Network_myNickSync);
-				Log.Info(p035.characterClassManager.UserId);
-				Log.Info(p035.characterClassManager.CurClass.ToString());
-				Vector3 pos = player.transform.position;
-				p035.ChangeRole(player.characterClassManager.CurClass);
-				Timing.CallDelayed(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0));
-
-				foreach (Inventory.SyncItemInfo item in player.inventory.items) p035.inventory.AddNewItem(item.id);
 				p035.playerStats.health = Configs.health;
 				p035.ammoBox.Networkamount = "250:250:250";
+			}
 
-				hasTag = !string.IsNullOrEmpty(p035.serverRoles.NetworkMyText);
-				isHidden = !string.IsNullOrEmpty(p035.serverRoles.HiddenBadge);
-				if (isHidden) p035.RefreshTag();
-				p035.SetRank("SCP-035", "red");
+			hasTag = !string.IsNullOrEmpty(p035.serverRoles.NetworkMyText);
+			isHidden = !string.IsNullOrEmpty(p035.serverRoles.HiddenBadge);
+			if (isHidden) p035.RefreshTag();
+			p035.SetRank("SCP-035", "red");
 
-				p035.Broadcast("<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>\nYou have infected a body and have gained control over it, use it to help the other SCPs!", 10);
-				scpPlayer = p035;
+			p035.Broadcast($"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\nYou have infected a body and have gained control over it, use it to help the other SCPs!" : string.Empty)}", 10);
+
+			scpPlayer = p035;
+		}
+
+		public static void InfectPlayer(ReferenceHub player, Pickup pItem)
+		{
+			List<ReferenceHub> pList = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled && x.characterClassManager.UserId != null && x.characterClassManager.UserId != string.Empty).ToList();
+			if (pList.Count > 0 && scpPlayer == null)
+			{
+				pItem.Delete();
+
+				Spawn035(pList[rand.Next(pList.Count)], player);
+
 				isRotating = false;
 
 				player.ChangeRole(RoleType.Spectator);
