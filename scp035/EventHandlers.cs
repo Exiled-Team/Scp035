@@ -19,6 +19,7 @@ namespace scp035
 		private static bool hasTag;
 		private bool isRoundStarted;
 		private static bool isRotating;
+		private static int maxHP;
 		// Arbitrary number to keep track of items
 		private const float dur = 327;
 		private static System.Random rand = new System.Random();
@@ -208,7 +209,7 @@ namespace scp035
 
 		public void OnUseMedicalItem(MedicalItemEvent ev)
 		{
-			if (ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500))
+			if (!Configs.canUseMedicalItems && ev.Player.queryProcessor.PlayerId == scpPlayer?.queryProcessor.PlayerId && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500))
 			{
 				ev.Allow = false;
 			}
