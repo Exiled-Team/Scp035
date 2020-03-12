@@ -8,6 +8,10 @@ Adds a passive SCP to the game. A certain amount of items will randomly be selec
 
 Place the "scp035.dll" file in your Plugins folder.
 
+See [this page](https://github.com/Cyanox62/scp035/wiki/API) for API usage.
+
+# Configs
+
 | Config        | Type | Default | Description
 | :-------------: | :---------: | :---------: | :------ |
 | 035_enabled | Boolean | True | If SCP-035 is enabled. |
