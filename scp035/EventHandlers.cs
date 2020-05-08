@@ -23,7 +23,6 @@ namespace scp035
 		private static bool isRotating;
 		private static int maxHP;
 		// Arbitrary number to keep track of items
-		private const float dur = 327;
 		private static System.Random rand = new System.Random();
 
 		private static List<CoroutineHandle> coroutines = new List<CoroutineHandle>();
