@@ -4,7 +4,6 @@ using UnityEngine;
 using MEC;
 using System;
 using EXILED.Extensions;
-using EXILED;
 
 namespace scp035
 {
@@ -54,7 +53,10 @@ namespace scp035
 				if (hasTag) scpPlayer.RefreshTag();
 				if (isHidden) scpPlayer.HideTag();
 			}
-			scpPlayer.playerStats.maxHP = maxHP;
+			if (Configs.canHealBeyondHostHP)
+			{
+				scpPlayer.playerStats.maxHP = maxHP;
+			}
 			scpPlayer = null;
 			isRotating = true;
 			RefreshItems();
@@ -73,7 +75,10 @@ namespace scp035
 					foreach (Inventory.SyncItemInfo item in player.inventory.items) p035.inventory.AddNewItem(item.id);
 				}
 				maxHP = p035.playerStats.maxHP;
-				p035.playerStats.maxHP = Configs.health;
+				if (Configs.canHealBeyondHostHP)
+				{
+					p035.playerStats.maxHP = Configs.health;
+				}
 				p035.playerStats.health = Configs.health;
 				p035.ammoBox.Networkamount = "250:250:250";
 			}

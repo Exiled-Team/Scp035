@@ -20,6 +20,7 @@ namespace scp035
 		internal static bool corrodeTrail;
 		internal static bool corrodeHost;
 		internal static bool canUseMedicalItems;
+		internal static bool canHealBeyondHostHP;
 
 		internal static float corrodeDistance;
 		internal static float rotateInterval;
@@ -46,6 +47,7 @@ namespace scp035
 			Configs.corrodeHostInterval = Plugin.Config.GetFloat("035_corrode_host_interval", 6f);
 			Configs.corrodeHostAmount = Plugin.Config.GetInt("035_corrode_host_amount", 5);
 			Configs.canUseMedicalItems = Plugin.Config.GetBool("035_can_use_medical_items", true);
+			Configs.canHealBeyondHostHP = Plugin.Config.GetBool("035_can_heal_beyond_host_hp", true);
 			if (Configs.possibleItems == null || Configs.possibleItems.Count == 0)
 			{
 				Configs.possibleItems = new List<int>() { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 27, 30, 33, 34 };
