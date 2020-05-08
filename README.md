@@ -8,6 +8,10 @@ Adds a passive SCP to the game. A certain amount of items will randomly be selec
 
 Place the "scp035.dll" file in your Plugins folder.
 
+See [this page](https://github.com/Cyanox62/scp035/wiki/API) for API usage.
+
+# Configs
+
 | Config        | Type | Default | Description
 | :-------------: | :---------: | :---------: | :------ |
 | 035_enabled | Boolean | True | If SCP-035 is enabled. |
@@ -28,3 +32,4 @@ Place the "scp035.dll" file in your Plugins folder.
 | 035_corrode_host | Boolean | False | Whether or not 035 should slowly kill his host body. This will prevent him from using medical items. |
 | 035_corrode_host_interval | Float | 15 | How often to deal damage to 035's host. |
 | 035_corrode_host_amount | Integer | 5 | The amount of damage to deal every host corrosion. |
+| 035_can_use_medical_items| Boolean | True | Determines whether or not SCP-035 can use medical items. |
