@@ -165,12 +165,6 @@ namespace scp035
 			}
 		}
 
-		public static IEnumerator<float> DelayAction(float delay, Action x)
-		{
-			yield return Timing.WaitForSeconds(delay);
-			x();
-		}
-
 		private void CorrodePlayer(ReferenceHub player)
 		{
 			if (Configs.corrodeLifeSteal && scpPlayer != null)

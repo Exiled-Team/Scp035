@@ -12,7 +12,7 @@ namespace scp035
 				Vector3 pos = player.transform.position;
 				Plugin.Info(pos.ToString());
 				player.characterClassManager.SetClassID(role);
-				Timing.RunCoroutine(EventHandlers.DelayAction(0.5f, () => player.plyMovementSync.OverridePosition(pos, 0)));
+				Timing.CallDelayed(0.5f, () => player.plyMovementSync.OverridePosition(pos, 0));
 			}
 			else
 			{
