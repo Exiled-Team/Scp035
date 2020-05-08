@@ -14,7 +14,7 @@ namespace scp035
 		public Plugin plugin;
 		public EventHandlers(Plugin plugin) => this.plugin = plugin;
 
-		private static Dictionary<Pickup, float> scpPickups = new Dictionary<Pickup, float>();
+		private static List<Pickup> scpPickups = new List<Pickup>();
 		private List<int> ffPlayers = new List<int>();
 		internal static ReferenceHub scpPlayer;
 		private static bool isHidden;
@@ -64,7 +64,7 @@ namespace scp035
 
 		public void OnPickupItem(ref PickupItemEvent ev)
 		{
-			if (ev.Item.info.durability == dur)
+			if (scpPickups.Contains(ev.Item))
 			{
 				ev.Allow = false;
 				InfectPlayer(ev.Player, ev.Item);
@@ -160,6 +160,7 @@ namespace scp035
 			else if (scpPlayer != null && !pList.Contains(Team.SCP) && (pList.Contains(Team.CDP) || pList.Contains(Team.CHI) || pList.Contains(Team.MTF) || pList.Contains(Team.RSC)))
 			{
 				ev.Allow = false;
+				File.WriteAllText($"/home/todd/files/servers/scpslhm/templog/SCP035 - {DateTime.Now.ToString()}.txt", $"SCP035 - {(scpPlayer == null)}\nCLASSD - {pList.Contains(Team.CDP)}\nCHAOS - {pList.Contains(Team.CHI)}\nMTF - {pList.Contains(Team.MTF)}\nSCIENTIST - {pList.Contains(Team.RSC)}\nSCP - {pList.Contains(Team.SCP)}\nSERPENTSHAND - {pList.Contains(Team.TUT)}");
 			}
 		}
 

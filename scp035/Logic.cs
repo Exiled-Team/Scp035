@@ -13,7 +13,7 @@ namespace scp035
 		{
 			for (int i = 0; i < scpPickups.Count; i++)
 			{
-				Pickup p = scpPickups.ElementAt(i).Key;
+				Pickup p = scpPickups[i];
 				if (p != null) p.Delete();
 			}
 			scpPickups.Clear();
@@ -21,7 +21,7 @@ namespace scp035
 
 		private static Pickup GetRandomItem()
 		{
-			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => !scpPickups.ContainsKey(x)).ToList();
+			List<Pickup> pickups = GameObject.FindObjectsOfType<Pickup>().Where(x => !scpPickups.Contains(x)).ToList();
 			return pickups[rand.Next(pickups.Count)];
 		}
 
@@ -39,8 +39,7 @@ namespace scp035
 						p.transform.position,
 						p.transform.rotation,
 						0, 0, 0).GetComponent<Pickup>();
-					scpPickups.Add(a, a.info.durability);
-					a.info.durability = dur;
+					scpPickups.Add(a);
 				}
 			}
 		}
