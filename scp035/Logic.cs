@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using MEC;
-using System;
-using EXILED.Extensions;
+using Exiled.API.Features;
+using Exiled.API.Enums;
 
 namespace scp035
 {
@@ -27,14 +27,14 @@ namespace scp035
 
 		private static void RefreshItems()
 		{
-			if (Player.GetHubs().Where(x => Player.GetTeam(x) == Team.RIP && !x.serverRoles.OverwatchEnabled).ToList().Count > 0)
+			if (Player.List.Where(x => x.Team == Team.RIP && !x.ReferenceHub.serverRoles.OverwatchEnabled).ToList().Count > 0)
 			{
 				RemovePossessedItems();
-				for (int i = 0; i < Configs.infectedItemCount; i++)
+				for (int i = 0; i < scp035.instance.Config.InfectedItemCount; i++)
 				{
 					Pickup p = GetRandomItem();
 					Pickup a = PlayerManager.localPlayer
-						.GetComponent<Inventory>().SetPickup((ItemType)Configs.possibleItems[rand.Next(Configs.possibleItems.Count)],
+						.GetComponent<Inventory>().SetPickup((ItemType)scp035.instance.Config.PossibleItems[rand.Next(scp035.instance.Config.PossibleItems.Count)],
 						-4.656647E+11f,
 						p.transform.position,
 						p.transform.rotation,
@@ -50,51 +50,57 @@ namespace scp035
 			{
 				scpPlayer.SetRank("", "default");
 				if (hasTag) scpPlayer.RefreshTag();
-				if (isHidden) scpPlayer.HideTag();
+				if (isHidden) scpPlayer.BadgeHidden = true;
 			}
-			if (Configs.canHealBeyondHostHP)
+			if (scp035.instance.Config.CanHealBeyondHostHp)
 			{
-				scpPlayer.playerStats.maxHP = maxHP;
+				scpPlayer.MaxHealth = maxHP;
 			}
 			scpPlayer = null;
 			isRotating = true;
 			RefreshItems();
 		}
 
-		public static void Spawn035(ReferenceHub p035, ReferenceHub player = null, bool full = true)
+		public static void Spawn035(Player p035, Player player = null, bool full = true)
 		{
 			if (full)
 			{
 				if (player != null)
 				{
-					Vector3 pos = player.transform.position;
-					p035.ChangeRole(player.characterClassManager.CurClass);
-					Timing.CallDelayed(0.2f, () => p035.plyMovementSync.OverridePosition(pos, 0));
+					Vector3 pos = player.Position;
+					p035.ChangeRole(player.Role);
+					Timing.CallDelayed(0.2f, () => p035.Position = pos);
 
-					foreach (Inventory.SyncItemInfo item in player.inventory.items) p035.inventory.AddNewItem(item.id);
+					foreach (Inventory.SyncItemInfo item in player.Inventory.items) p035.Inventory.AddNewItem(item.id);
 				}
-				maxHP = p035.playerStats.maxHP;
-				if (Configs.canHealBeyondHostHP)
+				maxHP = p035.MaxHealth;
+				if (scp035.instance.Config.CanHealBeyondHostHp)
 				{
-					p035.playerStats.maxHP = Configs.health;
+					p035.MaxHealth = scp035.instance.Config.Health;
 				}
-				p035.playerStats.health = Configs.health;
-				p035.ammoBox.Networkamount = "250:250:250";
+				p035.Health = scp035.instance.Config.Health;
+				p035.SetAmmo(AmmoType.Nato556, 250);
+				p035.SetAmmo(AmmoType.Nato762, 250);
+				p035.SetAmmo(AmmoType.Nato9, 250);
 			}
 
-			hasTag = !string.IsNullOrEmpty(p035.serverRoles.NetworkMyText);
-			isHidden = !string.IsNullOrEmpty(p035.serverRoles.HiddenBadge);
-			if (isHidden) p035.RefreshTag();
+			hasTag = !string.IsNullOrEmpty(p035.RankName);
+			Log.Warn(hasTag ? "has tag: " + p035.RankName : " no tag");
+			if (p035.BadgeHidden)
+			{
+				p035.BadgeHidden = false;
+				isHidden = true;
+			}
 			p035.SetRank("SCP-035", "red");
 
-			p035.Broadcast($"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\nYou have infected a body and have gained control over it, use it to help the other SCPs!" : string.Empty)}", 10);
+			p035.Broadcast(10, $"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\n<i>You have infected a body and have gained control over it, use it to help the other SCPs!</i>" : string.Empty)}");
 
 			scpPlayer = p035;
 		}
 
-		public static void InfectPlayer(ReferenceHub player, Pickup pItem)
+		public static void InfectPlayer(Player player, Pickup pItem)
 		{
-			List<ReferenceHub> pList = Player.GetHubs().Where(x => x.characterClassManager.CurClass == RoleType.Spectator && !x.serverRoles.OverwatchEnabled && x.characterClassManager.UserId != null && x.characterClassManager.UserId != string.Empty).ToList();
+			List<Player> pList = Player.List.Where(x => x.Role == RoleType.Spectator && !x.ReferenceHub.serverRoles.OverwatchEnabled && x.UserId != null && x.UserId != string.Empty).ToList();
 			if (pList.Count > 0 && scpPlayer == null)
 			{
 				pItem.Delete();
@@ -104,11 +110,11 @@ namespace scp035
 				isRotating = false;
 
 				player.ChangeRole(RoleType.Spectator);
-				player.Broadcast("You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.", 10);
+				player.Broadcast(10, "<i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i>");
 
 				RemovePossessedItems();
 
-				if (Configs.corrodeHost)
+				if (scp035.instance.Config.CorrodeHost)
 				{
 					coroutines.Add(Timing.RunCoroutine(CorrodeHost()));
 				}
@@ -119,13 +125,13 @@ namespace scp035
 		{
 			while (scpPlayer != null)
 			{
-				scpPlayer.playerStats.health -= Configs.corrodeHostAmount;
-				if (scpPlayer.playerStats.health <= 0)
+				scpPlayer.Health -= scp035.instance.Config.CorrodeHostAmount;
+				if (scpPlayer.Health <= 0)
 				{
 					scpPlayer.ChangeRole(RoleType.Spectator);
 					KillScp035();
 				}
-				yield return Timing.WaitForSeconds(Configs.corrodeHostInterval);
+				yield return Timing.WaitForSeconds(scp035.instance.Config.CorrodeHostInterval);
 			}
 		}
 
@@ -137,48 +143,56 @@ namespace scp035
 				{
 					RefreshItems();
 				}
-				yield return Timing.WaitForSeconds(Configs.rotateInterval);
+				yield return Timing.WaitForSeconds(scp035.instance.Config.RotateInterval);
 			}
 		}
 
 		private IEnumerator<float> CorrodeUpdate()
 		{
-			if (Configs.corrodePlayers)
+			if (scp035.instance.Config.CorrodePlayers)
 			{
 				while (isRoundStarted)
 				{
 					if (scpPlayer != null)
 					{
-						IEnumerable<ReferenceHub> pList = Player.GetHubs().Where(x => x.queryProcessor.PlayerId != scpPlayer.queryProcessor.PlayerId);
-						if (!Configs.scpFriendlyFire) pList = pList.Where(x => Player.GetTeam(x) != Team.SCP);
-						if (!Configs.tutorialFriendlyFire) pList = pList.Where(x => Player.GetTeam(x) != Team.TUT);
-						foreach (ReferenceHub player in pList)
+						IEnumerable<Player> pList = Player.List.Where(x => x.Id != scpPlayer.Id);
+						if (!scp035.instance.Config.ScpFriendlyFire) pList = pList.Where(x => x.Team != Team.SCP);
+						if (!scp035.instance.Config.TutorialFriendlyFire) pList = pList.Where(x => x.Team != Team.TUT);
+						foreach (Player player in pList)
 						{
-							if (player != null && Vector3.Distance(scpPlayer.transform.position, player.transform.position) <= Configs.corrodeDistance)
+							if (player != null && Vector3.Distance(scpPlayer.Position, player.Position) <= scp035.instance.Config.CorrodeDistance)
 							{
 								CorrodePlayer(player);
 							}
 						}
 					}
-					yield return Timing.WaitForSeconds(Configs.corrodeInterval);
+					yield return Timing.WaitForSeconds(scp035.instance.Config.CorrodeInterval);
 				}
 			}
 		}
 
-		private void CorrodePlayer(ReferenceHub player)
+		private void CorrodePlayer(Player player)
 		{
-			if (Configs.corrodeLifeSteal && scpPlayer != null)
+			if (scp035.instance.Config.CorrodeLifeSteal && scpPlayer != null)
 			{
-				int currHP = (int)scpPlayer.playerStats.health;
-				scpPlayer.playerStats.health = currHP + Configs.corrodeDamage > Configs.health ? Configs.health : currHP + Configs.corrodeDamage;
+				int currHP = (int)scpPlayer.Health;
+				scpPlayer.Health = currHP + scp035.instance.Config.CorrodeDamage > scp035.instance.Config.Health ? scp035.instance.Config.Health : currHP + scp035.instance.Config.CorrodeDamage;
 			}
-			player.Damage(Configs.corrodeDamage, DamageTypes.Nuke);
+			player.Damage(scp035.instance.Config.CorrodeDamage, DamageTypes.Nuke);
 		}
 
-		private void GrantFF(ReferenceHub player)
+		private void GrantFF(Player player)
 		{
-			player.weaponManager.NetworkfriendlyFire = false;
-			ffPlayers.Remove(player.queryProcessor.PlayerId);
+			Log.Warn("Granting FF for " + player.Nickname);
+			player.IsFriendlyFireEnabled = true;
+			ffPlayers.Add(player.Id);
+		}
+
+		private void RemoveFF(Player player)
+		{
+			Log.Warn("Revolking FF from" + player.Nickname);
+			player.IsFriendlyFireEnabled = false;
+			ffPlayers.Remove(player.Id);
 		}
 	}
 }

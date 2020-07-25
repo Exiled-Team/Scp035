@@ -1,4 +1,5 @@
-﻿using Harmony;
+﻿using Exiled.API.Features;
+using HarmonyLib;
 
 namespace scp035.Harmony
 {
@@ -9,11 +10,11 @@ namespace scp035.Harmony
 
 		public static void Prefix(FootstepSync __instance)
 		{
-			if (!Configs.corrodeTrail) return;
+			if (!scp035.instance.Config.CorrodeTrail) return;
 
-			ReferenceHub player = Plugin.GetPlayer(__instance.gameObject);
+			Player player = Player.Get(__instance.gameObject);
 			count++;
-			if (player.queryProcessor.PlayerId == EventHandlers.scpPlayer?.queryProcessor.PlayerId && count >= Configs.corrodeTrailInterval)
+			if (player.Id == EventHandlers.scpPlayer?.Id && count >= scp035.instance.Config.CorrodeTrailInterval)
 			{
 				player.PlaceCorrosion();
 				count = 0;

@@ -1,61 +1,46 @@
-﻿using MEC;
+﻿using Exiled.API.Features;
+using MEC;
 using UnityEngine;
 
 namespace scp035
 {
 	public static class Extensions
 	{
-		public static void ChangeRole(this ReferenceHub player, RoleType role, bool spawnTeleport = true)
+		public static void ChangeRole(this Player player, RoleType role, bool spawnTeleport = true)
 		{
 			if (!spawnTeleport)
 			{
-				Vector3 pos = player.transform.position;
-				Plugin.Info(pos.ToString());
-				player.characterClassManager.SetClassID(role);
-				Timing.CallDelayed(0.5f, () => player.plyMovementSync.OverridePosition(pos, 0));
+				Vector3 pos = player.Position;
+				player.SetRole(role);
+				Timing.CallDelayed(0.5f, () => player.Position = pos);
 			}
 			else
 			{
-				player.characterClassManager.SetClassID(role);
+				player.SetRole(role);
 			}
 		}
 
-		public static void Damage(this ReferenceHub player, int amount, DamageTypes.DamageType damageType)
+		public static void RefreshTag(this Player player)
 		{
-			player.playerStats.HurtPlayer(new PlayerStats.HitInfo(amount, "WORLD", damageType, player.queryProcessor.PlayerId), player.gameObject);
+			player.ReferenceHub.serverRoles.HiddenBadge = null;
+			player.ReferenceHub.serverRoles.RpcResetFixed();
+			player.ReferenceHub.serverRoles.RefreshPermissions(true);
 		}
 
-		public static void SetRank(this ReferenceHub player, string rank, string color = "default")
+		public static void Damage(this Player player, int amount, DamageTypes.DamageType damageType)
 		{
-			player.serverRoles.NetworkMyText = rank;
-			player.serverRoles.NetworkMyColor = color;
+			player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(amount, "WORLD", damageType, player.ReferenceHub.queryProcessor.PlayerId), player.GameObject);
 		}
 
-		public static void RefreshTag(this ReferenceHub player)
+		public static void SetRank(this Player player, string rank, string color = "default")
 		{
-			player.serverRoles.HiddenBadge = null;
-			player.serverRoles.RpcResetFixed();
-			player.serverRoles.RefreshPermissions(true);
+			player.ReferenceHub.serverRoles.NetworkMyText = rank;
+			player.ReferenceHub.serverRoles.NetworkMyColor = color;
 		}
 
-		public static void HideTag(this ReferenceHub player)
+		public static void PlaceCorrosion(this Player player)
 		{
-			player.serverRoles.HiddenBadge = player.serverRoles.MyText;
-			player.serverRoles.NetworkGlobalBadge = null;
-			player.serverRoles.SetText(null);
-			player.serverRoles.SetColor(null);
-			player.serverRoles.GlobalSet = false;
-			player.serverRoles.RefreshHiddenTag();
-		}
-
-		public static void Broadcast(this ReferenceHub player, string message, uint time, bool monospaced = false)
-		{
-			player.GetComponent<Broadcast>().TargetAddElement(player.scp079PlayerScript.connectionToClient, message, time, monospaced);
-		}
-
-		public static void PlaceCorrosion(this ReferenceHub player)
-		{
-			player.characterClassManager.RpcPlaceBlood(player.transform.position, 1, 2f);
+			player.ReferenceHub.characterClassManager.RpcPlaceBlood(player.Position, 1, 2f);
 		}
 	}
 }
