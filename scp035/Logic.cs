@@ -183,14 +183,12 @@ namespace scp035
 
 		private void GrantFF(Player player)
 		{
-			Log.Warn("Granting FF for " + player.Nickname);
 			player.IsFriendlyFireEnabled = true;
 			ffPlayers.Add(player.Id);
 		}
 
 		private void RemoveFF(Player player)
 		{
-			Log.Warn("Revolking FF from" + player.Nickname);
 			player.IsFriendlyFireEnabled = false;
 			ffPlayers.Remove(player.Id);
 		}
