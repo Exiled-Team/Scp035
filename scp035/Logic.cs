@@ -46,17 +46,18 @@ namespace scp035
 
 		private static void KillScp035(bool setRank = true)
 		{
+			Player player = scpPlayer;
+			scpPlayer = null;
 			if (setRank)
 			{
-				scpPlayer.SetRank("", "default");
-				if (hasTag) scpPlayer.RefreshTag();
-				if (isHidden) scpPlayer.BadgeHidden = true;
+				player.RankName = tag;
+				player.RankColor = color;
+				if (isHidden) player.ReferenceHub.characterClassManager.CallCmdRequestHideTag();
 			}
 			if (scp035.instance.Config.CanHealBeyondHostHp)
 			{
-				scpPlayer.MaxHealth = maxHP;
+				player.MaxHealth = maxHP;
 			}
-			scpPlayer = null;
 			isRotating = true;
 			RefreshItems();
 		}
@@ -84,14 +85,15 @@ namespace scp035
 				p035.SetAmmo(AmmoType.Nato9, 250);
 			}
 
-			hasTag = !string.IsNullOrEmpty(p035.RankName);
-			Log.Warn(hasTag ? "has tag: " + p035.RankName : " no tag");
-			if (p035.BadgeHidden)
+			if (!string.IsNullOrEmpty(p035.ReferenceHub.serverRoles.HiddenBadge))
 			{
-				p035.BadgeHidden = false;
 				isHidden = true;
+				p035.BadgeHidden = false;
 			}
-			p035.SetRank("SCP-035", "red");
+			tag = p035.RankName;
+			color = p035.RankColor;
+			p035.RankName = "SCP-035";
+			p035.RankColor = "red";
 
 			p035.Broadcast(10, $"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\n<i>You have infected a body and have gained control over it, use it to help the other SCPs!</i>" : string.Empty)}");
 

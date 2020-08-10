@@ -15,7 +15,8 @@ namespace scp035
 		private List<int> ffPlayers = new List<int>();
 		internal static Player scpPlayer;
 		private static bool isHidden;
-		private static bool hasTag;
+		private static string tag;
+		private static string color;
 		private bool isRoundStarted;
 		private static bool isRotating;
 		private static int maxHP;
