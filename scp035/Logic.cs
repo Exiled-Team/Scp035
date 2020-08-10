@@ -109,6 +109,7 @@ namespace scp035
 
 				isRotating = false;
 
+				player.ClearInventory();
 				player.ChangeRole(RoleType.Spectator);
 				player.Broadcast(10, "<i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i>");
 
