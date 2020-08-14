@@ -81,6 +81,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Harmony\FootstepSyncPatch.cs" />
     <Compile Include="Harmony\HideTagPatch.cs" />
+    <Compile Include="Harmony\Scp939AttackPatch.cs" />
     <Compile Include="Logic.cs" />
     <Compile Include="scp035.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

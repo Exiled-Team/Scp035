@@ -80,9 +80,9 @@ namespace scp035
 					p035.MaxHealth = scp035.instance.Config.Health;
 				}
 				p035.Health = scp035.instance.Config.Health;
-				p035.SetAmmo(AmmoType.Nato556, 250);
-				p035.SetAmmo(AmmoType.Nato762, 250);
-				p035.SetAmmo(AmmoType.Nato9, 250);
+				p035.Ammo[(int)AmmoType.Nato556] = 250;
+				p035.Ammo[(int)AmmoType.Nato762] = 250;
+				p035.Ammo[(int)AmmoType.Nato9] = 250;
 			}
 
 			if (!string.IsNullOrEmpty(p035.ReferenceHub.serverRoles.HiddenBadge))
