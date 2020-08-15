@@ -48,15 +48,18 @@ namespace scp035
 		{
 			Player player = scpPlayer;
 			scpPlayer = null;
-			if (setRank)
+			if (player != null)
 			{
-				player.RankName = tag;
-				player.RankColor = color;
-				if (isHidden) player.ReferenceHub.characterClassManager.CallCmdRequestHideTag();
-			}
-			if (scp035.instance.Config.CanHealBeyondHostHp)
-			{
-				player.MaxHealth = maxHP;
+				if (setRank)
+				{
+					player.RankName = tag;
+					player.RankColor = color;
+					if (isHidden) player.ReferenceHub.characterClassManager.CallCmdRequestHideTag();
+				}
+				if (scp035.instance.Config.CanHealBeyondHostHp)
+				{
+					player.MaxHealth = maxHP;
+				}
 			}
 			isRotating = true;
 			RefreshItems();

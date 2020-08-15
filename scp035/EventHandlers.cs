@@ -123,10 +123,6 @@ namespace scp035
 			{
 				KillScp035();
 			}
-			if (scpPlayer != null && scpPlayer.Role == RoleType.Spectator)
-			{
-				scpPlayer = null;
-			}
 		}
 
 		public void OnPocketDimensionEnter(EnteringPocketDimensionEventArgs ev)
@@ -165,6 +161,11 @@ namespace scp035
 		{
 			if (ev.Player.Id == scpPlayer?.Id)
 			{
+				KillScp035();
+			}
+			if (scpPlayer != null && ev.Player.Id == scpPlayer.Id && ev.NewRole == RoleType.Spectator)
+			{
+				scpPlayer = null;
 				KillScp035();
 			}
 		}
