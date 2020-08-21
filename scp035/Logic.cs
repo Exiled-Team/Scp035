@@ -187,6 +187,15 @@ namespace scp035
 			player.Damage(scp035.instance.Config.CorrodeDamage, DamageTypes.Nuke);
 		}
 
+		private void Verify()
+		{
+			foreach (Player player in Player.List)
+			{
+				if (player.Id == scpPlayer.Id && player.Role != RoleType.Spectator) return;
+			}
+			KillScp035();
+		}
+
 		private void GrantFF(Player player)
 		{
 			player.IsFriendlyFireEnabled = true;
