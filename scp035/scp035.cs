@@ -27,7 +27,7 @@ namespace scp035
 			Exiled.Events.Handlers.Server.RoundStarted += ev.OnRoundStart;
 			Exiled.Events.Handlers.Player.PickingUpItem += ev.OnPickupItem;
 			Exiled.Events.Handlers.Server.RoundEnded += ev.OnRoundEnd;
-			Exiled.Events.Handlers.Player.Dying += ev.OnPlayerDie;
+			Exiled.Events.Handlers.Player.Died += ev.OnPlayerDie;
 			Exiled.Events.Handlers.Player.Hurting += ev.OnPlayerHurt;
 			Exiled.Events.Handlers.Player.EnteringPocketDimension += ev.OnPocketDimensionEnter;
 			Exiled.Events.Handlers.Server.EndingRound += ev.OnCheckRoundEnd;
@@ -48,7 +48,7 @@ namespace scp035
 			Exiled.Events.Handlers.Server.RoundStarted -= ev.OnRoundStart;
 			Exiled.Events.Handlers.Player.PickingUpItem -= ev.OnPickupItem;
 			Exiled.Events.Handlers.Server.RoundEnded -= ev.OnRoundEnd;
-			Exiled.Events.Handlers.Player.Dying -= ev.OnPlayerDie;
+			Exiled.Events.Handlers.Player.Died -= ev.OnPlayerDie;
 			Exiled.Events.Handlers.Player.Hurting -= ev.OnPlayerHurt;
 			Exiled.Events.Handlers.Player.EnteringPocketDimension -= ev.OnPocketDimensionEnter;
 			Exiled.Events.Handlers.Server.EndingRound -= ev.OnCheckRoundEnd;

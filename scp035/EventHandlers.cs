@@ -117,15 +117,11 @@ namespace scp035
 			}
 		}
 
-		public void OnPlayerDie(DyingEventArgs ev)
+		public void OnPlayerDie(DiedEventArgs ev)
 		{
 			if (ev.Target.Id == scpPlayer?.Id)
 			{
 				KillScp035();
-			}
-			if (scpPlayer != null)
-			{
-				Verify();
 			}
 		}
 
