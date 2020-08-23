@@ -141,7 +141,7 @@ namespace scp035
 			if ((!pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && ((pList.Contains(Team.SCP) && scpPlayer != null) || (!pList.Contains(Team.SCP) && scpPlayer != null))) ||
 				(scp035.instance.Config.WinWithTutorial && !pList.Contains(Team.CHI) && !pList.Contains(Team.CDP) && !pList.Contains(Team.MTF) && !pList.Contains(Team.RSC) && pList.Contains(Team.TUT) && scpPlayer != null))
 			{
-				ev.LeadingTeam = RoundSummary.LeadingTeam.Anomalies;
+				ev.LeadingTeam = Exiled.API.Enums.LeadingTeam.Anomalies;
 				ev.IsRoundEnded = true;
 			}
 
