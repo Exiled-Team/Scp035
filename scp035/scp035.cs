@@ -4,9 +4,6 @@ namespace scp035
 {
 	public class scp035 : Plugin<Config>
 	{
-		// todo
-		// fix tags when 035 is assigned to a player with a tag
-
 		internal static scp035 instance;
 
 		private HarmonyLib.Harmony hInstance;
