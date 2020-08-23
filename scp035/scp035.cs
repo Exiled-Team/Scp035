@@ -67,5 +67,6 @@ namespace scp035
 		}
 
 		public override string Name => "scp035";
+		public override string Author => "Cyanox"; 
 	}
 }
