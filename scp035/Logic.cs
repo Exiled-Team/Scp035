@@ -27,9 +27,9 @@ namespace scp035
 
 		private static void RefreshItems()
 		{
-			if (Player.List.Where(x => x.Team == Team.RIP && !x.ReferenceHub.serverRoles.OverwatchEnabled).ToList().Count > 0)
+			RemovePossessedItems();
+			if (scp035.instance.Config.SelfInfect || Player.List.Where(x => x.Team == Team.RIP && !x.ReferenceHub.serverRoles.OverwatchEnabled).ToList().Count > 0)
 			{
-				RemovePossessedItems();
 				for (int i = 0; i < scp035.instance.Config.InfectedItemCount; i++)
 				{
 					Pickup p = GetRandomItem();
@@ -69,7 +69,7 @@ namespace scp035
 		{
 			if (full)
 			{
-				if (player != null)
+				if (player != null && p035 != player)
 				{
 					Vector3 pos = player.Position;
 					p035.ChangeRole(player.Role);
@@ -98,31 +98,50 @@ namespace scp035
 			p035.RankName = "SCP-035";
 			p035.RankColor = "red";
 
-			p035.Broadcast(10, $"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\n<i>You have infected a body and have gained control over it, use it to help the other SCPs!</i>" : string.Empty)}");
+			//p035.Broadcast(10, $"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\n<i>You have infected a body and have gained control over it, use it to help the other SCPs!</i>" : string.Empty)}");
+			p035.Broadcast(scp035.instance.Config.Scp035PlayerMessageTime, scp035.instance.Config.Scp035PlayerMessage);
 
 			scpPlayer = p035;
 		}
 
 		public static void InfectPlayer(Player player, Pickup pItem)
 		{
-			List<Player> pList = Player.List.Where(x => x.Role == RoleType.Spectator && !x.ReferenceHub.serverRoles.OverwatchEnabled && x.UserId != null && x.UserId != string.Empty).ToList();
-			if (pList.Count > 0 && scpPlayer == null)
+			if (scp035.instance.Config.SelfInfect)
 			{
 				pItem.Delete();
 
-				Spawn035(pList[rand.Next(pList.Count)], player);
+				Spawn035(player, player);
 
 				isRotating = false;
-
-				player.ClearInventory();
-				player.ChangeRole(RoleType.Spectator);
-				player.Broadcast(10, "<i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i>");
 
 				RemovePossessedItems();
 
 				if (scp035.instance.Config.CorrodeHost)
 				{
 					coroutines.Add(Timing.RunCoroutine(CorrodeHost()));
+				}
+			}
+			else
+			{
+				List<Player> pList = Player.List.Where(x => x.Role == RoleType.Spectator && !x.ReferenceHub.serverRoles.OverwatchEnabled && x.UserId != null && x.UserId != string.Empty).ToList();
+				if (pList.Count > 0 && scpPlayer == null)
+				{
+					pItem.Delete();
+
+					Spawn035(pList[rand.Next(pList.Count)], player);
+
+					isRotating = false;
+
+					player.ClearInventory();
+					player.ChangeRole(RoleType.Spectator);
+					player.Broadcast(scp035.instance.Config.InfectedPlayerMessageTime, scp035.instance.Config.InfectedPlayerMessage);
+
+					RemovePossessedItems();
+
+					if (scp035.instance.Config.CorrodeHost)
+					{
+						coroutines.Add(Timing.RunCoroutine(CorrodeHost()));
+					}
 				}
 			}
 		}

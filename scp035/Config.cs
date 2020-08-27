@@ -41,6 +41,8 @@ namespace scp035
 		public bool CanUseMedicalItems { get; set; } = true;
 		[Description("Determines if SCP-035 can use medical items to heal past the max health of his host body up to his maximum health.")]
 		public bool CanHealBeyondHostHp { get; set; } = true;
+		[Description("Determines if the player who picked up SCP-035 should become SCP-035.")]
+		public bool SelfInfect { get; set; } = false;
 
 		[Description("The distance SCP-035 can corrode other players from.")]
 		public float CorrodeDistance { get; set; } = 1.5f;
@@ -50,5 +52,15 @@ namespace scp035
 		public float CorrodeInterval { get; set; } = 1f;
 		[Description("The interval in which SCP-035 corrodes his host body.")]
 		public float CorrodeHostInterval { get; set; } = 6f;
+
+		[Description("The amount of time to show the infected player message.")]
+		public ushort InfectedPlayerMessageTime { get; set; } = 10;
+		[Description("The amount of time to show the SCP-035 player message.")]
+		public ushort Scp035PlayerMessageTime { get; set; } = 10;
+
+		[Description("The message to show the player that picked up SCP-035.")]
+		public string InfectedPlayerMessage { get; set; } = "<i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i>";
+		[Description("The message to show the player that will spawn as SCP-035.")]
+		public string Scp035PlayerMessage { get; set; } = "<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>\n<i>You have infected a body and have gained control over it, use it to help the other SCPs!</i>";
 	}
 }
