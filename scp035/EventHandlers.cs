@@ -152,11 +152,6 @@ namespace scp035
 			}
 		}
 
-		public void OnCheckEscape(EscapingEventArgs ev)
-		{
-			if (ev.Player.Id == scpPlayer?.Id) ev.IsAllowed = false;
-		}
-
 		public void OnSetClass(ChangingRoleEventArgs ev)
 		{
 			if ((ev.Player.Id == scpPlayer?.Id) || (scpPlayer != null && ev.Player.Id == scpPlayer.Id && ev.NewRole == RoleType.Spectator))

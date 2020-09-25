@@ -16,7 +16,7 @@ namespace scp035
 
 			instance = this;
 
-			hInstance = new HarmonyLib.Harmony($"cyanox.scp035");
+			hInstance = new HarmonyLib.Harmony("cyanox.scp035");
 			hInstance.PatchAll();
 
 			ev = new EventHandlers(this);
@@ -28,7 +28,6 @@ namespace scp035
 			Exiled.Events.Handlers.Player.Hurting += ev.OnPlayerHurt;
 			Exiled.Events.Handlers.Player.EnteringPocketDimension += ev.OnPocketDimensionEnter;
 			Exiled.Events.Handlers.Server.EndingRound += ev.OnCheckRoundEnd;
-			Exiled.Events.Handlers.Player.Escaping += ev.OnCheckEscape;
 			Exiled.Events.Handlers.Player.ChangingRole += ev.OnSetClass;
 			Exiled.Events.Handlers.Player.Left += ev.OnPlayerLeave;
 			Exiled.Events.Handlers.Scp106.Containing += ev.OnContain106;
@@ -49,7 +48,6 @@ namespace scp035
 			Exiled.Events.Handlers.Player.Hurting -= ev.OnPlayerHurt;
 			Exiled.Events.Handlers.Player.EnteringPocketDimension -= ev.OnPocketDimensionEnter;
 			Exiled.Events.Handlers.Server.EndingRound -= ev.OnCheckRoundEnd;
-			Exiled.Events.Handlers.Player.Escaping -= ev.OnCheckEscape;
 			Exiled.Events.Handlers.Player.ChangingRole -= ev.OnSetClass;
 			Exiled.Events.Handlers.Player.Left -= ev.OnPlayerLeave;
 			Exiled.Events.Handlers.Scp106.Containing -= ev.OnContain106;

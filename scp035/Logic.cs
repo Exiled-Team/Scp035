@@ -63,6 +63,8 @@ namespace scp035
 			}
 			isRotating = true;
 			RefreshItems();
+			if (Scp173.TurnedPlayers.Contains(player)) Scp173.TurnedPlayers.Remove(player);
+			if (Scp096.TurnedPlayers.Contains(player)) Scp096.TurnedPlayers.Remove(player);
 		}
 
 		public static void Spawn035(Player p035, Player player = null, bool full = true)
@@ -97,6 +99,9 @@ namespace scp035
 			color = p035.RankColor;
 			p035.RankName = "SCP-035";
 			p035.RankColor = "red";
+
+			if (!Scp173.TurnedPlayers.Contains(player)) Scp173.TurnedPlayers.Add(player);
+			if (!Scp096.TurnedPlayers.Contains(player)) Scp096.TurnedPlayers.Add(player);
 
 			//p035.Broadcast(10, $"<size=60>You are <color=\"red\"><b>SCP-035</b></color></size>{(full ? "\n<i>You have infected a body and have gained control over it, use it to help the other SCPs!</i>" : string.Empty)}");
 			p035.Broadcast(scp035.instance.Config.Scp035PlayerMessageTime, scp035.instance.Config.Scp035PlayerMessage);
