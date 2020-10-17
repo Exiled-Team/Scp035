@@ -213,7 +213,7 @@ namespace scp035
 					Player player = null;
 					if (ev.Arguments.Count >= 1)
 					{
-						if (int.TryParse(ev.Arguments[0], out int classid) && Enum.IsDefined(typeof(RoleType), classid))
+						if (int.TryParse(ev.Arguments[0], out int classid) && classid >= 0 && classid <= 17)
 						{
 							if (ev.Arguments.Count == 2)
 							{
