@@ -35,6 +35,7 @@ namespace scp035
 			Exiled.Events.Handlers.Player.FailingEscapePocketDimension += ev.OnPocketDimensionDie;
 			Exiled.Events.Handlers.Player.Shooting += ev.OnShoot;
 			Exiled.Events.Handlers.Player.UsingMedicalItem += ev.OnUseMedicalItem;
+			Exiled.Events.Handlers.Server.SendingRemoteAdminCommand += ev.OnRACommand;
 		}
 
 		public override void OnDisabled()
@@ -55,6 +56,7 @@ namespace scp035
 			Exiled.Events.Handlers.Player.FailingEscapePocketDimension -= ev.OnPocketDimensionDie;
 			Exiled.Events.Handlers.Player.Shooting -= ev.OnShoot;
 			Exiled.Events.Handlers.Player.UsingMedicalItem -= ev.OnUseMedicalItem;
+			Exiled.Events.Handlers.Server.SendingRemoteAdminCommand -= ev.OnRACommand;
 
 			hInstance.UnpatchAll();
 

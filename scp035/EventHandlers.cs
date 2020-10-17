@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Exiled.API.Features;
 using Exiled.Events.EventArgs;
@@ -198,6 +199,65 @@ namespace scp035
 			if (!scp035.instance.Config.CanUseMedicalItems && ev.Player.Id == scpPlayer?.Id && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500))
 			{
 				ev.IsAllowed = false;
+			}
+		}
+
+		public void OnRACommand(SendingRemoteAdminCommandEventArgs ev)
+		{
+			string cmd = ev.Name.ToLower();
+			if (cmd == "spawn035")
+			{
+				ev.IsAllowed = false;
+				if (scpPlayer == null)
+				{
+					Player player = null;
+					if (ev.Arguments.Count >= 1)
+					{
+						if (int.TryParse(ev.Arguments[0], out int classid) && Enum.IsDefined(typeof(RoleType), classid))
+						{
+							if (ev.Arguments.Count == 2)
+							{
+								player = Player.Get(ev.Arguments[1]);
+								if (player != null)
+								{
+									player.SetRole((RoleType)classid);
+									EventHandlers.Spawn035(player, null, false);
+									ev.Success = true;
+									ev.Sender.RemoteAdminMessage($"Spawned '{player.Nickname}' as SCP-035.");
+								}
+								else
+								{
+									ev.Success = false;
+									ev.Sender.RemoteAdminMessage("Error: Invalid player.");
+									return;
+								}
+							}
+							else
+							{
+								player = Player.List.ElementAt(UnityEngine.Random.Range(0, Player.List.Count()));
+								player.SetRole((RoleType)classid);
+								EventHandlers.Spawn035(player, null, false);
+								ev.Success = true;
+								ev.Sender.RemoteAdminMessage($"Spawned '{player.Nickname}' as SCP-035.");
+							}
+						}
+						else
+						{
+							ev.Success = false;
+							ev.Sender.RemoteAdminMessage("Error: Invalid ClassID.");
+						}
+					}
+					else
+					{
+						ev.Success = false;
+						ev.Sender.RemoteAdminMessage("Usage: SPAWN035 (CLASSID) [PLAYER / PLAYERID / STEAMID]");
+					}
+				}
+				else
+				{
+					ev.Success = false;
+					ev.Sender.RemoteAdminMessage("Error: SCP-035 is currently alive.");
+				}
 			}
 		}
 	}
