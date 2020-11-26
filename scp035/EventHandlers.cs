@@ -197,7 +197,7 @@ namespace scp035
 
 		public void OnUseMedicalItem(UsingMedicalItemEventArgs ev)
 		{
-			if ((!scp035.instance.Config.CanUseMedicalItems && ev.Player.Id == scpPlayer?.Id && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500)) || (!scp035.instance.Config.CanHealBeyondHostHp && ev.Player.Health >= maxHP))
+			if (ev.Player.Id == scpPlayer?.Id && ((!scp035.instance.Config.CanUseMedicalItems && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500)) || (!scp035.instance.Config.CanHealBeyondHostHp && ev.Player.Health >= maxHP)))
 			{
 				ev.IsAllowed = false;
 			}
@@ -205,7 +205,10 @@ namespace scp035
 
 		public void OnUsedMedicalItem(UsedMedicalItemEventArgs ev)
 		{
-			if (ev.Player.Health > maxHP) ev.Player.Health = maxHP;
+			if (ev.Player.Id == scpPlayer?.Id && ev.Player.Health > maxHP)
+			{
+				ev.Player.Health = maxHP;
+			}
 		}
 
 		public void OnRACommand(SendingRemoteAdminCommandEventArgs ev)
