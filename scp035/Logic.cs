@@ -80,11 +80,11 @@ namespace scp035
 					foreach (Inventory.SyncItemInfo item in player.Inventory.items) p035.Inventory.AddNewItem(item.id);
 				}
 				maxHP = p035.MaxHealth;
-				if (scp035.instance.Config.CanHealBeyondHostHp)
-				{
-					p035.MaxHealth = scp035.instance.Config.Health;
-				}
 				p035.Health = scp035.instance.Config.Health;
+				if (!scp035.instance.Config.CanHealBeyondHostHp)
+				{
+					p035.MaxHealth = maxHP;
+				}
 				p035.Ammo[(int)AmmoType.Nato556] = 250;
 				p035.Ammo[(int)AmmoType.Nato762] = 250;
 				p035.Ammo[(int)AmmoType.Nato9] = 250;
