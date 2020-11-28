@@ -1,4 +1,7 @@
 ﻿using Exiled.API.Features;
+using Exiled.Events;
+using System;
+using System.Reflection;
 
 namespace scp035
 {
@@ -15,6 +18,21 @@ namespace scp035
 			base.OnEnabled();
 
 			instance = this;
+
+			foreach (MethodBase method in Events.Instance.Harmony.GetPatchedMethods())
+				if (method.DeclaringType?.Name == "Scp106PlayerScript" && method.Name == "CallCmdMovePlayer")
+				{
+					Events.DisabledPatchesHashSet.Add(method);
+					break;
+				}
+			try
+			{
+				Events.Instance.ReloadDisabledPatches();
+			}
+			catch (Exception e)
+			{
+				Log.Error(e);
+			}
 
 			hInstance = new HarmonyLib.Harmony("cyanox.scp035");
 			hInstance.PatchAll();
