@@ -222,5 +222,11 @@ namespace scp035
 			player.IsFriendlyFireEnabled = false;
 			ffPlayers.Remove(player.Id);
 		}
+
+		private void ExitPD(Player player)
+		{
+			if (!Warhead.IsDetonated) player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
+			else player.Kill();
+		}
 	}
 }

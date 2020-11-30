@@ -51,6 +51,7 @@ namespace scp035
 			Exiled.Events.Handlers.Scp106.Containing += ev.OnContain106;
 			Exiled.Events.Handlers.Player.InsertingGeneratorTablet += ev.OnInsertTablet;
 			Exiled.Events.Handlers.Player.FailingEscapePocketDimension += ev.OnPocketDimensionDie;
+			Exiled.Events.Handlers.Player.EscapingPocketDimension += ev.OnPocketDimensionEscape;
 			Exiled.Events.Handlers.Player.Shooting += ev.OnShoot;
 			Exiled.Events.Handlers.Player.UsingMedicalItem += ev.OnUseMedicalItem;
 			Exiled.Events.Handlers.Player.MedicalItemUsed += ev.OnUsedMedicalItem;
@@ -73,6 +74,7 @@ namespace scp035
 			Exiled.Events.Handlers.Scp106.Containing -= ev.OnContain106;
 			Exiled.Events.Handlers.Player.InsertingGeneratorTablet -= ev.OnInsertTablet;
 			Exiled.Events.Handlers.Player.FailingEscapePocketDimension -= ev.OnPocketDimensionDie;
+			Exiled.Events.Handlers.Player.EscapingPocketDimension -= ev.OnPocketDimensionEscape;
 			Exiled.Events.Handlers.Player.Shooting -= ev.OnShoot;
 			Exiled.Events.Handlers.Player.UsingMedicalItem -= ev.OnUseMedicalItem;
 			Exiled.Events.Handlers.Player.MedicalItemUsed -= ev.OnUsedMedicalItem;

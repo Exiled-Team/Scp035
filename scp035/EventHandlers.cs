@@ -191,7 +191,16 @@ namespace scp035
 			if (ev.Player.Id == scpPlayer?.Id)
 			{
 				ev.IsAllowed = false;
-				ev.Player.Position = Map.GetRandomSpawnPoint(RoleType.Scp096);
+				ExitPD(ev.Player);
+			}
+		}
+
+		public void OnPocketDimensionEscape(EscapingPocketDimensionEventArgs ev)
+		{
+			if (ev.Player.Id == scpPlayer?.Id)
+			{
+				ev.IsAllowed = false;
+				ExitPD(ev.Player);
 			}
 		}
 
