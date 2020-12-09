@@ -75,6 +75,10 @@
     <Reference Include="UnityEngine.Networking">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\SCP Secret Laboratory\SCPSL_Data\Managed\UnityEngine.Networking.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Desktop\scpsls\SCPSL_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Scp035Data.cs" />
@@ -83,7 +87,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="Harmony\EscapePatch.cs" />
     <Compile Include="Harmony\FootstepSyncPatch.cs" />
-    <Compile Include="Harmony\FragGrenadePatches.cs" />
+    <Compile Include="Harmony\GrenadePatches.cs" />
     <Compile Include="Harmony\HideTagPatch.cs" />
     <Compile Include="Harmony\Scp106Patches.cs" />
     <Compile Include="Harmony\Scp939AttackPatch.cs" />

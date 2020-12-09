@@ -32,12 +32,6 @@ namespace scp035
 			player.ReferenceHub.playerStats.HurtPlayer(new PlayerStats.HitInfo(amount, "WORLD", damageType, player.ReferenceHub.queryProcessor.PlayerId), player.GameObject);
 		}
 
-		public static void SetRank(this Player player, string rank, string color = "default")
-		{
-			player.ReferenceHub.serverRoles.NetworkMyText = rank;
-			player.ReferenceHub.serverRoles.NetworkMyColor = color;
-		}
-
 		public static void PlaceCorrosion(this Player player)
 		{
 			player.ReferenceHub.characterClassManager.RpcPlaceBlood(player.Position, 1, 2f);
