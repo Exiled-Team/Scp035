@@ -52,7 +52,6 @@ namespace scp035
 			{
 				if (setRank)
 				{
-					Log.Info("fuck");
 					player.CustomPlayerInfo = string.Empty;
 					player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
 					if (isHidden) player.ReferenceHub.characterClassManager.CallCmdRequestHideTag();
@@ -75,8 +74,8 @@ namespace scp035
 				if (player != null && p035 != player)
 				{
 					Vector3 pos = player.Position;
-					p035.ChangeRole(player.Role);
-					Timing.CallDelayed(0.2f, () => p035.Position = pos);
+					p035.ChangeRole(player.Role, true);
+					p035.Position = pos;
 
 					foreach (Inventory.SyncItemInfo item in player.Inventory.items) p035.Inventory.AddNewItem(item.id);
 				}
@@ -99,8 +98,8 @@ namespace scp035
 			player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
 			p035.CustomPlayerInfo = "<color=#FF0000>SCP-035</color>";
 
-			if (!Scp173.TurnedPlayers.Contains(player)) Scp173.TurnedPlayers.Add(player);
-			if (!Scp096.TurnedPlayers.Contains(player)) Scp096.TurnedPlayers.Add(player);
+			if (!Scp173.TurnedPlayers.Contains(p035)) Scp173.TurnedPlayers.Add(p035);
+			if (!Scp096.TurnedPlayers.Contains(p035)) Scp096.TurnedPlayers.Add(p035);
 
 			p035.Broadcast(scp035.instance.Config.Scp035PlayerMessageTime, scp035.instance.Config.Scp035PlayerMessage);
 
