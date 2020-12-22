@@ -75,7 +75,7 @@ namespace scp035
 				{
 					Vector3 pos = player.Position;
 					p035.ChangeRole(player.Role, true);
-					p035.Position = pos;
+					Timing.CallDelayed(0.5f, () => p035.Position = pos);
 
 					foreach (Inventory.SyncItemInfo item in player.Inventory.items) p035.Inventory.AddNewItem(item.id);
 				}
@@ -95,7 +95,7 @@ namespace scp035
 				isHidden = true;
 				p035.BadgeHidden = false;
 			}
-			player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
+			p035.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
 			p035.CustomPlayerInfo = "<color=#FF0000>SCP-035</color>";
 
 			if (!Scp173.TurnedPlayers.Contains(p035)) Scp173.TurnedPlayers.Add(p035);
