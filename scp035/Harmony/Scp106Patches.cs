@@ -77,7 +77,7 @@ namespace scp035.Harmony
                         }
                     }
 
-                    var ev = new EnteringPocketDimensionEventArgs(Player.Get(ply), Vector3.down * 1998.5f);
+                    var ev = new EnteringPocketDimensionEventArgs(Player.Get(ply), Vector3.down * 1998.5f, Player.Get(instanceHub));
 
                     Exiled.Events.Handlers.Player.OnEnteringPocketDimension(ev);
 
