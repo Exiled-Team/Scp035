@@ -89,6 +89,7 @@
     <Compile Include="Harmony\FootstepSyncPatch.cs" />
     <Compile Include="Harmony\GrenadePatches.cs" />
     <Compile Include="Harmony\HideTagPatch.cs" />
+    <Compile Include="Harmony\Scp096Patches.cs" />
     <Compile Include="Harmony\Scp106Patches.cs" />
     <Compile Include="Harmony\Scp939AttackPatch.cs" />
     <Compile Include="Logic.cs" />
