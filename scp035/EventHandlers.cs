@@ -216,7 +216,10 @@ namespace scp035
 		{
 			if (ev.Player.Id == scpPlayer?.Id && (!scp035.instance.Config.CanHealBeyondHostHp && ev.Player.Health > maxHP) && (ev.Item == ItemType.Adrenaline || ev.Item == ItemType.Painkillers || ev.Item == ItemType.Medkit || ev.Item == ItemType.SCP500 || ev.Item == ItemType.SCP207))
 			{
-				ev.Player.Health = maxHP;
+				if (ev.Item == ItemType.SCP207)
+					ev.Player.Health = UnityEngine.Mathf.Max(maxHP, ev.Player.Health - 30);
+				else
+					ev.Player.Health = maxHP;
 			}
 		}
 
