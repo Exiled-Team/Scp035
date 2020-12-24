@@ -79,12 +79,8 @@ namespace scp035
 
 					foreach (Inventory.SyncItemInfo item in player.Inventory.items) p035.Inventory.AddNewItem(item.id);
 				}
-				maxHP = p035.MaxHealth;
+				maxHP = player?.MaxHealth ?? p035.MaxHealth;
 				p035.Health = scp035.instance.Config.Health;
-				if (!scp035.instance.Config.CanHealBeyondHostHp)
-				{
-					p035.MaxHealth = maxHP;
-				}
 				p035.Ammo[(int)AmmoType.Nato556] = 250;
 				p035.Ammo[(int)AmmoType.Nato762] = 250;
 				p035.Ammo[(int)AmmoType.Nato9] = 250;
@@ -104,6 +100,11 @@ namespace scp035
 			p035.Broadcast(scp035.instance.Config.Scp035PlayerMessageTime, scp035.instance.Config.Scp035PlayerMessage);
 
 			scpPlayer = p035;
+
+			if (scp035.instance.Config.CorrodeHost)
+			{
+				coroutines.Add(Timing.RunCoroutine(CorrodeHost()));
+			}
 		}
 
 		public static void InfectPlayer(Player player, Pickup pItem)
@@ -139,11 +140,6 @@ namespace scp035
 					player.Broadcast(scp035.instance.Config.InfectedPlayerMessageTime, scp035.instance.Config.InfectedPlayerMessage);
 
 					RemovePossessedItems();
-
-					if (scp035.instance.Config.CorrodeHost)
-					{
-						coroutines.Add(Timing.RunCoroutine(CorrodeHost()));
-					}
 				}
 			}
 		}
