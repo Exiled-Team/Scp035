@@ -178,7 +178,7 @@ namespace scp035
 				{
 					if (scpPlayer != null)
 					{
-						IEnumerable<Player> pList = Player.List.Where(x => x.Id != scpPlayer.Id);
+						IEnumerable<Player> pList = Player.List.Where(x => x.Id != scpPlayer.Id && x.IsAlive);
 						if (!scp035.instance.Config.ScpFriendlyFire) pList = pList.Where(x => x.Team != Team.SCP);
 						if (!scp035.instance.Config.TutorialFriendlyFire) pList = pList.Where(x => x.Team != Team.TUT);
 						foreach (Player player in pList)
