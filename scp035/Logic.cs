@@ -52,7 +52,7 @@ namespace scp035
 			{
 				if (setRank)
 				{
-					player.CustomPlayerInfo = string.Empty;
+					player.CustomInfo = string.Empty;
 					player.ReferenceHub.nicknameSync.ShownPlayerInfo |= PlayerInfoArea.Role;
 					if (isHidden) player.ReferenceHub.characterClassManager.CallCmdRequestHideTag();
 				}
@@ -92,7 +92,7 @@ namespace scp035
 				p035.BadgeHidden = false;
 			}
 			p035.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
-			p035.CustomPlayerInfo = "<color=#FF0000>SCP-035</color>";
+			p035.CustomInfo = "<color=#FF0000>SCP-035</color>";
 
 			if (!Scp173.TurnedPlayers.Contains(p035)) Scp173.TurnedPlayers.Add(p035);
 			if (!Scp096.TurnedPlayers.Contains(p035)) Scp096.TurnedPlayers.Add(p035);
