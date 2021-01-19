@@ -17,8 +17,6 @@ namespace scp035
 		{
 			base.OnEnabled();
 
-			HarmonyLib.Harmony.DEBUG = true;
-
 			instance = this;
 
 			foreach (MethodBase method in Events.Instance.Harmony.GetPatchedMethods())
