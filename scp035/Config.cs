@@ -52,6 +52,8 @@ namespace scp035
 		public float CorrodeInterval { get; set; } = 1f;
 		[Description("The interval in which SCP-035 corrodes his host body.")]
 		public float CorrodeHostInterval { get; set; } = 6f;
+		[Description("The multiplier of SCP-035's base class health he can heal to with medkits if permitted.")]
+		public float OverhealMultiplier { get; set; } = 1.5f;
 
 		[Description("The amount of time to show the infected player message.")]
 		public ushort InfectedPlayerMessageTime { get; set; } = 10;
