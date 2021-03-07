@@ -126,7 +126,7 @@ namespace Scp035
             Log.Debug($"Running {nameof(SpawnPickups)}.", Config.Debug);
             RemoveScpPickups();
 
-            List<Pickup> pickups = Config.ItemSpawning.OnlyMimicSpawned ? Pickup.Instances.Where(pickup => !ScpPickups.Contains(pickup)).ToList() : Object.FindObjectsOfType<Pickup>().Where(pickup => !ScpPickups.Contains(pickup)).ToList();
+            List<Pickup> pickups = Pickup.Instances.Where(pickup => !ScpPickups.Contains(pickup)).ToList();
             if (Warhead.IsDetonated)
             {
                 pickups.RemoveAll(pickup => Map.FindParentRoom(pickup.gameObject).Type != RoomType.Surface);

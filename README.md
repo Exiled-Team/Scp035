@@ -47,7 +47,6 @@ Configs for the spawning of Scp035 item instances.
 | :-------------: | :---------: | :---------: | :------ |
 | infected_item_count | Integer | 1 | How many Scp035 item instances will spawn per cycle. |
 | rotate_interval | Float | 30 | The amount of seconds between each spawn interval. |
-| only_mimic_spawned | Boolean | True | Whether Scp035 item instances can only spawn on items which have already spawned in. |
 | possible_items | ItemType Array | Adrenaline, Coin, Disarmer, Flashlight, Medkit, Painkillers, Radio, GrenadeFlash, GrenadeFrag, MicroHID | All ItemTypes that a Scp035 item instance can spawn as. |
 | spawn_after_death | Boolean | false | Whether a Scp035 item instance will spawn when a Scp035 host dies. |
 

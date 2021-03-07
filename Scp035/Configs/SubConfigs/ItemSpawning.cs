@@ -27,12 +27,6 @@ namespace Scp035.Configs.SubConfigs
         public float RotateInterval { get; private set; } = 30f;
 
         /// <summary>
-        /// Gets a value indicating whether Scp035 item instances can only spawn on items which have already spawned in.
-        /// </summary>
-        [Description("Whether Scp035 item instances can only spawn on items which have already spawned in.")]
-        public bool OnlyMimicSpawned { get; private set; } = true;
-
-        /// <summary>
         /// Gets all <see cref="ItemType"/>s that a Scp035 item instance can spawn as.
         /// </summary>
         [Description("All ItemTypes that a Scp035 item instance can spawn as.")]
