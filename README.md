@@ -6,30 +6,59 @@ Adds a passive SCP to the game. A certain amount of items will randomly be selec
 
 **[EXILED](https://github.com/galaxy119/EXILED) must be installed for this to work.**
 
-Place the "scp035.dll" file in your Plugins folder.
-
-See [this page](https://github.com/Cyanox62/scp035/wiki/API) for API usage.
+Place the "Scp035.dll" file in your Plugins folder.
 
 # Configs
+## Main
+| Config        | Type | Default | Description
+| :-------------: | :---------: | :---------: | :------ |
+| is_enabled | Boolean | True | Whether the plugin should load. |
+| debug | Boolean | False | Whether debug messages should show. |
+| corrode_trail | Boolean | False | Whether a Scp035 should leave a trail behind them. |
+| corrode_trail_interval | Integer | 5 | The amount of time between the creation of a part of the trail. |
+| scp_friendly_fire | Boolean | False | Whether Scp035 and Scp subjects can damage each other. |
+| tutorial_friendly_fire | Boolean | False | Whether Scp035 and tutorials can damage each other. |
+
+## Corrode Host
+Configs for the corrosion of Scp035 instances.
 
 | Config        | Type | Default | Description
 | :-------------: | :---------: | :---------: | :------ |
-| 035_enabled | Boolean | True | If SCP-035 is enabled. |
-| 035_possible_items | Integer List | 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 19, 20, 21, 23, 24, 25, 26, 27, 30, 33, 34 | The item IDs SCP-035 can disguise as. |
-| 035_health | Integer | 300 | The amount of health SCP-035 has. |
-| 035_rotate_interval | Float | 120 | The amount of time in seconds before SCP-035 will choose a new item on the map to disguise as. |
-| 035_scp_friendly_fire | Boolean | False | If SCP-035 is allowed to damage other SCPs. |
-| 035_infected_item_count | Integer | 1 | The number of items every refresh that are possessed by SCP-035. |
-| 035_win_with_tutorial | Boolean | False | If SCP-035 should win with tutorials. |
-| 035_tutorial_friendly_fire | Boolean | False | If friendly fire between SCP-035 and tutorials is enabled. |
-| 035_corrode_players | Boolean | True | If SCP-035 should do passive damage to players within a range of him. |
-| 035_corrode_distance | Float | 1.5 | The distance in which a player will take corrosion damage from SCP-035. |
-| 035_corrode_damage | Integer | 5 | The amount of damage to do to a player within range of corrosion. |
-| 035_corrode_interval | Float | 1 | The interval in seconds for corrosion damage. |
-| 035_corrode_life_steal | Boolean | True | If SCP-035 should steal any health taken from other players by corrosion. |
-| 035_corrode_trail | Boolean | True | If SCP-035 should leave behind a trail of corrosion when he walks. |
-| 035_corrode_trail_interval | Integer | 5 | The amount of steps inbetween each corrosion decal placement. |
-| 035_corrode_host | Boolean | False | Whether or not 035 should slowly kill his host body. This will prevent him from using medical items. |
-| 035_corrode_host_interval | Float | 15 | How often to deal damage to 035's host. |
-| 035_corrode_host_amount | Integer | 5 | The amount of damage to deal every host corrosion. |
-| 035_can_use_medical_items| Boolean | True | Determines whether or not SCP-035 can use medical items. |
+| is_enabled | Boolean | False | Whether a Scp035 host will lose health over time. |
+| damage | Integer | 5 | The amount of damage that will be dealt to a Scp035 host each interval. |
+| interval | Float | 6 | The amount of seconds between each damage tick. |
+
+## Corrode Players
+Configs for the corrosion of players around Scp035 instances.
+
+| Config        | Type | Default | Description
+| :-------------: | :---------: | :---------: | :------ |
+| is_enabled | Boolean | False | Whether players around a Scp035 host will lose health over time. |
+| distance | Float | 1.5 | The minimum distance a player must be to a Scp035 instance to take damage. |
+| damage | Integer | 5 | The amount of damage that will be dealt to players around a Scp035 host. |
+| life_steal | Boolean | True | Whether Scp035 instances will heal while dealing corrosion damage. |
+| interval | Float | 1 | The amount of seconds between each damage tick. |
+
+## Item Spawning
+Configs for the spawning of Scp035 item instances.
+
+| Config        | Type | Default | Description
+| :-------------: | :---------: | :---------: | :------ |
+| infected_item_count | Integer | 1 | How many Scp035 item instances will spawn per cycle. |
+| rotate_interval | Float | 30 | The amount of seconds between each spawn interval. |
+| only_mimic_spawned | Boolean | True | Whether Scp035 item instances can only spawn on items which have already spawned in. |
+| possible_items | ItemType Array | Adrenaline, Coin, Disarmer, Flashlight, Medkit, Painkillers, Radio, GrenadeFlash, GrenadeFrag, MicroHID | All ItemTypes that a Scp035 item instance can spawn as. |
+| spawn_after_death | Boolean | false | Whether a Scp035 item instance will spawn when a Scp035 host dies. |
+
+## Scp035 Modifiers
+Configs in relation to Scp035 instances.
+
+| Config        | Type | Default | Description
+| :-------------: | :---------: | :---------: | :------ |
+| ammo_amount | Unsigned Integer | 250 | The amount of ammo that is given to Scp035. |
+| can_heal_beyond_host_hp | Boolean | True | Whether a Scp035 instance can heal beyond their current roles max health. |
+| can_use_medial_items | Boolean | True | Whether a Scp035 instance can use medical items. |
+| health | Integer | 300 | The amount of health a Scp035 instance will spawn with. |
+| self_inflict | Boolean | False | Whether the user who picks up an item will become an instance or if someone will be chosen to replace them. |
+| scale | Vector | z: 1 y: 1 x: 1 | The size of a Scp035 instance. |
+| spawn_broadcast | Broadcast | <i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i> | The broadcast that will be displayed to an Scp035 instance when they spawn. |
