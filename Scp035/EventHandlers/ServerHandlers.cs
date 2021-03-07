@@ -7,6 +7,11 @@
 
 namespace Scp035.EventHandlers
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Exiled.Events.EventArgs;
     using MEC;
 
     /// <summary>
@@ -14,6 +19,27 @@ namespace Scp035.EventHandlers
     /// </summary>
     public static class ServerHandlers
     {
+        /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
+        internal static void OnEndingRound(EndingRoundEventArgs ev)
+        {
+            if (!API.AllScp035.Any())
+            {
+                return;
+            }
+
+            List<Team> teams = (from player in Player.List where !API.IsScp035(player) select player.Team).ToList();
+
+            if (teams.All(team => (team == Team.TUT && Scp035.Instance.Config.WinWithTutorial) || team == Team.SCP || team == Team.RIP))
+            {
+                ev.LeadingTeam = LeadingTeam.Anomalies;
+                ev.IsRoundEnded = true;
+            }
+            else
+            {
+                ev.IsAllowed = false;
+            }
+        }
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRoundStarted"/>
         internal static void OnRoundStarted()
         {

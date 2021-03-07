@@ -53,6 +53,12 @@ namespace Scp035.Configs
         public bool TutorialFriendlyFire { get; private set; } = true;
 
         /// <summary>
+        /// Gets a value indicating whether Scp035 and tutorials will win together.
+        /// </summary>
+        [Description("Whether Scp035 and tutorials will win together.")]
+        public bool WinWithTutorial { get; private set; } = true;
+
+        /// <summary>
         /// Gets all of the configs in relation to corrosion of Scp035 instances.
         /// </summary>
         [Description("All of the configs in relation to corrision of Scp035 instances.")]

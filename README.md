@@ -17,7 +17,8 @@ Place the "Scp035.dll" file in your Plugins folder.
 | corrode_trail | Boolean | False | Whether a Scp035 should leave a trail behind them. |
 | corrode_trail_interval | Integer | 5 | The amount of time between the creation of a part of the trail. |
 | scp_friendly_fire | Boolean | False | Whether Scp035 and Scp subjects can damage each other. |
-| tutorial_friendly_fire | Boolean | False | Whether Scp035 and tutorials can damage each other. |
+| tutorial_friendly_fire | Boolean | True | Whether Scp035 and tutorials can damage each other. |
+| win_with_tutorial | Boolean | True | Whether Scp035 and tutorials will win together. |
 
 ## Corrode Host
 Configs for the corrosion of Scp035 instances.

@@ -69,6 +69,7 @@ namespace Scp035
             Exiled.Events.Handlers.Player.PickingUpItem += PlayerHandlers.OnPickingUpItem;
             Exiled.Events.Handlers.Player.Shooting += PlayerHandlers.OnShooting;
 
+            Exiled.Events.Handlers.Server.EndingRound += ServerHandlers.OnEndingRound;
             Exiled.Events.Handlers.Server.RoundStarted += ServerHandlers.OnRoundStarted;
             Exiled.Events.Handlers.Server.WaitingForPlayers += ServerHandlers.OnWaitingForPlayers;
         }
@@ -83,6 +84,7 @@ namespace Scp035
             Exiled.Events.Handlers.Player.PickingUpItem -= PlayerHandlers.OnPickingUpItem;
             Exiled.Events.Handlers.Player.Shooting -= PlayerHandlers.OnShooting;
 
+            Exiled.Events.Handlers.Server.EndingRound -= ServerHandlers.OnEndingRound;
             Exiled.Events.Handlers.Server.RoundStarted -= ServerHandlers.OnRoundStarted;
             Exiled.Events.Handlers.Server.WaitingForPlayers -= ServerHandlers.OnWaitingForPlayers;
         }
