@@ -71,6 +71,12 @@ namespace Scp035.Configs
         public CorrodePlayers CorrodePlayers { get; private set; } = new CorrodePlayers();
 
         /// <summary>
+        /// Gets all of the configs in relation to the display of a notification to users looking at a Scp035 instance.
+        /// </summary>
+        [Description("All of the configs in relation to the display of a notification to users looking at a Scp035 instance.")]
+        public RangedNotification RangedNotification { get; private set; } = new RangedNotification();
+
+        /// <summary>
         /// Gets all of the configs in relation to the spawning of Scp035 item instances.
         /// </summary>
         [Description("All of the configs in relation to the spawning of Scp035 item instances.")]

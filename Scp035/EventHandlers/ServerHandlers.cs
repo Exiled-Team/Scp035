@@ -48,6 +48,11 @@ namespace Scp035.EventHandlers
 
             Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.RunSpawning()));
             Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.CorrodePlayers()));
+
+            if (Scp035.Instance.Config.RangedNotification.IsEnabled)
+            {
+                Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.RangedNotification()));
+            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers"/>

@@ -34,6 +34,12 @@ namespace Scp035.EventHandlers
             Methods.DestroyScp035(ev.Player);
         }
 
+        /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDied(DiedEventArgs)"/>
+        internal static void OnDied(DiedEventArgs ev)
+        {
+            Methods.DestroyScp035(ev.Target);
+        }
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnPickingUpItem(PickingUpItemEventArgs)"/>
         internal static void OnPickingUpItem(PickingUpItemEventArgs ev)
         {
@@ -75,7 +81,7 @@ namespace Scp035.EventHandlers
                 Methods.RemoveFf(ev.Attacker);
             }
 
-            if (!API.IsScp035(ev.Target) && !API.IsScp035(ev.Attacker))
+            if ((!API.IsScp035(ev.Target) && !API.IsScp035(ev.Attacker)) || ev.Attacker == ev.Target)
             {
                 return;
             }
@@ -106,19 +112,25 @@ namespace Scp035.EventHandlers
                 Methods.RemoveFf(ev.Shooter);
             }
 
-            if (ev.Target == null)
-            {
-                return;
-            }
-
-            Player target = Player.Get(ev.Target);
-            if (target == null)
+            if (ev.Target == null || !(Player.Get(ev.Target) is Player target))
             {
                 return;
             }
 
             if (!API.IsScp035(target) && !API.IsScp035(ev.Shooter))
             {
+                return;
+            }
+
+            if (!Config.ScpFriendlyFire && ((target.Team == Team.SCP || ev.Shooter.Team == Team.SCP) || (API.IsScp035(ev.Shooter) && API.IsScp035(target))))
+            {
+                ev.IsAllowed = false;
+                return;
+            }
+
+            if (!Config.TutorialFriendlyFire && (target.Team == Team.TUT || ev.Shooter.Team == Team.TUT))
+            {
+                ev.IsAllowed = false;
                 return;
             }
 

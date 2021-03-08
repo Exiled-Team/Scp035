@@ -65,6 +65,7 @@ namespace Scp035
 
             Exiled.Events.Handlers.Player.ChangingRole += PlayerHandlers.OnChangingRole;
             Exiled.Events.Handlers.Player.Destroying += PlayerHandlers.OnDestroying;
+            Exiled.Events.Handlers.Player.Died += PlayerHandlers.OnDied;
             Exiled.Events.Handlers.Player.Hurting += PlayerHandlers.OnHurting;
             Exiled.Events.Handlers.Player.PickingUpItem += PlayerHandlers.OnPickingUpItem;
             Exiled.Events.Handlers.Player.Shooting += PlayerHandlers.OnShooting;
@@ -80,6 +81,7 @@ namespace Scp035
 
             Exiled.Events.Handlers.Player.ChangingRole -= PlayerHandlers.OnChangingRole;
             Exiled.Events.Handlers.Player.Destroying -= PlayerHandlers.OnDestroying;
+            Exiled.Events.Handlers.Player.Died -= PlayerHandlers.OnDied;
             Exiled.Events.Handlers.Player.Hurting -= PlayerHandlers.OnHurting;
             Exiled.Events.Handlers.Player.PickingUpItem -= PlayerHandlers.OnPickingUpItem;
             Exiled.Events.Handlers.Player.Shooting -= PlayerHandlers.OnShooting;

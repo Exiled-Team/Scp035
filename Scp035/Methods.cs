@@ -16,6 +16,7 @@ namespace Scp035
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using MEC;
+    using Mirror;
     using UnityEngine;
     using Random = System.Random;
 
@@ -216,6 +217,53 @@ namespace Scp035
                         if (Vector3.Distance(scp035.Position, player.Position) <= Config.CorrodePlayers.Distance)
                         {
                             CorrodePlayer(player);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Runs the ranged notification loop check.
+        /// </summary>
+        /// <returns>A delay in seconds based on <see cref="Configs.SubConfigs.RangedNotification.Interval"/>.</returns>
+        internal static IEnumerator<float> RangedNotification()
+        {
+            while (true)
+            {
+                yield return Timing.WaitForSeconds(Config.RangedNotification.Interval);
+                Broadcast broadcast = Config.RangedNotification.Notification;
+                if (!API.AllScp035.Any() || !broadcast.Show)
+                {
+                    continue;
+                }
+
+                foreach (Player player in Player.List)
+                {
+                    Vector3 forward = player.CameraTransform.forward;
+                    if (Physics.Raycast(player.CameraTransform.position + forward, forward, out var hit, Config.RangedNotification.MaximumRange, player.ReferenceHub.weaponManager.raycastMask))
+                    {
+                        if (hit.distance < Config.RangedNotification.MinimumRange)
+                        {
+                            continue;
+                        }
+
+                        if (hit.collider.GetComponentInParent<HitboxIdentity>() != null)
+                        {
+                            var parent = hit.collider.GetComponentInParent<NetworkIdentity>().gameObject;
+                            var hitCcm = parent.GetComponent<CharacterClassManager>();
+
+                            if (Player.Get(hitCcm._hub) is Player target && API.IsScp035(target))
+                            {
+                                if (Config.RangedNotification.UseHints)
+                                {
+                                    player.ShowHint(broadcast.Content, broadcast.Duration);
+                                }
+                                else
+                                {
+                                    player.Broadcast(broadcast);
+                                }
+                            }
                         }
                     }
                 }
