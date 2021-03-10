@@ -5,11 +5,14 @@
         <RootNamespace>Scp035</RootNamespace>
         <AssemblyName>Scp035</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+      <DocumentationFile>bin\Release\net472\Scp035.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EXILED" Version="2.3.4" />
+      <PackageReference Include="EXILED" Version="2.8.0" />
       <PackageReference Include="Lib.Harmony" Version="2.0.4" />
       <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     </ItemGroup>
