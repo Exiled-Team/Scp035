@@ -4,12 +4,8 @@
         <TargetFramework>net472</TargetFramework>
         <RootNamespace>Scp035</RootNamespace>
         <AssemblyName>Scp035</AssemblyName>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
         <IsPackable>false</IsPackable>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <DocumentationFile>bin\Release\net472\Scp035.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
