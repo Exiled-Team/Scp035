@@ -241,28 +241,28 @@ namespace Scp035
                 foreach (Player player in Player.List)
                 {
                     Vector3 forward = player.CameraTransform.forward;
-                    if (Physics.Raycast(player.CameraTransform.position + forward, forward, out var hit, Config.RangedNotification.MaximumRange, player.ReferenceHub.weaponManager.raycastMask))
+                    if (Physics.Raycast(player.CameraTransform.position + forward, forward, out var hit, Config.RangedNotification.MaximumRange))
                     {
                         if (hit.distance < Config.RangedNotification.MinimumRange)
                         {
                             continue;
                         }
 
-                        if (hit.collider.GetComponentInParent<HitboxIdentity>() != null)
+                        GameObject parent = hit.collider.GetComponentInParent<NetworkIdentity>()?.gameObject;
+                        if (parent == null)
                         {
-                            var parent = hit.collider.GetComponentInParent<NetworkIdentity>().gameObject;
-                            var hitCcm = parent.GetComponent<CharacterClassManager>();
+                            continue;
+                        }
 
-                            if (Player.Get(hitCcm._hub) is Player target && API.IsScp035(target))
+                        if (Player.Get(parent.gameObject) is Player target && API.IsScp035(target))
+                        {
+                            if (Config.RangedNotification.UseHints)
                             {
-                                if (Config.RangedNotification.UseHints)
-                                {
-                                    player.ShowHint(broadcast.Content, broadcast.Duration);
-                                }
-                                else
-                                {
-                                    player.Broadcast(broadcast);
-                                }
+                                player.ShowHint(broadcast.Content, broadcast.Duration);
+                            }
+                            else
+                            {
+                                player.Broadcast(broadcast);
                             }
                         }
                     }
