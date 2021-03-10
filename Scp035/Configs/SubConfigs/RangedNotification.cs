@@ -16,7 +16,7 @@ namespace Scp035.Configs.SubConfigs
     public class RangedNotification
     {
         /// <summary>
-        /// Gets a value indicating whether players around a Scp035 host will lose health over time.
+        /// Gets a value indicating whether players looking at Scp035 will see a notification.
         /// </summary>
         [Description("Whether players around a Scp035 host will lose health over time.")]
         public bool IsEnabled { get; private set; } = false;

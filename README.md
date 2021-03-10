@@ -50,6 +50,18 @@ Configs for the spawning of Scp035 item instances.
 | possible_items | ItemType Array | Adrenaline, Coin, Disarmer, Flashlight, Medkit, Painkillers, Radio, GrenadeFlash, GrenadeFrag, MicroHID | All ItemTypes that a Scp035 item instance can spawn as. |
 | spawn_after_death | Boolean | false | Whether a Scp035 item instance will spawn when a Scp035 host dies. |
 
+## Ranged Notification
+Configs for the display of a notification to users looking at a Scp035 instance.
+
+| Config        | Type | Default | Description
+| :-------------: | :---------: | :---------: | :------ |
+| is_enabled | Boolean | False | Whether players looking at Scp035 will see a notification. |
+| interval | Float | 5 | The time between checking if a player is looking at a Scp035 instance. |
+| minimum_range | Float | 10 | The minimum distance a Scp035 instance must be to a player to display a notification. |
+| maximum_range | Float | 30 | The maximum distance a Scp035 instance must be to a player to display a notification. |
+| use_hints | Boolean | True | Whether hints should be used in place of a broadcast. |
+| notification | Broadcast | You are looking at a <color=red>SCP-035</color>! | The message to be displayed to players. |
+
 ## Scp035 Modifiers
 Configs in relation to Scp035 instances.
 
