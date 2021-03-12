@@ -147,7 +147,7 @@ namespace Scp035
                     .PossibleItems[Random.Next(Config.ItemSpawning.PossibleItems.Length)]
                     .Spawn(0, transform.position, transform.rotation);
 
-                Log.Debug($"Spawned Scp035 item with ItemType of {scpPickup.itemId} at {scpPickup.transform.position}");
+                Log.Debug($"Spawned Scp035 item with ItemType of {scpPickup.itemId} at {scpPickup.transform.position}", Config.Debug);
                 ScpPickups.Add(scpPickup);
                 returnPickups.Add(scpPickup);
 
