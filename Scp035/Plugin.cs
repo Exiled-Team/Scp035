@@ -41,7 +41,7 @@ namespace Scp035
         public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
 
         /// <inheritdoc/>
-        public override Version Version { get; } = new Version(2, 0, 1);
+        public override Version Version { get; } = new Version(3, 0, 0);
 
         /// <inheritdoc/>
         public override void OnEnabled()
