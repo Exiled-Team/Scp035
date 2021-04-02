@@ -5,12 +5,11 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
-using Exiled.API.Features;
-
 namespace Scp035.Commands.SubCommands
 {
     using System;
     using CommandSystem;
+    using Exiled.API.Features;
     using Exiled.Permissions.Extensions;
 
     /// <summary>
