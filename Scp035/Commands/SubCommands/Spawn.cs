@@ -39,7 +39,7 @@ namespace Scp035.Commands.SubCommands
             Player player = Player.Get((sender as PlayerCommandSender)?.ReferenceHub);
             if (arguments.Count > 0)
             {
-                if (!(Player.Get(arguments.At(0)) is Player ply))
+                if (!(Player.Get(arguments.At(0)) is { } ply))
                 {
                     response = "Could not find the referenced user.";
                     return false;

@@ -7,11 +7,8 @@
 
 namespace Scp035
 {
-#pragma warning disable SA1135
-
     using System.Collections.Generic;
     using System.Linq;
-    using Configs;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
@@ -25,24 +22,24 @@ namespace Scp035
     /// </summary>
     public static class Methods
     {
-        private static readonly Config Config = Scp035.Instance.Config;
+        private static readonly Config Config = Plugin.Instance.Config;
 
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new ();
 
         /// <summary>
         /// Gets all active coroutines.
         /// </summary>
-        internal static List<CoroutineHandle> CoroutineHandles { get; } = new List<CoroutineHandle>();
+        internal static List<CoroutineHandle> CoroutineHandles { get; } = new ();
 
         /// <summary>
         /// Gets all user ids that currently have friendly fire enabled.
         /// </summary>
-        internal static List<string> FriendlyFireUsers { get; } = new List<string>();
+        internal static List<string> FriendlyFireUsers { get; } = new ();
 
         /// <summary>
         /// Gets all Scp035 item instances.
         /// </summary>
-        internal static List<Pickup> ScpPickups { get; } = new List<Pickup>();
+        internal static List<Pickup> ScpPickups { get; } = new ();
 
         /// <summary>
         /// Gets or sets a value indicating whether a Scp035 item instance can spawn.
@@ -79,24 +76,6 @@ namespace Scp035
         }
 
         /// <summary>
-        /// Removes the <see cref="Components.Scp035Component"/>, if initialized, from a player.
-        /// </summary>
-        /// <param name="player">The <see cref="Player"/> to be removed from being Scp035.</param>
-        internal static void DestroyScp035(Player player)
-        {
-            if (!API.IsScp035(player))
-            {
-                return;
-            }
-
-            if (player.GameObject.TryGetComponent(out Components.Scp035Component scp035Component) &&
-                scp035Component.Initialized)
-            {
-                scp035Component.Destroy();
-            }
-        }
-
-        /// <summary>
         /// Deletes all active Scp035 item instances.
         /// </summary>
         internal static void RemoveScpPickups()
@@ -127,7 +106,7 @@ namespace Scp035
             Log.Debug($"Running {nameof(SpawnPickups)}.", Config.Debug);
             RemoveScpPickups();
 
-            List<Pickup> pickups = Pickup.Instances.Where(pickup => !ScpPickups.Contains(pickup)).ToList();
+            List<Pickup> pickups = Pickup.Instances.Where(pickup => !API.IsScp035Item(pickup)).ToList();
             if (Warhead.IsDetonated)
             {
                 pickups.RemoveAll(pickup => Map.FindParentRoom(pickup.gameObject).Type != RoomType.Surface);
@@ -160,7 +139,7 @@ namespace Scp035
         /// <summary>
         /// A coroutine which loops the spawning of Scp035 item instances.
         /// </summary>
-        /// <returns>A delay in seconds based on <see cref="Configs.SubConfigs.ItemSpawning.RotateInterval"/>.</returns>
+        /// <returns>A delay in seconds based on <see cref="Configs.ItemSpawning.RotateInterval"/>.</returns>
         internal static IEnumerator<float> RunSpawning()
         {
             while (Round.IsStarted)
@@ -178,7 +157,7 @@ namespace Scp035
         /// A coroutine which deals damage to the host of Scp035 over time.
         /// </summary>
         /// <param name="player">The Scp035 instance to corrode.</param>
-        /// <returns>A delay in seconds based on <see cref="Configs.SubConfigs.CorrodeHost.Interval"/>.</returns>
+        /// <returns>A delay in seconds based on <see cref="Configs.CorrodeHost.Interval"/>.</returns>
         internal static IEnumerator<float> CorrodeHost(Player player)
         {
             while (player != null && API.IsScp035(player))
@@ -192,7 +171,7 @@ namespace Scp035
         /// <summary>
         /// A coroutine which deals damage to players near a Scp035 instance.
         /// </summary>
-        /// <returns>A delay in seconds based on <see cref="Configs.SubConfigs.CorrodePlayers.Interval"/>.</returns>
+        /// <returns>A delay in seconds based on <see cref="Configs.CorrodePlayers.Interval"/>.</returns>
         internal static IEnumerator<float> CorrodePlayers()
         {
             if (!Config.CorrodePlayers.IsEnabled)
@@ -226,7 +205,7 @@ namespace Scp035
         /// <summary>
         /// Runs the ranged notification loop check.
         /// </summary>
-        /// <returns>A delay in seconds based on <see cref="Configs.SubConfigs.RangedNotification.Interval"/>.</returns>
+        /// <returns>A delay in seconds based on <see cref="Configs.RangedNotification.Interval"/>.</returns>
         internal static IEnumerator<float> RangedNotification()
         {
             while (true)
@@ -254,7 +233,7 @@ namespace Scp035
                             continue;
                         }
 
-                        if (Player.Get(parent.gameObject) is Player target && API.IsScp035(target))
+                        if (Player.Get(parent.gameObject) is { } target && API.IsScp035(target))
                         {
                             if (Config.RangedNotification.UseHints)
                             {
@@ -272,7 +251,7 @@ namespace Scp035
 
         private static void CorrodePlayer(Player player)
         {
-            player.Hurt(Config.CorrodePlayers.Damage, DamageTypes.Pocket);
+            player.Hurt(Config.CorrodePlayers.Damage, DamageTypes.Poison);
             List<Player> scp035List = API.AllScp035.ToList();
             if (!Config.CorrodePlayers.LifeSteal || scp035List.Count == 0)
             {

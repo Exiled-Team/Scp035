@@ -8,13 +8,11 @@
 namespace Scp035.Commands
 {
 #pragma warning disable SA1101
-#pragma warning disable SA1135
-
     using System;
     using System.Text;
     using CommandSystem;
     using NorthwoodLib.Pools;
-    using SubCommands;
+    using Scp035.Commands.SubCommands;
 
     /// <summary>
     /// The command which all Scp035 commands are run off of.
@@ -49,14 +47,15 @@ namespace Scp035.Commands
         protected override bool ExecuteParent(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent();
-            foreach (var command in AllCommands)
+            stringBuilder.AppendLine("Please enter a valid subcommand! Available:");
+            foreach (ICommand command in AllCommands)
             {
                 stringBuilder.AppendLine(command.Aliases.Length > 0
                     ? $"{command.Command} | Aliases: {string.Join(", ", command.Aliases)}"
                     : command.Command);
             }
 
-            response = $"Please enter a valid subcommand! Available:\n{StringBuilderPool.Shared.ToStringReturn(stringBuilder)}";
+            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
             return false;
         }
     }

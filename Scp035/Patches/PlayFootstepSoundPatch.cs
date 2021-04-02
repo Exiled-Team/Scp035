@@ -8,7 +8,6 @@
 namespace Scp035.Patches
 {
 #pragma warning disable SA1313
-
     using Exiled.API.Features;
     using HarmonyLib;
 
@@ -22,7 +21,7 @@ namespace Scp035.Patches
 
         private static void Postfix(FootstepSync __instance)
         {
-            if (!Scp035.Instance.Config.CorrodeTrail)
+            if (!Plugin.Instance.Config.CorrodeTrail)
             {
                 return;
             }
@@ -32,7 +31,7 @@ namespace Scp035.Patches
 
             foreach (var scp035 in API.AllScp035)
             {
-                if (player.Id == scp035?.Id && count >= Scp035.Instance.Config.CorrodeTrailInterval)
+                if (player.Id == scp035?.Id && count >= Plugin.Instance.Config.CorrodeTrailInterval)
                 {
                     player.ReferenceHub.characterClassManager.RpcPlaceBlood(player.Position, 1, 2f);
                     count = 0;

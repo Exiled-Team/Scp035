@@ -8,7 +8,6 @@
 namespace Scp035.Patches
 {
 #pragma warning disable SA1313
-
     using CustomPlayerEffects;
     using Exiled.API.Features;
     using HarmonyLib;
@@ -25,7 +24,7 @@ namespace Scp035.Patches
             Player thrower = Player.Get(throwerPlayerHub);
             Player target = Player.Get(__instance.Hub);
             bool scp035Applies = false;
-            var config = Scp035.Instance.Config;
+            var config = Plugin.Instance.Config;
             if (API.IsScp035(thrower))
             {
                 scp035Applies = (target.IsScp && config.ScpFriendlyFire) ||

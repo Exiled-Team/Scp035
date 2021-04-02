@@ -5,6 +5,7 @@
         <RootNamespace>Scp035</RootNamespace>
         <AssemblyName>Scp035</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <LangVersion>9</LangVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
@@ -12,7 +13,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EXILED" Version="2.8.0" />
+      <PackageReference Include="EXILED" Version="2.9.4-beta" />
       <PackageReference Include="Lib.Harmony" Version="2.0.4" />
       <PackageReference Include="StyleCop.Analyzers" Version="1.1.118" />
     </ItemGroup>
@@ -25,6 +26,10 @@
       <Reference Include="NorthwoodLib" HintPath="$(EXILED_References)\NorthwoodLib.dll" Private="false" />
       <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_References)\UnityEngine.CoreModule.dll" Private="false" />
       <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_References)\UnityEngine.PhysicsModule.dll" Private="false" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scp035.ruleset" />
     </ItemGroup>
 
 </Project>

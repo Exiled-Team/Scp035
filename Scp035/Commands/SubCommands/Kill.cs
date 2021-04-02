@@ -5,6 +5,8 @@
 // </copyright>
 // -----------------------------------------------------------------------
 
+using Exiled.API.Features;
+
 namespace Scp035.Commands.SubCommands
 {
     using System;
@@ -34,7 +36,7 @@ namespace Scp035.Commands.SubCommands
                 return false;
             }
 
-            foreach (var player in API.AllScp035)
+            foreach (Player player in API.AllScp035)
             {
                 player.Kill();
             }
