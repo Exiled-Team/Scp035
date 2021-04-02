@@ -24,9 +24,5 @@
       <Reference Include="UnityEngine.CoreModule" HintPath="$(EXILED_References)\UnityEngine.CoreModule.dll" Private="false" />
       <Reference Include="UnityEngine.PhysicsModule" HintPath="$(EXILED_References)\UnityEngine.PhysicsModule.dll" Private="false" />
     </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Scp035.ruleset" />
-    </ItemGroup>
-
+ 
 </Project>
