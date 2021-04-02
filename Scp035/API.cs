@@ -23,7 +23,7 @@ namespace Scp035
         /// <summary>
         /// Gets all active Scp035 instances.
         /// </summary>
-        public static IEnumerable<Player> AllScp035 => Player.List.Where(player => player.SessionVariables.ContainsKey("IsScp035"));
+        public static IEnumerable<Player> AllScp035 => Player.List.Where(IsScp035);
 
         /// <summary>
         /// Removes a player from being considered as Scp035.
