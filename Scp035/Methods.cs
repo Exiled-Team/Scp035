@@ -24,22 +24,22 @@ namespace Scp035
     {
         private static readonly Config Config = Plugin.Instance.Config;
 
-        private static readonly Random Random = new ();
+        private static readonly Random Random = new Random();
 
         /// <summary>
         /// Gets all active coroutines.
         /// </summary>
-        internal static List<CoroutineHandle> CoroutineHandles { get; } = new ();
+        internal static List<CoroutineHandle> CoroutineHandles { get; } = new List<CoroutineHandle>();
 
         /// <summary>
         /// Gets all user ids that currently have friendly fire enabled.
         /// </summary>
-        internal static List<string> FriendlyFireUsers { get; } = new ();
+        internal static List<string> FriendlyFireUsers { get; } = new List<string>();
 
         /// <summary>
         /// Gets all Scp035 item instances.
         /// </summary>
-        internal static List<Pickup> ScpPickups { get; } = new ();
+        internal static List<Pickup> ScpPickups { get; } = new List<Pickup>();
 
         /// <summary>
         /// Gets or sets a value indicating whether a Scp035 item instance can spawn.

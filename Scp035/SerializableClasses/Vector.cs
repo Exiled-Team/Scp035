@@ -34,6 +34,6 @@ namespace Scp035.SerializableClasses
         /// Returns an instance of the <see cref="Vector"/> class as a <see cref="Vector3"/> for alternative uses.
         /// </summary>
         /// <returns>A <see cref="Vector3"/> with identical <see cref="X"/>, <see cref="Y"/>, and <see cref="Z"/> values.</returns>
-        public Vector3 ToVector3() => new (X, Y, Z);
+        public Vector3 ToVector3() => new Vector3(X, Y, Z);
     }
 }

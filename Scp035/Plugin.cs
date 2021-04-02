@@ -22,7 +22,7 @@ namespace Scp035
     /// </summary>
     public class Plugin : Plugin<Config>
     {
-        private static readonly Plugin InstanceValue = new ();
+        private static readonly Plugin InstanceValue = new Plugin();
         private static Harmony harmony;
 
         private Plugin()
@@ -38,10 +38,10 @@ namespace Scp035
         public override string Author { get; } = "Build, formerly by Cyanox";
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new (2, 9, 4);
+        public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
 
         /// <inheritdoc/>
-        public override Version Version { get; } = new (2, 0, 1);
+        public override Version Version { get; } = new Version(2, 0, 1);
 
         /// <inheritdoc/>
         public override void OnEnabled()

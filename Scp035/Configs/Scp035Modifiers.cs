@@ -56,6 +56,6 @@ namespace Scp035.Configs
         /// Gets the <see cref="Broadcast"/> that will be displayed to an Scp035 instance when they spawn.
         /// </summary>
         [Description("The broadcast that will be displayed to an Scp035 instance when they spawn.")]
-        public Broadcast SpawnBroadcast { get; private set; } = new ("<i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i>");
+        public Broadcast SpawnBroadcast { get; private set; } = new Broadcast("<i>You have picked up <color=\"red\">SCP-035.</color> He has infected your body and is now in control of you.</i>");
     }
 }

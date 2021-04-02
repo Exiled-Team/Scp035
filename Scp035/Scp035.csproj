@@ -5,11 +5,8 @@
         <RootNamespace>Scp035</RootNamespace>
         <AssemblyName>Scp035</AssemblyName>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <LangVersion>9</LangVersion>
-    </PropertyGroup>
-
-    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
-      <DocumentationFile>bin\Release\net472\Scp035.xml</DocumentationFile>
+        <LangVersion>8</LangVersion>
+        <DocumentationFile>..\Scp035.xml</DocumentationFile>
     </PropertyGroup>
 
     <ItemGroup>
