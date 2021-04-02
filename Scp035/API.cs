@@ -64,6 +64,11 @@ namespace Scp035
         /// <returns>A value indicating whether the <see cref="Player"/> is a Scp035 instance.</returns>
         public static bool IsScp035(Player player) => player.SessionVariables.ContainsKey("IsScp035");
 
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="Pickup"/> is considered to be a Scp035 item.
+        /// </summary>
+        /// <param name="pickup">The item to check.</param>
+        /// <returns>If the item is a Scp035 item.</returns>
         public static bool IsScp035Item(Pickup pickup) => Methods.ScpPickups.Contains(pickup);
 
         /// <summary>
