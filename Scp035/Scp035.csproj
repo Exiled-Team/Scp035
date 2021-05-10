@@ -10,7 +10,6 @@
       <LangVersion>8</LangVersion>
 
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-      <DocumentationFile>..\Scp035.xml</DocumentationFile>
 
       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
       <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
