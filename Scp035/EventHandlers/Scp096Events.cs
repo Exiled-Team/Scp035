@@ -18,9 +18,7 @@ namespace Scp035.EventHandlers
         internal static void OnAddingTarget(AddingTargetEventArgs ev)
         {
             if (API.IsScp035(ev.Target))
-            {
                 ev.IsAllowed = false;
-            }
         }
     }
 }

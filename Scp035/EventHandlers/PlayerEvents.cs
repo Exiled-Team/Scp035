@@ -26,9 +26,7 @@ namespace Scp035.EventHandlers
         internal static void OnChangingRole(ChangingRoleEventArgs ev)
         {
             if (!ev.IsEscaped)
-            {
                 API.Destroy035(ev.Player);
-            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>
@@ -47,18 +45,14 @@ namespace Scp035.EventHandlers
         internal static void OnEnteringPocketDimension(EnteringPocketDimensionEventArgs ev)
         {
             if (API.IsScp035(ev.Player) && !Config.ScpFriendlyFire)
-            {
                 ev.IsAllowed = false;
-            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnEscaping(EscapingEventArgs)"/>
         internal static void OnEscaping(EscapingEventArgs ev)
         {
             if (API.IsScp035(ev.Player))
-            {
                 ev.IsAllowed = false;
-            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnHurting(HurtingEventArgs)"/>
@@ -70,9 +64,7 @@ namespace Scp035.EventHandlers
             }
 
             if ((!API.IsScp035(ev.Target) && !API.IsScp035(ev.Attacker)) || ev.Attacker == ev.Target)
-            {
                 return;
-            }
 
             if (!Config.ScpFriendlyFire && ((ev.Target.Team == Team.SCP || ev.Attacker.Team == Team.SCP) || (API.IsScp035(ev.Attacker) && API.IsScp035(ev.Target))))
             {
@@ -96,18 +88,14 @@ namespace Scp035.EventHandlers
         internal static void OnInsertingGeneratorTablet(InsertingGeneratorTabletEventArgs ev)
         {
             if (API.IsScp035(ev.Player) && !Config.ScpFriendlyFire)
-            {
                 ev.IsAllowed = false;
-            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnMedicalItemUsed(UsedMedicalItemEventArgs)"/>
         internal static void OnMedicalItemUsed(UsedMedicalItemEventArgs ev)
         {
             if (!API.IsScp035(ev.Player))
-            {
                 return;
-            }
 
             int maxHp = ev.Player.ReferenceHub.characterClassManager.CurRole.maxHP;
             if (!Config.Scp035Modifiers.CanHealBeyondHostHp &&
@@ -168,14 +156,10 @@ namespace Scp035.EventHandlers
             }
 
             if (ev.Target == null || !(Player.Get(ev.Target) is Player target))
-            {
                 return;
-            }
 
             if (!API.IsScp035(target) && !API.IsScp035(ev.Shooter))
-            {
                 return;
-            }
 
             if (!Config.ScpFriendlyFire && ((target.Team == Team.SCP || ev.Shooter.Team == Team.SCP) || (API.IsScp035(ev.Shooter) && API.IsScp035(target))))
             {
@@ -199,9 +183,7 @@ namespace Scp035.EventHandlers
         internal static void OnUsingMedicalItem(UsingMedicalItemEventArgs ev)
         {
             if (!API.IsScp035(ev.Player))
-            {
                 return;
-            }
 
             if (ev.Item.IsMedical() && ((!Config.Scp035Modifiers.CanHealBeyondHostHp &&
                                          ev.Player.Health >=

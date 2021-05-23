@@ -18,9 +18,7 @@ namespace Scp035.EventHandlers
         internal static void OnContaining(ContainingEventArgs ev)
         {
             if (API.IsScp035(ev.Player) && !Plugin.Instance.Config.ScpFriendlyFire)
-            {
                 ev.IsAllowed = false;
-            }
         }
     }
 }
