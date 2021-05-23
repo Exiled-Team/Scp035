@@ -18,6 +18,8 @@ namespace Scp035.Commands.SubCommands
     /// </summary>
     public class SpawnItems : ICommand
     {
+        private const string RequiredPermission = "035.spawnitem";
+
         /// <inheritdoc/>
         public string Command { get; } = "spawnitems";
 
@@ -30,9 +32,9 @@ namespace Scp035.Commands.SubCommands
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("035.spawnitem"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required: 035.spawnitem";
+                response = $"Insufficient permission. Required: {RequiredPermission}";
                 return false;
             }
 

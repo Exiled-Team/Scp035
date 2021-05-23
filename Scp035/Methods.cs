@@ -116,9 +116,7 @@ namespace Scp035
             for (int i = 0; i < amount; i++)
             {
                 if (pickups.Count == 0)
-                {
                     return returnPickups;
-                }
 
                 Pickup mimicAs = pickups[Random.Next(pickups.Count)];
                 Transform transform = mimicAs.transform;
@@ -175,9 +173,7 @@ namespace Scp035
         internal static IEnumerator<float> CorrodePlayers()
         {
             if (!Config.CorrodePlayers.IsEnabled)
-            {
                 yield break;
-            }
 
             while (Round.IsStarted)
             {
@@ -185,9 +181,7 @@ namespace Scp035
                 Log.Debug($"Running {nameof(CorrodePlayers)} loop.", Config.Debug);
                 List<Player> scp035List = API.AllScp035.ToList();
                 if (scp035List.Count == 0)
-                {
                     continue;
-                }
 
                 foreach (var player in GetValidPlayers())
                 {
@@ -213,9 +207,7 @@ namespace Scp035
                 yield return Timing.WaitForSeconds(Config.RangedNotification.Interval);
                 Broadcast broadcast = Config.RangedNotification.Notification;
                 if (!API.AllScp035.Any() || !broadcast.Show)
-                {
                     continue;
-                }
 
                 foreach (Player player in Player.List)
                 {
@@ -223,17 +215,13 @@ namespace Scp035
                     if (Physics.Raycast(player.CameraTransform.position + forward, forward, out var hit, Config.RangedNotification.MaximumRange))
                     {
                         if (hit.distance < Config.RangedNotification.MinimumRange)
-                        {
                             continue;
-                        }
 
                         GameObject parent = hit.collider.GetComponentInParent<NetworkIdentity>()?.gameObject;
                         if (parent == null)
-                        {
                             continue;
-                        }
 
-                        if (Player.Get(parent.gameObject) is { } target && API.IsScp035(target))
+                        if (Player.Get(parent.gameObject) is Player target && API.IsScp035(target))
                         {
                             if (Config.RangedNotification.UseHints)
                             {
@@ -254,25 +242,11 @@ namespace Scp035
             player.Hurt(Config.CorrodePlayers.Damage, DamageTypes.Poison);
             List<Player> scp035List = API.AllScp035.ToList();
             if (!Config.CorrodePlayers.LifeSteal || scp035List.Count == 0)
-            {
                 return;
-            }
 
             foreach (var scp035 in scp035List)
             {
-                HealPlayer(scp035, Config.CorrodePlayers.Damage);
-            }
-        }
-
-        private static void HealPlayer(Player player, int amount)
-        {
-            if (player.Health + amount > player.MaxHealth)
-            {
-                player.Health = player.MaxHealth;
-            }
-            else
-            {
-                player.Health += amount;
+                scp035.ReferenceHub.playerStats.HealHPAmount(Config.CorrodePlayers.Damage);
             }
         }
 
@@ -281,14 +255,10 @@ namespace Scp035
             foreach (var player in Player.List)
             {
                 if ((!Config.ScpFriendlyFire && player.IsScp) || (!Config.TutorialFriendlyFire && player.Role == RoleType.Tutorial) || API.IsScp035(player))
-                {
                     continue;
-                }
 
                 if (player.IsAlive)
-                {
                     yield return player;
-                }
             }
         }
     }

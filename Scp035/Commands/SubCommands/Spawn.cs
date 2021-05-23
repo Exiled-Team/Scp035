@@ -18,6 +18,8 @@ namespace Scp035.Commands.SubCommands
     /// </summary>
     public class Spawn : ICommand
     {
+        private const string RequiredPermission = "035.spawn";
+
         /// <inheritdoc/>
         public string Command { get; } = "spawn";
 
@@ -30,16 +32,16 @@ namespace Scp035.Commands.SubCommands
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("035.spawn"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required: 035.spawn";
+                response = $"Insufficient permission. Required: {RequiredPermission}";
                 return false;
             }
 
             Player player = Player.Get((sender as PlayerCommandSender)?.ReferenceHub);
             if (arguments.Count > 0)
             {
-                if (!(Player.Get(arguments.At(0)) is { } ply))
+                if (!(Player.Get(arguments.At(0)) is Player ply))
                 {
                     response = "Could not find the referenced user.";
                     return false;

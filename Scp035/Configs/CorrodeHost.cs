@@ -15,21 +15,21 @@ namespace Scp035.Configs
     public class CorrodeHost
     {
         /// <summary>
-        /// Gets a value indicating whether a Scp035 host will lose health over time.
+        /// Gets or sets a value indicating whether a Scp035 host will lose health over time.
         /// </summary>
         [Description("Whether a Scp035 host will lose health over time.")]
-        public bool IsEnabled { get; private set; } = false;
+        public bool IsEnabled { get; set; } = false;
 
         /// <summary>
-        /// Gets the amount of damage that will be dealt to a Scp035 host each interval.
+        /// Gets or sets the amount of damage that will be dealt to a Scp035 host each interval.
         /// </summary>
         [Description("The amount of damage that will be dealt to a Scp035 host each interval.")]
-        public int Damage { get; private set; } = 5;
+        public int Damage { get; set; } = 5;
 
         /// <summary>
-        /// Gets the amount of seconds between each damage tick.
+        /// Gets or sets the amount of seconds between each damage tick.
         /// </summary>
         [Description("The amount of seconds between each damage tick.")]
-        public float Interval { get; private set; } = 6f;
+        public float Interval { get; set; } = 6f;
     }
 }

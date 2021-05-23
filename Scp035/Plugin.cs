@@ -82,9 +82,7 @@ namespace Scp035
             Scp106Handlers.Containing += Scp106Events.OnContaining;
 
             if (Instance.Config.CheckWinConditions)
-            {
                 ServerHandlers.EndingRound += ServerEvents.OnEndingRound;
-            }
 
             ServerHandlers.RoundStarted += ServerEvents.OnRoundStarted;
             ServerHandlers.WaitingForPlayers += ServerEvents.OnWaitingForPlayers;

@@ -7,10 +7,12 @@
 
 namespace Scp035.EventHandlers
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
+    using NorthwoodLib.Pools;
     using UnityEngine;
 
     /// <summary>
@@ -127,9 +129,10 @@ namespace Scp035.EventHandlers
         internal static void OnPickingUpItem(PickingUpItemEventArgs ev)
         {
             if (!API.IsScp035Item(ev.Pickup))
-            {
                 return;
-            }
+
+            if (ev.Player.SessionVariables.ContainsKey("IsGhostSpectator"))
+                return;
 
             Log.Debug($"{ev.Player.Nickname} attempted to pickup a Scp035 object.", Config.Debug);
             ev.IsAllowed = false;
@@ -141,19 +144,19 @@ namespace Scp035.EventHandlers
 
             if (Config.Scp035Modifiers.SelfInflict)
             {
+                ev.Pickup.Delete();
                 API.Spawn035(ev.Player);
                 return;
             }
 
-            Player player = Player.Get(Team.RIP).FirstOrDefault(ply => !ply.IsOverwatchEnabled);
-            if (player == null)
-            {
-                Log.Debug("There were no spectators to spawn Scp035 as, cancelling pickup.", Config.Debug);
+            List<Player> players = ListPool<Player>.Shared.Rent(Player.List.Where(x => x.IsDead && !x.IsOverwatchEnabled));
+            if (players.Count == 0)
                 return;
-            }
 
+            Player player = players[Random.Range(0, players.Count)];
             ev.Pickup.Delete();
             API.Spawn035(player, ev.Player);
+            ListPool<Player>.Shared.Return(players);
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShooting(ShootingEventArgs)"/>
@@ -164,7 +167,7 @@ namespace Scp035.EventHandlers
                 Methods.RemoveFf(ev.Shooter);
             }
 
-            if (ev.Target == null || !(Player.Get(ev.Target) is { } target))
+            if (ev.Target == null || !(Player.Get(ev.Target) is Player target))
             {
                 return;
             }

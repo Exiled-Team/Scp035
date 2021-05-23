@@ -16,39 +16,39 @@ namespace Scp035.Configs
     public class RangedNotification
     {
         /// <summary>
-        /// Gets a value indicating whether players looking at Scp035 will see a notification.
+        /// Gets or sets a value indicating whether players looking at Scp035 will see a notification.
         /// </summary>
         [Description("Whether players around a Scp035 host will lose health over time.")]
-        public bool IsEnabled { get; private set; } = false;
+        public bool IsEnabled { get; set; } = false;
 
         /// <summary>
-        /// Gets the time between checking if a player is looking at a Scp035 instance.
+        /// Gets or sets the time between checking if a player is looking at a Scp035 instance.
         /// </summary>
         [Description("The time between checking if a player is looking at a Scp035 instance.")]
-        public float Interval { get; private set; } = 5f;
+        public float Interval { get; set; } = 5f;
 
         /// <summary>
-        /// Gets the minimum distance a Scp035 instance must be to a player to display a notification.
+        /// Gets or sets the minimum distance a Scp035 instance must be to a player to display a notification.
         /// </summary>
         [Description("The minimum distance a Scp035 instance must be to a player to display a notification.")]
-        public float MinimumRange { get; private set; } = 10f;
+        public float MinimumRange { get; set; } = 10f;
 
         /// <summary>
-        /// Gets the maximum distance a Scp035 instance must be to a player to display a notification.
+        /// Gets or sets the maximum distance a Scp035 instance must be to a player to display a notification.
         /// </summary>
         [Description("The maximum distance a Scp035 instance must be to a player to display a notification.")]
-        public float MaximumRange { get; private set; } = 30f;
+        public float MaximumRange { get; set; } = 30f;
 
         /// <summary>
-        /// Gets a value indicating whether hints should be used in place of a broadcast.
+        /// Gets or sets a value indicating whether hints should be used in place of a broadcast.
         /// </summary>
         [Description("Whether hints should be used in place of a broadcast.")]
-        public bool UseHints { get; private set; } = true;
+        public bool UseHints { get; set; } = true;
 
         /// <summary>
-        /// Gets the message to be displayed to players.
+        /// Gets or sets the message to be displayed to players.
         /// </summary>
         [Description("The message to be displayed to players.")]
-        public Broadcast Notification { get; private set; } = new Broadcast("You are looking at a <color=red>SCP-035</color>!", 2);
+        public Broadcast Notification { get; set; } = new Broadcast("You are looking at a <color=red>SCP-035</color>!", 2);
     }
 }

@@ -23,9 +23,7 @@ namespace Scp035.EventHandlers
         internal static void OnEndingRound(EndingRoundEventArgs ev)
         {
             if (!API.AllScp035.Any())
-            {
                 return;
-            }
 
             List<Team> teams = (from player in Player.List where !API.IsScp035(player) select player.Team).ToList();
 

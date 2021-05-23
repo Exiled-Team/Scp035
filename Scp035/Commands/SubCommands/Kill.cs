@@ -17,6 +17,8 @@ namespace Scp035.Commands.SubCommands
     /// </summary>
     public class Kill : ICommand
     {
+        private const string RequiredPermission = "035.kill";
+
         /// <inheritdoc/>
         public string Command { get; } = "kill";
 
@@ -29,9 +31,9 @@ namespace Scp035.Commands.SubCommands
         /// <inheritdoc/>
         public bool Execute(ArraySegment<string> arguments, ICommandSender sender, out string response)
         {
-            if (!sender.CheckPermission("035.kill"))
+            if (!sender.CheckPermission(RequiredPermission))
             {
-                response = "Insufficient permission. Required: 035.kill";
+                response = $"Insufficient permission. Required: {RequiredPermission}";
                 return false;
             }
 

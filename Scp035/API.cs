@@ -32,9 +32,7 @@ namespace Scp035
         public static void Destroy035(Player player)
         {
             if (!IsScp035(player))
-            {
                 return;
-            }
 
             player.SessionVariables.Remove("IsScp035");
             if (AllScp035.IsEmpty())
@@ -79,9 +77,7 @@ namespace Scp035
         public static void Spawn035(Player player, Player toReplace = null)
         {
             if (player == null)
-            {
                 return;
-            }
 
             Methods.IsRotating = false;
 
@@ -115,22 +111,16 @@ namespace Scp035
 
             Vector3 scale = config.Scp035Modifiers.Scale.ToVector3();
             if (player.Scale != scale)
-            {
                 player.Scale = scale;
-            }
 
             if (config.Scp035Modifiers.SpawnBroadcast.Show)
-            {
                 player.Broadcast(config.Scp035Modifiers.SpawnBroadcast);
-            }
 
+            player.SessionVariables.Add("IsScp035", true);
             if (config.CorrodeHost.IsEnabled)
-            {
                 Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.CorrodeHost(player)));
-            }
 
             Methods.RemoveScpPickups();
-            player.SessionVariables.Add("IsScp035", true);
         }
 
         /// <summary>

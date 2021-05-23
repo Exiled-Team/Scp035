@@ -55,7 +55,7 @@ namespace Scp035.Commands
                     : command.Command);
             }
 
-            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder).TrimEnd();
             return false;
         }
     }

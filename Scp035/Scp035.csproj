@@ -2,12 +2,10 @@
 
     <PropertyGroup>
       <TargetFramework>net472</TargetFramework>
-      <RootNamespace>Scp035</RootNamespace>
       <AssemblyName>Scp035</AssemblyName>
 
       <Authors>Build</Authors>
       <Version>3.0.0</Version>
-      <LangVersion>8</LangVersion>
 
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
