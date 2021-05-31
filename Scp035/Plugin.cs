@@ -63,8 +63,6 @@ namespace Scp035
 
         private static void SubscribeAll()
         {
-            MapHandlers.ExplodingGrenade += MapEvents.OnExplodingGrenade;
-
             PlayerHandlers.ChangingRole += PlayerEvents.OnChangingRole;
             PlayerHandlers.Destroying += PlayerEvents.OnDestroying;
             PlayerHandlers.Died += PlayerEvents.OnDied;
@@ -90,8 +88,6 @@ namespace Scp035
 
         private static void UnSubscribeAll()
         {
-            MapHandlers.ExplodingGrenade -= MapEvents.OnExplodingGrenade;
-
             PlayerHandlers.ChangingRole -= PlayerEvents.OnChangingRole;
             PlayerHandlers.Destroying -= PlayerEvents.OnDestroying;
             PlayerHandlers.Died -= PlayerEvents.OnDied;

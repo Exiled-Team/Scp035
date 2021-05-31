@@ -41,6 +41,12 @@ namespace Scp035.Configs
         public int Health { get; set; } = 300;
 
         /// <summary>
+        /// Gets or sets a value indicating whether Scp035 will take damage in the pocket dimension.
+        /// </summary>
+        [Description("Indicates whether Scp035 will take damage in the pocket dimension.")]
+        public bool PocketDamage { get; set; } = true;
+
+        /// <summary>
         /// Gets or sets a value indicating whether the user who picks up an item will become an instance or if someone will be chosen to replace them.
         /// </summary>
         [Description("Whether the user who picks up an item will become an instance or if someone will be chosen to replace them.")]

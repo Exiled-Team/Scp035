@@ -43,7 +43,7 @@ namespace Scp035.Commands.SubCommands
             }
 
             response = "Killed all Scp035 users successfully.";
-            return false;
+            return true;
         }
     }
 }

@@ -38,7 +38,7 @@ namespace Scp035.Commands.SubCommands
                 return false;
             }
 
-            if (arguments.Count != 1)
+            if (arguments.Count < 1)
             {
                 response = "Syntax: 035 item <Amount>";
                 return false;
@@ -56,7 +56,7 @@ namespace Scp035.Commands.SubCommands
                 stringBuilder.AppendLine($"ItemType: {item.itemId} - Position: {item.transform.position}");
             }
 
-            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder);
+            response = StringBuilderPool.Shared.ToStringReturn(stringBuilder).TrimEnd();
             return true;
         }
     }

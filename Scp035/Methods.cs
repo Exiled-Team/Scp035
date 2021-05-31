@@ -51,7 +51,9 @@ namespace Scp035
         /// </summary>
         internal static void KillAllCoroutines()
         {
-            Timing.KillCoroutines(CoroutineHandles.ToArray());
+            foreach (var coroutine in CoroutineHandles)
+                Timing.KillCoroutines(coroutine);
+
             CoroutineHandles.Clear();
         }
 
@@ -83,14 +85,10 @@ namespace Scp035
             foreach (var pickup in ScpPickups)
             {
                 if (pickup.InUse)
-                {
                     pickup.Locked = true;
-                }
 
                 if (pickup != null)
-                {
                     pickup.Delete();
-                }
             }
 
             ScpPickups.Clear();

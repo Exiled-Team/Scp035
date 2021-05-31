@@ -59,14 +59,23 @@ namespace Scp035.EventHandlers
         internal static void OnHurting(HurtingEventArgs ev)
         {
             if (Methods.FriendlyFireUsers.Contains(ev.Attacker.UserId))
-            {
                 Methods.RemoveFf(ev.Attacker);
+
+            bool targetIs035 = API.IsScp035(ev.Target);
+            if (targetIs035 && ev.DamageType == DamageTypes.Pocket && !Config.Scp035Modifiers.PocketDamage)
+            {
+                ev.IsAllowed = false;
+                return;
             }
 
-            if ((!API.IsScp035(ev.Target) && !API.IsScp035(ev.Attacker)) || ev.Attacker == ev.Target)
+            if (targetIs035 && ev.DamageType == DamageTypes.Grenade)
+                ev.Amount *= 1.428571f;
+
+            bool attackerIs035 = API.IsScp035(ev.Attacker);
+            if ((!targetIs035 && !attackerIs035) || ev.Attacker == ev.Target)
                 return;
 
-            if (!Config.ScpFriendlyFire && ((ev.Target.Team == Team.SCP || ev.Attacker.Team == Team.SCP) || (API.IsScp035(ev.Attacker) && API.IsScp035(ev.Target))))
+            if (!Config.ScpFriendlyFire && ((ev.Target.Team == Team.SCP || ev.Attacker.Team == Team.SCP) || (attackerIs035 && targetIs035)))
             {
                 ev.IsAllowed = false;
                 return;
@@ -79,9 +88,7 @@ namespace Scp035.EventHandlers
             }
 
             if (ev.Attacker.Side == ev.Target.Side)
-            {
                 Methods.GrantFf(ev.Attacker);
-            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnInsertingGeneratorTablet(InsertingGeneratorTabletEventArgs)"/>
