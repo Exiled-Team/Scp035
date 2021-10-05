@@ -10,12 +10,13 @@ namespace Scp035.Patches
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using HarmonyLib;
+    using PlayableScps;
     using UnityEngine;
 
     /// <summary>
     /// Removes the <see cref="EffectType.Amnesia"/> effect from a Scp035 when bitten by a Scp939.
     /// </summary>
-    [HarmonyPatch(typeof(Scp939PlayerScript), nameof(Scp939PlayerScript.CallCmdShoot))]
+    [HarmonyPatch(typeof(Scp939), nameof(Scp939.ServerAttack))]
     internal static class Scp939AttackPatch
     {
         private static void Postfix(GameObject target)

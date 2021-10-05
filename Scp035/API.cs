@@ -11,7 +11,10 @@ namespace Scp035
     using System.Linq;
     using Exiled.API.Enums;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
+    using InventorySystem;
     using MEC;
+    using MonoMod.Utils;
     using Scp035.Configs;
     using UnityEngine;
 
@@ -83,7 +86,7 @@ namespace Scp035
 
             if (toReplace != null && player.UserId != toReplace.UserId)
             {
-                List<Inventory.SyncItemInfo> items = new List<Inventory.SyncItemInfo>(toReplace.Inventory.items);
+                List<Item> items = toReplace.Items.ToList();
                 toReplace.ClearInventory();
 
                 Vector3 position = toReplace.Position;
@@ -96,10 +99,9 @@ namespace Scp035
 
             Config config = Plugin.Instance.Config;
 
-            uint ammo = config.Scp035Modifiers.AmmoAmount;
-            player.Ammo[(int)AmmoType.Nato556] = ammo;
-            player.Ammo[(int)AmmoType.Nato762] = ammo;
-            player.Ammo[(int)AmmoType.Nato9] = ammo;
+            Dictionary<ItemType, ushort> ammo = config.Scp035Modifiers.Ammo;
+            player.Ammo.Clear();
+            player.Ammo.AddRange(ammo);
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
             player.CustomInfo = "<color=#FF0000>SCP-035</color>";
@@ -109,7 +111,7 @@ namespace Scp035
 
             player.Health = player.MaxHealth = config.Scp035Modifiers.Health;
 
-            Vector3 scale = config.Scp035Modifiers.Scale.ToVector3();
+            Vector3 scale = config.Scp035Modifiers.Scale;
             if (player.Scale != scale)
                 player.Scale = scale;
 

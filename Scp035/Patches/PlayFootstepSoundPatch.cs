@@ -22,9 +22,7 @@ namespace Scp035.Patches
         private static void Postfix(FootstepSync __instance)
         {
             if (!Plugin.Instance.Config.CorrodeTrail)
-            {
                 return;
-            }
 
             Player player = Player.Get(__instance.gameObject);
             count++;

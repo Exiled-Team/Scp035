@@ -22,20 +22,16 @@ namespace Scp035
     /// </summary>
     public class Plugin : Plugin<Config>
     {
-        private static readonly Plugin InstanceValue = new Plugin();
-        private static Harmony harmony;
-
-        private Plugin()
-        {
-        }
+        private Harmony harmony;
+        private PlayerEvents playerEvents;
 
         /// <summary>
         /// Gets an instance of <see cref="Plugin"/>.
         /// </summary>
-        public static Plugin Instance { get; } = InstanceValue;
+        public static Plugin Instance { get; private set; }
 
         /// <inheritdoc/>
-        public override string Author { get; } = "Build, formerly by Cyanox";
+        public override string Author { get; } = "Build";
 
         /// <inheritdoc/>
         public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
@@ -46,6 +42,7 @@ namespace Scp035
         /// <inheritdoc/>
         public override void OnEnabled()
         {
+            Instance = this;
             SubscribeAll();
             harmony = new Harmony($"build.scp035.{DateTime.UtcNow.Ticks}");
             harmony.PatchAll();
@@ -57,23 +54,25 @@ namespace Scp035
         {
             UnSubscribeAll();
             Methods.KillAllCoroutines();
-            harmony.UnpatchAll(harmony.Id);
+            harmony.UnpatchAll();
+            Instance = null;
             base.OnDisabled();
         }
 
-        private static void SubscribeAll()
+        private void SubscribeAll()
         {
-            PlayerHandlers.ChangingRole += PlayerEvents.OnChangingRole;
-            PlayerHandlers.Destroying += PlayerEvents.OnDestroying;
-            PlayerHandlers.Died += PlayerEvents.OnDied;
-            PlayerHandlers.EnteringPocketDimension += PlayerEvents.OnEnteringPocketDimension;
-            PlayerHandlers.Escaping += PlayerEvents.OnEscaping;
-            PlayerHandlers.Hurting += PlayerEvents.OnHurting;
-            PlayerHandlers.InsertingGeneratorTablet += PlayerEvents.OnInsertingGeneratorTablet;
-            PlayerHandlers.MedicalItemUsed += PlayerEvents.OnMedicalItemUsed;
-            PlayerHandlers.PickingUpItem += PlayerEvents.OnPickingUpItem;
-            PlayerHandlers.Shooting += PlayerEvents.OnShooting;
-            PlayerHandlers.UsingMedicalItem += PlayerEvents.OnUsingMedicalItem;
+            playerEvents = new PlayerEvents(this);
+            PlayerHandlers.ChangingRole += playerEvents.OnChangingRole;
+            PlayerHandlers.Destroying += playerEvents.OnDestroying;
+            PlayerHandlers.Died += playerEvents.OnDied;
+            PlayerHandlers.EnteringPocketDimension += playerEvents.OnEnteringPocketDimension;
+            PlayerHandlers.Escaping += playerEvents.OnEscaping;
+            PlayerHandlers.Hurting += playerEvents.OnHurting;
+            PlayerHandlers.ActivatingGenerator += playerEvents.OnActivatingGenerator;
+            PlayerHandlers.ItemUsed += playerEvents.OnItemUsed;
+            PlayerHandlers.PickingUpItem += playerEvents.OnPickingUpItem;
+            PlayerHandlers.Shot += playerEvents.OnShot;
+            PlayerHandlers.UsingItem += playerEvents.OnUsingItem;
 
             Scp096Handlers.AddingTarget += Scp096Events.OnAddingTarget;
 
@@ -86,19 +85,20 @@ namespace Scp035
             ServerHandlers.WaitingForPlayers += ServerEvents.OnWaitingForPlayers;
         }
 
-        private static void UnSubscribeAll()
+        private void UnSubscribeAll()
         {
-            PlayerHandlers.ChangingRole -= PlayerEvents.OnChangingRole;
-            PlayerHandlers.Destroying -= PlayerEvents.OnDestroying;
-            PlayerHandlers.Died -= PlayerEvents.OnDied;
-            PlayerHandlers.EnteringPocketDimension -= PlayerEvents.OnEnteringPocketDimension;
-            PlayerHandlers.Escaping -= PlayerEvents.OnEscaping;
-            PlayerHandlers.Hurting -= PlayerEvents.OnHurting;
-            PlayerHandlers.InsertingGeneratorTablet -= PlayerEvents.OnInsertingGeneratorTablet;
-            PlayerHandlers.MedicalItemUsed -= PlayerEvents.OnMedicalItemUsed;
-            PlayerHandlers.PickingUpItem -= PlayerEvents.OnPickingUpItem;
-            PlayerHandlers.Shooting -= PlayerEvents.OnShooting;
-            PlayerHandlers.UsingMedicalItem -= PlayerEvents.OnUsingMedicalItem;
+            PlayerHandlers.ChangingRole -= playerEvents.OnChangingRole;
+            PlayerHandlers.Destroying -= playerEvents.OnDestroying;
+            PlayerHandlers.Died -= playerEvents.OnDied;
+            PlayerHandlers.EnteringPocketDimension -= playerEvents.OnEnteringPocketDimension;
+            PlayerHandlers.Escaping -= playerEvents.OnEscaping;
+            PlayerHandlers.Hurting -= playerEvents.OnHurting;
+            PlayerHandlers.ActivatingGenerator -= playerEvents.OnActivatingGenerator;
+            PlayerHandlers.ItemUsed -= playerEvents.OnItemUsed;
+            PlayerHandlers.PickingUpItem -= playerEvents.OnPickingUpItem;
+            PlayerHandlers.Shot -= playerEvents.OnShot;
+            PlayerHandlers.UsingItem -= playerEvents.OnUsingItem;
+            playerEvents = null;
 
             Scp096Handlers.AddingTarget -= Scp096Events.OnAddingTarget;
 

@@ -7,9 +7,10 @@
 
 namespace Scp035.Configs
 {
+    using System.Collections.Generic;
     using System.ComponentModel;
     using Exiled.API.Features;
-    using Scp035.SerializableClasses;
+    using UnityEngine;
 
     /// <summary>
     /// Configs in relation to Scp035 instances.
@@ -20,7 +21,14 @@ namespace Scp035.Configs
         /// Gets or sets the amount of ammo that is given to Scp035.
         /// </summary>
         [Description("The amount of ammo that is given to Scp035.")]
-        public uint AmmoAmount { get; set; } = 250;
+        public Dictionary<ItemType, ushort> Ammo { get; set; } = new Dictionary<ItemType, ushort>
+        {
+            [ItemType.Ammo9x19] = 100,
+            [ItemType.Ammo12gauge] = 100,
+            [ItemType.Ammo44cal] = 100,
+            [ItemType.Ammo556x45] = 100,
+            [ItemType.Ammo762x39] = 100,
+        };
 
         /// <summary>
         /// Gets or sets a value indicating whether a Scp035 instance can heal beyond their current roles max health.
@@ -56,7 +64,7 @@ namespace Scp035.Configs
         /// Gets or sets the size of a Scp035 instance.
         /// </summary>
         [Description("The size of a Scp035 instance.")]
-        public Vector Scale { get; set; } = new Vector { X = 1, Y = 1, Z = 1 };
+        public Vector3 Scale { get; set; } = Vector3.one;
 
         /// <summary>
         /// Gets or sets the <see cref="Broadcast"/> that will be displayed to an Scp035 instance when they spawn.

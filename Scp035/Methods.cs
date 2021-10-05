@@ -12,6 +12,7 @@ namespace Scp035
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Items;
     using MEC;
     using Mirror;
     using UnityEngine;
@@ -23,8 +24,6 @@ namespace Scp035
     public static class Methods
     {
         private static readonly Config Config = Plugin.Instance.Config;
-
-        private static readonly Random Random = new Random();
 
         /// <summary>
         /// Gets all active coroutines.
@@ -75,6 +74,14 @@ namespace Scp035
         {
             player.IsFriendlyFireEnabled = false;
             FriendlyFireUsers.Remove(player.UserId);
+
+            foreach (var item in player.Items.ToList())
+            {
+                if (item.Type == ItemType.Coin)
+                {
+                    player.RemoveItem(item);
+                }
+            }
         }
 
         /// <summary>
@@ -83,13 +90,7 @@ namespace Scp035
         internal static void RemoveScpPickups()
         {
             foreach (var pickup in ScpPickups)
-            {
-                if (pickup.InUse)
-                    pickup.Locked = true;
-
-                if (pickup != null)
-                    pickup.Delete();
-            }
+                pickup.Destroy();
 
             ScpPickups.Clear();
         }
@@ -104,10 +105,10 @@ namespace Scp035
             Log.Debug($"Running {nameof(SpawnPickups)}.", Config.Debug);
             RemoveScpPickups();
 
-            List<Pickup> pickups = Pickup.Instances.Where(pickup => !API.IsScp035Item(pickup)).ToList();
+            List<Pickup> pickups = Map.Pickups.Where(pickup => !API.IsScp035Item(pickup)).ToList();
             if (Warhead.IsDetonated)
             {
-                pickups.RemoveAll(pickup => Map.FindParentRoom(pickup.gameObject).Type != RoomType.Surface);
+                pickups.RemoveAll(pickup => Map.FindParentRoom(pickup.Base.gameObject).Type != RoomType.Surface);
             }
 
             List<Pickup> returnPickups = new List<Pickup>();
@@ -116,13 +117,9 @@ namespace Scp035
                 if (pickups.Count == 0)
                     return returnPickups;
 
-                Pickup mimicAs = pickups[Random.Next(pickups.Count)];
-                Transform transform = mimicAs.transform;
-                Pickup scpPickup = Config.ItemSpawning
-                    .PossibleItems[Random.Next(Config.ItemSpawning.PossibleItems.Length)]
-                    .Spawn(0, transform.position, transform.rotation);
-
-                Log.Debug($"Spawned Scp035 item with ItemType of {scpPickup.itemId} at {scpPickup.transform.position}", Config.Debug);
+                Pickup mimicAs = pickups.GetRandom();
+                Pickup scpPickup = new Item(Config.ItemSpawning.PossibleItems.GetRandom()).Spawn(mimicAs.Position, mimicAs.Rotation);
+                Log.Debug($"Spawned Scp035 item with ItemType of {scpPickup.Type} at {scpPickup.Position}", Config.Debug);
                 ScpPickups.Add(scpPickup);
                 returnPickups.Add(scpPickup);
 

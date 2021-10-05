@@ -8,36 +8,48 @@
 namespace Scp035.Patches
 {
 #pragma warning disable SA1313
-    using CustomPlayerEffects;
     using Exiled.API.Features;
     using HarmonyLib;
-    using UnityEngine;
+    using InventorySystem.Items.ThrowableProjectiles;
 
     /// <summary>
     /// Allows for Scp035 to flash/be flashed by teammates.
     /// </summary>
-    [HarmonyPatch(typeof(Flashed), nameof(Flashed.Flashable))]
+    [HarmonyPatch(typeof(FlashbangGrenade), nameof(FlashbangGrenade.PlayExplosionEffects))]
     internal static class FlashablePatch
     {
-        private static bool Prefix(Flashed __instance, ref bool __result, ReferenceHub throwerPlayerHub, Vector3 sourcePosition, int ignoreMask)
+        private static bool Prefix(FlashbangGrenade __instance)
         {
-            Player thrower = Player.Get(throwerPlayerHub);
-            Player target = Player.Get(__instance.Hub);
-            bool scp035Applies = false;
+            double time = __instance._blindingOverDistance.keys[__instance._blindingOverDistance.length - 1].time;
+            float num = (float)(time * time);
+            Player thrower = Player.Get(__instance.PreviousOwner.Hub);
+            foreach (ReferenceHub hub in ReferenceHub.GetAllHubs().Values)
+            {
+                if (!(hub == null) && (__instance.transform.position - hub.transform.position).sqrMagnitude <= (double)num && !(hub == __instance.PreviousOwner.Hub)
+                    && (CheckScp035Application(thrower, Player.Get(hub)) || HitboxIdentity.CheckFriendlyFire(__instance.PreviousOwner.Role, hub.characterClassManager.CurClass)))
+                    __instance.ProcessPlayer(hub);
+            }
+
+            return false;
+        }
+
+        private static bool CheckScp035Application(Player thrower, Player target)
+        {
             var config = Plugin.Instance.Config;
+
+            bool scp035Applies = false;
             if (API.IsScp035(thrower))
             {
                 scp035Applies = (target.IsScp && config.ScpFriendlyFire) ||
-                                (target.Role == RoleType.Tutorial && config.TutorialFriendlyFire);
+                                 (target.Role == RoleType.Tutorial && config.TutorialFriendlyFire);
             }
             else if (API.IsScp035(target))
             {
                 scp035Applies = (thrower.IsScp && config.ScpFriendlyFire) ||
-                                (thrower.Role == RoleType.Tutorial && config.TutorialFriendlyFire);
+                                 (thrower.Role == RoleType.Tutorial && config.TutorialFriendlyFire);
             }
 
-            __result = __instance.Hub != throwerPlayerHub && (throwerPlayerHub.weaponManager.GetShootPermission(__instance.Hub.characterClassManager.CurRole.team) || scp035Applies) && !Physics.Linecast(sourcePosition, __instance.Hub.PlayerCameraReference.position, ignoreMask);
-            return false;
+            return scp035Applies;
         }
     }
 }

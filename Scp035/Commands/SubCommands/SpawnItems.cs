@@ -51,9 +51,9 @@ namespace Scp035.Commands.SubCommands
             }
 
             StringBuilder stringBuilder = StringBuilderPool.Shared.Rent().AppendLine("Spawned Items:");
-            foreach (Pickup item in API.SpawnItems(amount))
+            foreach (var item in API.SpawnItems(amount))
             {
-                stringBuilder.AppendLine($"ItemType: {item.itemId} - Position: {item.transform.position}");
+                stringBuilder.AppendLine($"ItemType: {item.Type} - Position: {item.Position}");
             }
 
             response = StringBuilderPool.Shared.ToStringReturn(stringBuilder).TrimEnd();
