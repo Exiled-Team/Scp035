@@ -18,19 +18,6 @@ namespace Scp035.Configs
     public class Scp035Modifiers
     {
         /// <summary>
-        /// Gets or sets the amount of ammo that is given to Scp035.
-        /// </summary>
-        [Description("The amount of ammo that is given to Scp035.")]
-        public Dictionary<ItemType, ushort> Ammo { get; set; } = new Dictionary<ItemType, ushort>
-        {
-            [ItemType.Ammo9x19] = 100,
-            [ItemType.Ammo12gauge] = 100,
-            [ItemType.Ammo44cal] = 100,
-            [ItemType.Ammo556x45] = 100,
-            [ItemType.Ammo762x39] = 100,
-        };
-
-        /// <summary>
         /// Gets or sets a value indicating whether a Scp035 instance can heal beyond their current roles max health.
         /// </summary>
         [Description("Whether a Scp035 instance can heal beyond their current roles max health.")]

@@ -87,21 +87,19 @@ namespace Scp035
             if (toReplace != null && player.UserId != toReplace.UserId)
             {
                 List<Item> items = toReplace.Items.ToList();
+                Dictionary<ItemType, ushort> ammo = new Dictionary<ItemType, ushort>(toReplace.Ammo);
                 toReplace.ClearInventory();
 
                 Vector3 position = toReplace.Position;
                 player.Role = toReplace.Role;
                 player.ResetInventory(items);
+                player.Ammo.AddRange(ammo);
 
                 toReplace.Role = RoleType.Spectator;
                 Timing.CallDelayed(0.5f, () => player.Position = position);
             }
 
             Config config = Plugin.Instance.Config;
-
-            Dictionary<ItemType, ushort> ammo = config.Scp035Modifiers.Ammo;
-            player.Ammo.Clear();
-            player.Ammo.AddRange(ammo);
 
             player.ReferenceHub.nicknameSync.ShownPlayerInfo &= ~PlayerInfoArea.Role;
             player.CustomInfo = "<color=#FF0000>SCP-035</color>";

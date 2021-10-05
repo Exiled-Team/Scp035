@@ -17,17 +17,25 @@ namespace Scp035.EventHandlers
     /// <summary>
     /// All event handlers which use <see cref="Exiled.Events.Handlers.Server"/>.
     /// </summary>
-    public static class ServerEvents
+    public class ServerEvents
     {
+        private readonly Plugin plugin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ServerEvents"/> class.
+        /// </summary>
+        /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
+        public ServerEvents(Plugin plugin) => this.plugin = plugin;
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnEndingRound(EndingRoundEventArgs)"/>
-        internal static void OnEndingRound(EndingRoundEventArgs ev)
+        public void OnEndingRound(EndingRoundEventArgs ev)
         {
             if (!API.AllScp035.Any())
                 return;
 
             List<Team> teams = (from player in Player.List where !API.IsScp035(player) select player.Team).ToList();
 
-            if (teams.All(team => (team == Team.TUT && Plugin.Instance.Config.WinWithTutorial) || team == Team.SCP || team == Team.RIP))
+            if (teams.All(team => (team == Team.TUT && plugin.Config.WinWithTutorial) || team == Team.SCP || team == Team.RIP))
             {
                 ev.LeadingTeam = LeadingTeam.Anomalies;
                 ev.IsRoundEnded = true;
@@ -39,7 +47,7 @@ namespace Scp035.EventHandlers
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnRoundStarted"/>
-        internal static void OnRoundStarted()
+        public void OnRoundStarted()
         {
             Methods.IsRotating = true;
             Methods.ScpPickups.Clear();
@@ -47,14 +55,14 @@ namespace Scp035.EventHandlers
             Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.RunSpawning()));
             Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.CorrodePlayers()));
 
-            if (Plugin.Instance.Config.RangedNotification.IsEnabled)
+            if (plugin.Config.RangedNotification.IsEnabled)
             {
                 Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.RangedNotification()));
             }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Server.OnWaitingForPlayers"/>
-        internal static void OnWaitingForPlayers()
+        public void OnWaitingForPlayers()
         {
             Methods.KillAllCoroutines();
         }

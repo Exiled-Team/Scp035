@@ -23,8 +23,6 @@ namespace Scp035
     /// </summary>
     public static class Methods
     {
-        private static readonly Config Config = Plugin.Instance.Config;
-
         /// <summary>
         /// Gets all active coroutines.
         /// </summary>
@@ -44,6 +42,8 @@ namespace Scp035
         /// Gets or sets a value indicating whether a Scp035 item instance can spawn.
         /// </summary>
         internal static bool IsRotating { get; set; }
+
+        private static Config Config => Plugin.Instance.Config;
 
         /// <summary>
         /// Kills all active coroutines.
@@ -74,14 +74,6 @@ namespace Scp035
         {
             player.IsFriendlyFireEnabled = false;
             FriendlyFireUsers.Remove(player.UserId);
-
-            foreach (var item in player.Items.ToList())
-            {
-                if (item.Type == ItemType.Coin)
-                {
-                    player.RemoveItem(item);
-                }
-            }
         }
 
         /// <summary>

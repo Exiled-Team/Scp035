@@ -12,12 +12,20 @@ namespace Scp035.EventHandlers
     /// <summary>
     /// All event handlers which use <see cref="Exiled.Events.Handlers.Scp106"/>.
     /// </summary>
-    public static class Scp106Events
+    public class Scp106Events
     {
+        private readonly Plugin plugin;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Scp106Events"/> class.
+        /// </summary>
+        /// <param name="plugin">An instance of the <see cref="Plugin"/> class.</param>
+        public Scp106Events(Plugin plugin) => this.plugin = plugin;
+
         /// <inheritdoc cref="Exiled.Events.Handlers.Scp106.OnContaining(ContainingEventArgs)"/>
-        internal static void OnContaining(ContainingEventArgs ev)
+        public void OnContaining(ContainingEventArgs ev)
         {
-            if (API.IsScp035(ev.Player) && !Plugin.Instance.Config.ScpFriendlyFire)
+            if (API.IsScp035(ev.Player) && !plugin.Config.ScpFriendlyFire)
                 ev.IsAllowed = false;
         }
     }

@@ -24,6 +24,9 @@ namespace Scp035
     {
         private Harmony harmony;
         private PlayerEvents playerEvents;
+        private Scp096Events scp096Events;
+        private Scp106Events scp106Events;
+        private ServerEvents serverEvents;
 
         /// <summary>
         /// Gets an instance of <see cref="Plugin"/>.
@@ -34,7 +37,7 @@ namespace Scp035
         public override string Author { get; } = "Build";
 
         /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(2, 9, 4);
+        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
 
         /// <inheritdoc/>
         public override Version Version { get; } = new Version(3, 0, 0);
@@ -74,15 +77,18 @@ namespace Scp035
             PlayerHandlers.Shot += playerEvents.OnShot;
             PlayerHandlers.UsingItem += playerEvents.OnUsingItem;
 
-            Scp096Handlers.AddingTarget += Scp096Events.OnAddingTarget;
+            scp096Events = new Scp096Events();
+            Scp096Handlers.AddingTarget += scp096Events.OnAddingTarget;
 
-            Scp106Handlers.Containing += Scp106Events.OnContaining;
+            scp106Events = new Scp106Events(this);
+            Scp106Handlers.Containing += scp106Events.OnContaining;
 
+            serverEvents = new ServerEvents(this);
             if (Instance.Config.CheckWinConditions)
-                ServerHandlers.EndingRound += ServerEvents.OnEndingRound;
+                ServerHandlers.EndingRound += serverEvents.OnEndingRound;
 
-            ServerHandlers.RoundStarted += ServerEvents.OnRoundStarted;
-            ServerHandlers.WaitingForPlayers += ServerEvents.OnWaitingForPlayers;
+            ServerHandlers.RoundStarted += serverEvents.OnRoundStarted;
+            ServerHandlers.WaitingForPlayers += serverEvents.OnWaitingForPlayers;
         }
 
         private void UnSubscribeAll()
@@ -100,13 +106,16 @@ namespace Scp035
             PlayerHandlers.UsingItem -= playerEvents.OnUsingItem;
             playerEvents = null;
 
-            Scp096Handlers.AddingTarget -= Scp096Events.OnAddingTarget;
+            Scp096Handlers.AddingTarget -= scp096Events.OnAddingTarget;
+            scp096Events = null;
 
-            Scp106Handlers.Containing -= Scp106Events.OnContaining;
+            Scp106Handlers.Containing -= scp106Events.OnContaining;
+            scp106Events = null;
 
-            ServerHandlers.EndingRound -= ServerEvents.OnEndingRound;
-            ServerHandlers.RoundStarted -= ServerEvents.OnRoundStarted;
-            ServerHandlers.WaitingForPlayers -= ServerEvents.OnWaitingForPlayers;
+            ServerHandlers.EndingRound -= serverEvents.OnEndingRound;
+            ServerHandlers.RoundStarted -= serverEvents.OnRoundStarted;
+            ServerHandlers.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
+            serverEvents = null;
         }
     }
 }

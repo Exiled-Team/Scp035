@@ -141,23 +141,24 @@ namespace Scp035.EventHandlers
             if (API.IsScp035(ev.Player))
             {
                 Log.Debug($"Pickup failed because {ev.Player.Nickname} is already a Scp035.", plugin.Config.Debug);
+                ev.Pickup.Locked = false;
                 return;
             }
 
             if (plugin.Config.Scp035Modifiers.SelfInflict)
             {
-                ev.Pickup.Destroy();
                 API.Spawn035(ev.Player);
                 return;
             }
 
             List<Player> players = ListPool<Player>.Shared.Rent(Player.List.Where(x => x.IsDead && !x.IsOverwatchEnabled));
             if (players.Count == 0)
+            {
+                ev.Pickup.Locked = false;
                 return;
+            }
 
-            Player player = players[Random.Range(0, players.Count)];
-            ev.Pickup.Destroy();
-            API.Spawn035(player, ev.Player);
+            API.Spawn035(players.GetRandom(), ev.Player);
             ListPool<Player>.Shared.Return(players);
         }
 
