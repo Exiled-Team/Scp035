@@ -13,6 +13,7 @@ namespace Scp035.EventHandlers
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.Events.EventArgs;
+    using MEC;
     using NorthwoodLib.Pools;
     using UnityEngine;
 
@@ -34,6 +35,14 @@ namespace Scp035.EventHandlers
         {
             if (ev.Reason != SpawnReason.Escaped)
                 API.Destroy035(ev.Player);
+
+            if (ev.NewRole == RoleType.Spectator)
+            {
+                foreach (Player scp035 in API.AllScp035)
+                {
+                    Timing.CallDelayed(0.5f, () => ev.Player.SendFakeSyncVar(scp035.ReferenceHub.networkIdentity, typeof(NicknameSync), nameof(NicknameSync.Network_displayName), $"{scp035.Nickname} - (Scp035)"));
+                }
+            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnDestroying(DestroyingEventArgs)"/>

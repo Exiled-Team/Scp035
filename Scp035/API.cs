@@ -9,10 +9,9 @@ namespace Scp035
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Exiled.API.Enums;
+    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
-    using InventorySystem;
     using MEC;
     using MonoMod.Utils;
     using Scp035.Configs;
@@ -121,6 +120,10 @@ namespace Scp035
                 Methods.CoroutineHandles.Add(Timing.RunCoroutine(Methods.CorrodeHost(player)));
 
             Methods.RemoveScpPickups();
+            foreach (Player spectator in Player.Get(RoleType.Spectator))
+            {
+                Timing.CallDelayed(0.5f, () => spectator.SendFakeSyncVar(player.ReferenceHub.networkIdentity, typeof(NicknameSync), nameof(NicknameSync.Network_displayName), $"{player.Nickname} - (Scp035)"));
+            }
         }
 
         /// <summary>

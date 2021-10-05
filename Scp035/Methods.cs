@@ -10,13 +10,11 @@ namespace Scp035
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Enums;
-    using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Items;
     using MEC;
     using Mirror;
     using UnityEngine;
-    using Random = System.Random;
 
     /// <summary>
     /// Contains all methods and various tracking.
