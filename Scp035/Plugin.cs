@@ -23,10 +23,6 @@ namespace Scp035
     public class Plugin : Plugin<Config>
     {
         private Harmony harmony;
-        private PlayerEvents playerEvents;
-        private Scp096Events scp096Events;
-        private Scp106Events scp106Events;
-        private ServerEvents serverEvents;
 
         /// <summary>
         /// Gets an instance of <see cref="Plugin"/>.
@@ -41,6 +37,14 @@ namespace Scp035
 
         /// <inheritdoc/>
         public override Version Version { get; } = new Version(3, 0, 0);
+
+        public PlayerEvents PlayerEvents { get; private set; }
+
+        public Scp096Events Scp096Events { get; private set; }
+
+        public Scp106Events Scp106Events { get; private set; }
+
+        public ServerEvents ServerEvents { get; private set; }
 
         /// <inheritdoc/>
         public override void OnEnabled()
@@ -64,58 +68,58 @@ namespace Scp035
 
         private void SubscribeAll()
         {
-            playerEvents = new PlayerEvents(this);
-            PlayerHandlers.ChangingRole += playerEvents.OnChangingRole;
-            PlayerHandlers.Destroying += playerEvents.OnDestroying;
-            PlayerHandlers.Died += playerEvents.OnDied;
-            PlayerHandlers.EnteringPocketDimension += playerEvents.OnEnteringPocketDimension;
-            PlayerHandlers.Escaping += playerEvents.OnEscaping;
-            PlayerHandlers.Hurting += playerEvents.OnHurting;
-            PlayerHandlers.ActivatingGenerator += playerEvents.OnActivatingGenerator;
-            PlayerHandlers.ItemUsed += playerEvents.OnItemUsed;
-            PlayerHandlers.PickingUpItem += playerEvents.OnPickingUpItem;
-            PlayerHandlers.Shot += playerEvents.OnShot;
-            PlayerHandlers.UsingItem += playerEvents.OnUsingItem;
+            PlayerEvents = new PlayerEvents(this);
+            PlayerHandlers.ChangingRole += PlayerEvents.OnChangingRole;
+            PlayerHandlers.Destroying += PlayerEvents.OnDestroying;
+            PlayerHandlers.Died += PlayerEvents.OnDied;
+            PlayerHandlers.EnteringPocketDimension += PlayerEvents.OnEnteringPocketDimension;
+            PlayerHandlers.Escaping += PlayerEvents.OnEscaping;
+            PlayerHandlers.Hurting += PlayerEvents.OnHurting;
+            PlayerHandlers.ActivatingGenerator += PlayerEvents.OnActivatingGenerator;
+            PlayerHandlers.ItemUsed += PlayerEvents.OnItemUsed;
+            PlayerHandlers.PickingUpItem += PlayerEvents.OnPickingUpItem;
+            PlayerHandlers.Shot += PlayerEvents.OnShot;
+            PlayerHandlers.UsingItem += PlayerEvents.OnUsingItem;
 
-            scp096Events = new Scp096Events();
-            Scp096Handlers.AddingTarget += scp096Events.OnAddingTarget;
+            Scp096Events = new Scp096Events();
+            Scp096Handlers.AddingTarget += Scp096Events.OnAddingTarget;
 
-            scp106Events = new Scp106Events(this);
-            Scp106Handlers.Containing += scp106Events.OnContaining;
+            Scp106Events = new Scp106Events(this);
+            Scp106Handlers.Containing += Scp106Events.OnContaining;
 
-            serverEvents = new ServerEvents(this);
+            ServerEvents = new ServerEvents(this);
             if (Instance.Config.CheckWinConditions)
-                ServerHandlers.EndingRound += serverEvents.OnEndingRound;
+                ServerHandlers.EndingRound += ServerEvents.OnEndingRound;
 
-            ServerHandlers.RoundStarted += serverEvents.OnRoundStarted;
-            ServerHandlers.WaitingForPlayers += serverEvents.OnWaitingForPlayers;
+            ServerHandlers.RoundStarted += ServerEvents.OnRoundStarted;
+            ServerHandlers.WaitingForPlayers += ServerEvents.OnWaitingForPlayers;
         }
 
         private void UnSubscribeAll()
         {
-            PlayerHandlers.ChangingRole -= playerEvents.OnChangingRole;
-            PlayerHandlers.Destroying -= playerEvents.OnDestroying;
-            PlayerHandlers.Died -= playerEvents.OnDied;
-            PlayerHandlers.EnteringPocketDimension -= playerEvents.OnEnteringPocketDimension;
-            PlayerHandlers.Escaping -= playerEvents.OnEscaping;
-            PlayerHandlers.Hurting -= playerEvents.OnHurting;
-            PlayerHandlers.ActivatingGenerator -= playerEvents.OnActivatingGenerator;
-            PlayerHandlers.ItemUsed -= playerEvents.OnItemUsed;
-            PlayerHandlers.PickingUpItem -= playerEvents.OnPickingUpItem;
-            PlayerHandlers.Shot -= playerEvents.OnShot;
-            PlayerHandlers.UsingItem -= playerEvents.OnUsingItem;
-            playerEvents = null;
+            PlayerHandlers.ChangingRole -= PlayerEvents.OnChangingRole;
+            PlayerHandlers.Destroying -= PlayerEvents.OnDestroying;
+            PlayerHandlers.Died -= PlayerEvents.OnDied;
+            PlayerHandlers.EnteringPocketDimension -= PlayerEvents.OnEnteringPocketDimension;
+            PlayerHandlers.Escaping -= PlayerEvents.OnEscaping;
+            PlayerHandlers.Hurting -= PlayerEvents.OnHurting;
+            PlayerHandlers.ActivatingGenerator -= PlayerEvents.OnActivatingGenerator;
+            PlayerHandlers.ItemUsed -= PlayerEvents.OnItemUsed;
+            PlayerHandlers.PickingUpItem -= PlayerEvents.OnPickingUpItem;
+            PlayerHandlers.Shot -= PlayerEvents.OnShot;
+            PlayerHandlers.UsingItem -= PlayerEvents.OnUsingItem;
+            PlayerEvents = null;
 
-            Scp096Handlers.AddingTarget -= scp096Events.OnAddingTarget;
-            scp096Events = null;
+            Scp096Handlers.AddingTarget -= Scp096Events.OnAddingTarget;
+            Scp096Events = null;
 
-            Scp106Handlers.Containing -= scp106Events.OnContaining;
-            scp106Events = null;
+            Scp106Handlers.Containing -= Scp106Events.OnContaining;
+            Scp106Events = null;
 
-            ServerHandlers.EndingRound -= serverEvents.OnEndingRound;
-            ServerHandlers.RoundStarted -= serverEvents.OnRoundStarted;
-            ServerHandlers.WaitingForPlayers -= serverEvents.OnWaitingForPlayers;
-            serverEvents = null;
+            ServerHandlers.EndingRound -= ServerEvents.OnEndingRound;
+            ServerHandlers.RoundStarted -= ServerEvents.OnRoundStarted;
+            ServerHandlers.WaitingForPlayers -= ServerEvents.OnWaitingForPlayers;
+            ServerEvents = null;
         }
     }
 }

@@ -7,6 +7,7 @@
 
 namespace Scp035.EventHandlers
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Exiled.API.Enums;
@@ -174,30 +175,8 @@ namespace Scp035.EventHandlers
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnShot(ShotEventArgs)"/>
         public void OnShot(ShotEventArgs ev)
         {
-            if (Methods.FriendlyFireUsers.Contains(ev.Shooter.UserId))
-            {
-                Methods.RemoveFf(ev.Shooter);
-            }
-
-            if (!API.IsScp035(ev.Target) && !API.IsScp035(ev.Shooter))
-                return;
-
-            if (!plugin.Config.ScpFriendlyFire && ((ev.Target.Team == Team.SCP || ev.Shooter.Team == Team.SCP) || (API.IsScp035(ev.Shooter) && API.IsScp035(ev.Target))))
-            {
+            if (!CanHurt(ev.Shooter, ev.Target))
                 ev.CanHurt = false;
-                return;
-            }
-
-            if (!plugin.Config.TutorialFriendlyFire && (ev.Target.Team == Team.TUT || ev.Shooter.Team == Team.TUT))
-            {
-                ev.CanHurt = false;
-                return;
-            }
-
-            if (ev.Target.Side == ev.Shooter.Side)
-            {
-                Methods.GrantFf(ev.Shooter);
-            }
         }
 
         /// <inheritdoc cref="Exiled.Events.Handlers.Player.OnUsingItem(UsingItemEventArgs)"/>
@@ -212,6 +191,42 @@ namespace Scp035.EventHandlers
                                         !plugin.Config.Scp035Modifiers.CanUseMedicalItems))
             {
                 ev.IsAllowed = false;
+            }
+        }
+
+        internal bool CanHurt(Player shooter, Player target)
+        {
+            try
+            {
+                if (Methods.FriendlyFireUsers.Contains(shooter.UserId))
+                {
+                    Methods.RemoveFf(shooter);
+                }
+
+                if (!API.IsScp035(target) && !API.IsScp035(shooter))
+                    return HitboxIdentity.CheckFriendlyFire(shooter.Role, target.Role);
+
+                if (!plugin.Config.ScpFriendlyFire && ((target.Team == Team.SCP || shooter.Team == Team.SCP) || (API.IsScp035(shooter) && API.IsScp035(target))))
+                {
+                    return false;
+                }
+
+                if (!plugin.Config.TutorialFriendlyFire && (target.Team == Team.TUT || shooter.Team == Team.TUT))
+                {
+                    return false;
+                }
+
+                if (target.Side == shooter.Side)
+                {
+                    Methods.GrantFf(shooter);
+                }
+
+                return true;
+            }
+            catch (NullReferenceException)
+            {
+                // I dislike shotguns.
+                return true;
             }
         }
     }
