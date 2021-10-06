@@ -32,8 +32,15 @@ namespace Scp035.Configs
         [Description("All ItemTypes that a Scp035 item instance can spawn as.")]
         public ItemType[] PossibleItems { get; set; } =
         {
-            ItemType.Adrenaline, ItemType.Coin, ItemType.Flashlight, ItemType.Medkit,
-            ItemType.Painkillers, ItemType.Radio, ItemType.GrenadeFlash, ItemType.GrenadeHE, ItemType.MicroHID,
+            ItemType.Painkillers,
+            ItemType.GrenadeHE,
+            ItemType.MicroHID,
+            ItemType.KeycardO5,
+            ItemType.KeycardFacilityManager,
+            ItemType.KeycardContainmentEngineer,
+            ItemType.SCP500,
+            ItemType.SCP268,
+            ItemType.SCP018,
         };
 
         /// <summary>

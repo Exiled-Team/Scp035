@@ -22,6 +22,9 @@ namespace Scp035.Patches
         private static void Postfix(GameObject target)
         {
             Player player = Player.Get(target);
+            if (player == null)
+                return;
+
             if (API.IsScp035(player) && !Plugin.Instance.Config.ScpFriendlyFire)
             {
                 player.DisableEffect(EffectType.Amnesia);
