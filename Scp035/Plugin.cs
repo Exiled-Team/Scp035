@@ -17,8 +17,8 @@ namespace Scp035
         public override string Author { get; } = "Joker119";
         public override string Name { get; } = "Scp035";
         public override string Prefix { get; } = "Scp035";
-        public override Version Version { get; } = new Version(1, 0, 0);
-        public override Version RequiredExiledVersion { get; } = new Version(2, 11, 1);
+        public override Version Version { get; } = new Version(4, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new Version(4, 2, 0);
 
         public Methods Methods { get; private set; }
         public EventHandlers EventHandlers { get; private set; }
