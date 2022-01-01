@@ -51,12 +51,18 @@ namespace Scp035
             EventHandlers = new EventHandlers(this);
             Exiled.Events.Handlers.Player.SpawningRagdoll += EventHandlers.OnSpawningRagdoll;
 
+            Config.Scp035ItemConfig.TryRegister();
+            Config.Scp035RoleConfig.TryRegister();
             base.OnEnabled();
         }
 
         /// <inheritdoc />
         public override void OnDisabled()
         {
+            Config.Scp035ItemConfig.TryUnregister();
+            Config.Scp035RoleConfig.TryUnregister();
+            
+            Exiled.Events.Handlers.Player.SpawningRagdoll -= EventHandlers.OnSpawningRagdoll;
             EventHandlers = null;
 
             base.OnDisabled();
