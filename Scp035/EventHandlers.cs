@@ -1,5 +1,8 @@
 namespace Scp035
 {
+    using Exiled.API.Enums;
+    using Exiled.API.Features;
+    using Exiled.CustomRoles.API.Features;
     using Exiled.Events.EventArgs;
 
     /// <summary>
@@ -15,6 +18,26 @@ namespace Scp035
         {
             if (_plugin.StopRagdollsList.Contains(ev.Owner))
                 ev.IsAllowed = false;
+        }
+
+        internal void OnEndingRound(EndingRoundEventArgs ev)
+        {
+            bool human = false;
+            bool scps = false;
+
+            foreach (Player player in Player.List)
+            {
+                if (!CustomRole.Get(typeof(Scp035Role)).Check(player) || player.Side == Side.Scp)
+                    scps = true;
+                else if (player.Side == Side.Mtf || player.Role == RoleType.ClassD)
+                    human = true;
+
+                if (scps && human)
+                    break;
+            }
+
+            ev.IsAllowed = !(human && scps);
+            ev.IsRoundEnded = !(human && scps);
         }
     }
 }

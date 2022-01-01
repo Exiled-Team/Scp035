@@ -13,6 +13,7 @@ using WarheadEvents = Exiled.Events.Handlers.Warhead;
 namespace Scp035
 {
     using System.Collections.Generic;
+    using HarmonyLib;
 
     /// <inheritdoc />
     public class Plugin : Plugin<Config>
@@ -43,14 +44,18 @@ namespace Scp035
         public EventHandlers EventHandlers { get; private set; }
 
         internal List<Player> StopRagdollsList = new List<Player>();
+        internal Harmony _harmony;
 
         /// <inheritdoc />
         public override void OnEnabled()
         {
             Instance = this;
             EventHandlers = new EventHandlers(this);
+            Exiled.Events.Handlers.Server.EndingRound += EventHandlers.OnEndingRound;
             Exiled.Events.Handlers.Player.SpawningRagdoll += EventHandlers.OnSpawningRagdoll;
 
+            _harmony = new Harmony($"com.joker.035-{DateTime.Now.Ticks}");
+            _harmony.PatchAll();
             Config.Scp035ItemConfig.TryRegister();
             Config.Scp035RoleConfig.TryRegister();
             base.OnEnabled();
@@ -61,7 +66,8 @@ namespace Scp035
         {
             Config.Scp035ItemConfig.TryUnregister();
             Config.Scp035RoleConfig.TryUnregister();
-            
+
+            Exiled.Events.Handlers.Server.EndingRound -= EventHandlers.OnEndingRound;
             Exiled.Events.Handlers.Player.SpawningRagdoll -= EventHandlers.OnSpawningRagdoll;
             EventHandlers = null;
 
