@@ -1,14 +1,5 @@
 using System;
 using Exiled.API.Features;
-using MapEvents = Exiled.Events.Handlers.Map;
-using PlayerEvents = Exiled.Events.Handlers.Player;
-using Scp049Events = Exiled.Events.Handlers.Scp049;
-using Scp079Events = Exiled.Events.Handlers.Scp079;
-using Scp096Events = Exiled.Events.Handlers.Scp096;
-using Scp106Events = Exiled.Events.Handlers.Scp106;
-using Scp914Events = Exiled.Events.Handlers.Scp914;
-using ServerEvents = Exiled.Events.Handlers.Server;
-using WarheadEvents = Exiled.Events.Handlers.Warhead;
 
 namespace Scp035
 {
@@ -44,7 +35,8 @@ namespace Scp035
         public EventHandlers EventHandlers { get; private set; }
 
         internal List<Player> StopRagdollsList = new List<Player>();
-        internal Harmony _harmony;
+        private Harmony _harmony;
+        private string _harmonyId;
 
         /// <inheritdoc />
         public override void OnEnabled()
@@ -54,7 +46,8 @@ namespace Scp035
             Exiled.Events.Handlers.Server.EndingRound += EventHandlers.OnEndingRound;
             Exiled.Events.Handlers.Player.SpawningRagdoll += EventHandlers.OnSpawningRagdoll;
 
-            _harmony = new Harmony($"com.joker.035-{DateTime.Now.Ticks}");
+            _harmonyId = $"com.joker.035-{DateTime.Now.Ticks}";
+            _harmony = new Harmony(_harmonyId);
             _harmony.PatchAll();
             Config.Scp035ItemConfig.TryRegister();
             Config.Scp035RoleConfig.TryRegister();
@@ -64,12 +57,14 @@ namespace Scp035
         /// <inheritdoc />
         public override void OnDisabled()
         {
+            _harmony.UnpatchAll(_harmonyId);
             Config.Scp035ItemConfig.TryUnregister();
             Config.Scp035RoleConfig.TryUnregister();
 
             Exiled.Events.Handlers.Server.EndingRound -= EventHandlers.OnEndingRound;
             Exiled.Events.Handlers.Player.SpawningRagdoll -= EventHandlers.OnSpawningRagdoll;
             EventHandlers = null;
+            Instance = null;
 
             base.OnDisabled();
         }

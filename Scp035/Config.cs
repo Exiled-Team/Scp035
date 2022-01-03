@@ -3,6 +3,7 @@ using Exiled.API.Interfaces;
 
 namespace Scp035
 {
+    /// <inheritdoc />
     public class Config : IConfig
     {
         /// <inheritdoc />
