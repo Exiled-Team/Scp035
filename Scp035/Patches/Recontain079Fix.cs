@@ -24,7 +24,11 @@ namespace Scp035.Patches
 
             newInstructions.InsertRange(index, new[]
             {
-                new CodeInstruction(OpCodes.Call, Method(typeof(CustomRole), nameof(CustomRole.Get), new[] { typeof(Scp035Role) })),
+                new CodeInstruction(OpCodes.Ldsfld, Field(typeof(Plugin), nameof(Plugin.Instance))),
+                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Plugin), nameof(Plugin.Config))),
+                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Scp035.Config), nameof(Scp035.Config.Scp035RoleConfig))),
+                new CodeInstruction(OpCodes.Callvirt, PropertyGetter(typeof(Scp035Role), nameof(Scp035Role.Id))),
+                new CodeInstruction(OpCodes.Call, Method(typeof(CustomRole), nameof(CustomRole.Get), new[] { typeof(int) })),
                 new CodeInstruction(OpCodes.Ldloca_S, 1),
                 new CodeInstruction(OpCodes.Call, PropertyGetter(typeof(KeyValuePair<GameObject, ReferenceHub>), nameof(KeyValuePair<GameObject, ReferenceHub>.Value))),
                 new CodeInstruction(OpCodes.Call, Method(typeof(Player), nameof(Player.Get), new[] { typeof(ReferenceHub) })),

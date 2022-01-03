@@ -24,10 +24,20 @@ namespace Scp035
         {
             bool human = false;
             bool scps = false;
+            CustomRole role = CustomRole.Get(typeof(Scp035Role));
+
+            if (role == null)
+            {
+                Log.Debug($"{nameof(OnEndingRound)}: Custom role is null, returning.", _plugin.Config.Debug);
+                return;
+            }
 
             foreach (Player player in Player.List)
             {
-                if (!CustomRole.Get(typeof(Scp035Role)).Check(player) || player.Side == Side.Scp)
+                if (player == null)
+                    continue;
+
+                if (!role.Check(player) || player.Side == Side.Scp)
                     scps = true;
                 else if (player.Side == Side.Mtf || player.Role == RoleType.ClassD)
                     human = true;
