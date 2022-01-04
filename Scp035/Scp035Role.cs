@@ -131,8 +131,14 @@ namespace Scp035
             player.InfoArea |= PlayerInfoArea.Nickname;
             player.InfoArea |= PlayerInfoArea.Role;
             player.Scale = Vector3.one;
+            player.CustomInfo = string.Empty;
             Scp035Item.ChangedPlayers.Remove(player);
-            
+            Timing.CallDelayed(1.5f, () =>
+            {
+                player.ChangeWalkingSpeed(1f);
+                player.ChangeRunningSpeed(1f);
+            });
+
             base.RoleRemoved(player);
         }
 

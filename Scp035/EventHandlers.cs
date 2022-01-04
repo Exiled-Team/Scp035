@@ -35,19 +35,35 @@ namespace Scp035
             foreach (Player player in Player.List)
             {
                 if (player == null)
+                {
+                    Log.Debug($"{nameof(OnEndingRound)}: Skipping a null player.", _plugin.Config.Debug);
                     continue;
+                }
 
-                if (!role.Check(player) || player.Side == Side.Scp)
+                if (role.Check(player) || player.Side == Side.Scp)
+                {
+                    Log.Debug($"{nameof(OnEndingRound)}: Found an SCP player.", _plugin.Config.Debug);
                     scps = true;
+                }
                 else if (player.Side == Side.Mtf || player.Role == RoleType.ClassD)
+                {
+                    Log.Debug($"{nameof(OnEndingRound)}: Found a Human player.", _plugin.Config.Debug);
                     human = true;
+                }
 
                 if (scps && human)
+                {
+                    Log.Debug($"{nameof(OnEndingRound)}: Both humans and scps detected.", _plugin.Config.Debug);
                     break;
+                }
             }
 
-            ev.IsAllowed = !(human && scps);
-            ev.IsRoundEnded = !(human && scps);
+            Log.Debug($"{nameof(OnEndingRound)}: Should event be blocked: {(human && scps)} -- Should round end: {(human && scps)}", _plugin.Config.Debug);
+            if (human && scps)
+            {
+                ev.IsAllowed = false;
+                ev.IsRoundEnded = false;
+            }
         }
     }
 }

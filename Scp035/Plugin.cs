@@ -24,7 +24,7 @@ namespace Scp035
         public override string Prefix { get; } = "Scp035";
 
         /// <inheritdoc />
-        public override Version Version { get; } = new Version(4, 0, 1);
+        public override Version Version { get; } = new Version(4, 0, 2);
 
         /// <inheritdoc />
         public override Version RequiredExiledVersion { get; } = new Version(4, 2, 0);
