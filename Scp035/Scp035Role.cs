@@ -6,6 +6,7 @@ namespace Scp035
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API.Features;
@@ -20,6 +21,7 @@ namespace Scp035
     /// <summary>
     /// The <see cref="CustomRole"/> handler for SCP-035.
     /// </summary>
+    [ExiledSerializable]
     public class Scp035Role : CustomRole
     {
         /// <inheritdoc />
@@ -41,17 +43,20 @@ namespace Scp035
             "An SCP who slowly corrodes over time, but is able to use items normally.";
 
         /// <inheritdoc />
-        protected override bool KeepInventoryOnSpawn { get; set; } = true;
+        public override string CustomInfo { get; set; } = "SCP-035";
+
+        /// <inheritdoc />
+        public override bool KeepInventoryOnSpawn { get; set; } = true;
         
         /// <summary>
         /// Gets or sets a multiplier used to modify the player's movement speed (running and walking).
         /// </summary>
-        protected float MovementMultiplier { get; set; } = 0.75f;
+        public float MovementMultiplier { get; set; } = 0.75f;
 
         /// <summary>
         /// Gets a list of item names that the player is unable to pickup while playing this role.
         /// </summary>
-        protected List<string> BlacklistedItems { get; set; } = new List<string>
+        public List<string> BlacklistedItems { get; set; } = new List<string>
         {
             "SR-119",
             "GL-119",
@@ -62,12 +67,12 @@ namespace Scp035
         /// <summary>
         /// Gets or sets how much damage per tick (1second) the player will take.
         /// </summary>
-        protected float DamagePerTick { get; set; } = 5f;
+        public float DamagePerTick { get; set; } = 5f;
 
         /// <summary>
         /// Gets or sets the custom scale factor for players when they are this role.
         /// </summary>
-        protected Vector3 Scale { get; set; } = new Vector3(1.25f, 0.75f, 1f);
+        public override Vector3 Scale { get; set; } = new Vector3(1.25f, 0.75f, 1f);
 
         // The following properties are only defined so that we can add the YamlIgnore attribute to them so they cannot be changed via configs.
         /// <inheritdoc />
@@ -80,7 +85,7 @@ namespace Scp035
 
         /// <inheritdoc />
         [YamlIgnore]
-        protected override SpawnProperties SpawnProperties { get; set; } = null;
+        public override SpawnProperties SpawnProperties { get; set; } = null;
 
         /// <inheritdoc />
         protected override void RoleAdded(Player player)
@@ -152,12 +157,12 @@ namespace Scp035
         }
 
         /// <inheritdoc />
-        protected override void UnSubscribeEvents()
+        protected override void UnsubscribeEvents()
         {
             Exiled.Events.Handlers.Player.Dying -= OnDying;
             Exiled.Events.Handlers.Player.Hurting -= OnHurting;
             Exiled.Events.Handlers.Player.PickingUpItem -= OnPickingUpItem;
-            base.UnSubscribeEvents();
+            base.UnsubscribeEvents();
         }
         
         private void OnDying(DyingEventArgs ev)

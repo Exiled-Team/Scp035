@@ -4,6 +4,7 @@ namespace Scp035
     using System.ComponentModel;
     using System.Linq;
     using Exiled.API.Features;
+    using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API;
@@ -14,8 +15,9 @@ namespace Scp035
     using MEC;
     using UnityEngine;
     using YamlDotNet.Serialization;
-
+    
     /// <inheritdoc />
+    [ExiledSerializable]
     public class Scp035Item : CustomItem
     {
         /// <inheritdoc />
@@ -75,7 +77,7 @@ namespace Scp035
         /// <inheritdoc />
         public override Pickup Spawn(Vector3 position)
         {
-            Pickup pickup = new Item(RandomType()).Spawn(position);
+            Pickup pickup = Item.Create(RandomType()).Spawn(position);
             pickup.Weight = Weight;
             TrackedSerials.Add(pickup.Serial);
             return pickup;

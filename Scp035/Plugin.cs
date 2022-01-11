@@ -4,6 +4,8 @@ using Exiled.API.Features;
 namespace Scp035
 {
     using System.Collections.Generic;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomRoles.API.Features;
     using HarmonyLib;
 
     /// <inheritdoc />
@@ -49,8 +51,8 @@ namespace Scp035
             _harmonyId = $"com.joker.035-{DateTime.Now.Ticks}";
             _harmony = new Harmony(_harmonyId);
             _harmony.PatchAll();
-            Config.Scp035ItemConfig.TryRegister();
-            Config.Scp035RoleConfig.TryRegister();
+            CustomItem.RegisterItems();
+            CustomRole.RegisterRoles();
             base.OnEnabled();
         }
 
@@ -58,8 +60,8 @@ namespace Scp035
         public override void OnDisabled()
         {
             _harmony.UnpatchAll(_harmonyId);
-            Config.Scp035ItemConfig.TryUnregister();
-            Config.Scp035RoleConfig.TryUnregister();
+            CustomItem.UnregisterItems();
+            CustomRole.RegisterRoles();
 
             Exiled.Events.Handlers.Server.EndingRound -= EventHandlers.OnEndingRound;
             Exiled.Events.Handlers.Player.SpawningRagdoll -= EventHandlers.OnSpawningRagdoll;
