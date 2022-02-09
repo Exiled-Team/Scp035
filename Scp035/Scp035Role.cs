@@ -173,7 +173,7 @@ namespace Scp035
         
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != null && Check(ev.Attacker) && ev.Target.Side == Side.Scp)
+            if (ev.Attacker != null && Check(ev.Attacker) && ev.Target.Role.Side == Side.Scp)
                 ev.IsAllowed = Server.FriendlyFire || ev.Attacker.IsFriendlyFireEnabled;
         }
         

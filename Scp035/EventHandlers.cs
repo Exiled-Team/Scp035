@@ -40,12 +40,12 @@ namespace Scp035
                     continue;
                 }
 
-                if (role.Check(player) || player.Side == Side.Scp)
+                if (role.Check(player) || player.Role.Side == Side.Scp)
                 {
                     Log.Debug($"{nameof(OnEndingRound)}: Found an SCP player.", _plugin.Config.Debug);
                     scps = true;
                 }
-                else if (player.Side == Side.Mtf || player.Role == RoleType.ClassD)
+                else if (player.Role.Side == Side.Mtf || player.Role == RoleType.ClassD)
                 {
                     Log.Debug($"{nameof(OnEndingRound)}: Found a Human player.", _plugin.Config.Debug);
                     human = true;
