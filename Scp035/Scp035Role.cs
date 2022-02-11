@@ -21,7 +21,7 @@ namespace Scp035
     /// <summary>
     /// The <see cref="CustomRole"/> handler for SCP-035.
     /// </summary>
-    [ExiledSerializable]
+    [CustomRole(RoleType.Tutorial)]
     public class Scp035Role : CustomRole
     {
         /// <inheritdoc />

@@ -17,7 +17,7 @@ namespace Scp035
     using YamlDotNet.Serialization;
     
     /// <inheritdoc />
-    [ExiledSerializable]
+    [CustomItem(ItemType.Coin)]
     public class Scp035Item : CustomItem
     {
         /// <inheritdoc />

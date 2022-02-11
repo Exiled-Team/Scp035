@@ -4,7 +4,9 @@ using Exiled.API.Features;
 namespace Scp035
 {
     using System.Collections.Generic;
+    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
+    using Exiled.CustomRoles.API;
     using Exiled.CustomRoles.API.Features;
     using HarmonyLib;
 
@@ -50,9 +52,11 @@ namespace Scp035
 
             _harmonyId = $"com.joker.035-{DateTime.Now.Ticks}";
             _harmony = new Harmony(_harmonyId);
+            Log.Debug($"{nameof(OnEnabled)}: Patching..", Config.Debug);
             _harmony.PatchAll();
-            CustomItem.RegisterItems();
-            CustomRole.RegisterRoles();
+            Log.Debug($"{nameof(OnEnabled)}: Registering item & role..", Config.Debug);
+            Config.Scp035ItemConfig.Register();
+            Config.Scp035RoleConfig.Register();
             base.OnEnabled();
         }
 
