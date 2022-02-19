@@ -90,11 +90,6 @@ namespace Scp035
         /// <inheritdoc />
         protected override void RoleAdded(Player player)
         {
-            player.CustomInfo = $"<color=red>{player.Nickname}\nSCP-035</color>";
-            player.InfoArea &= ~PlayerInfoArea.Nickname;
-            player.InfoArea &= ~PlayerInfoArea.Role;
-            player.InfoArea &= ~PlayerInfoArea.PowerStatus;
-            player.InfoArea &= ~PlayerInfoArea.UnitName;
             player.UnitName = "Scp035";
 
             Timing.CallDelayed(1.5f, () =>
@@ -131,12 +126,7 @@ namespace Scp035
         {
             Timing.KillCoroutines($"{player.UserId}-appearance");
             Timing.KillCoroutines($"{player.UserId}-corrosion");
-            player.InfoArea |= PlayerInfoArea.PowerStatus;
-            player.InfoArea |= PlayerInfoArea.UnitName;
-            player.InfoArea |= PlayerInfoArea.Nickname;
-            player.InfoArea |= PlayerInfoArea.Role;
             player.Scale = Vector3.one;
-            player.CustomInfo = string.Empty;
             Scp035Item.ChangedPlayers.Remove(player);
             Timing.CallDelayed(1.5f, () =>
             {
