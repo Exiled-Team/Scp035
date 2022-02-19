@@ -1,125 +1,78 @@
-﻿// -----------------------------------------------------------------------
-// <copyright file="Plugin.cs" company="Build and Cyanox">
-// Copyright (c) Build and Cyanox. All rights reserved.
-// Licensed under the CC BY-SA 3.0 license.
-// </copyright>
-// -----------------------------------------------------------------------
+using System;
+using Exiled.API.Features;
 
 namespace Scp035
 {
-    using System;
-    using Exiled.API.Features;
+    using System.Collections.Generic;
+    using Exiled.CustomItems.API;
+    using Exiled.CustomItems.API.Features;
+    using Exiled.CustomRoles.API;
+    using Exiled.CustomRoles.API.Features;
     using HarmonyLib;
-    using Scp035.EventHandlers;
-    using MapHandlers = Exiled.Events.Handlers.Map;
-    using PlayerHandlers = Exiled.Events.Handlers.Player;
-    using Scp096Handlers = Exiled.Events.Handlers.Scp096;
-    using Scp106Handlers = Exiled.Events.Handlers.Scp106;
-    using ServerHandlers = Exiled.Events.Handlers.Server;
 
-    /// <summary>
-    /// The main class which inherits <see cref="Plugin{TConfig}"/>.
-    /// </summary>
+    /// <inheritdoc />
     public class Plugin : Plugin<Config>
     {
-        private Harmony harmony;
+        /// <summary>
+        /// Static reference to the main instance of this class.
+        /// </summary>
+        public static Plugin Instance;
+
+        /// <inheritdoc />
+        public override string Author { get; } = "Joker119";
+
+        /// <inheritdoc />
+        public override string Name { get; } = "Scp035";
+
+        /// <inheritdoc />
+        public override string Prefix { get; } = "Scp035";
+
+        /// <inheritdoc />
+        public override Version Version { get; } = new Version(4, 0, 3);
+
+        /// <inheritdoc />
+        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
 
         /// <summary>
-        /// Gets an instance of <see cref="Plugin"/>.
+        /// Gets the reference to this plugin's Event Handler class.
         /// </summary>
-        public static Plugin Instance { get; private set; }
+        public EventHandlers EventHandlers { get; private set; }
 
-        /// <inheritdoc/>
-        public override string Author { get; } = "Build";
+        internal List<Player> StopRagdollsList = new List<Player>();
+        private Harmony _harmony;
+        private string _harmonyId;
 
-        /// <inheritdoc/>
-        public override Version RequiredExiledVersion { get; } = new Version(3, 0, 0);
-
-        /// <inheritdoc/>
-        public override Version Version { get; } = new Version(3, 0, 0);
-
-        public PlayerEvents PlayerEvents { get; private set; }
-
-        public Scp096Events Scp096Events { get; private set; }
-
-        public Scp106Events Scp106Events { get; private set; }
-
-        public ServerEvents ServerEvents { get; private set; }
-
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void OnEnabled()
         {
             Instance = this;
-            SubscribeAll();
-            harmony = new Harmony($"build.scp035.{DateTime.UtcNow.Ticks}");
-            harmony.PatchAll();
+            EventHandlers = new EventHandlers(this);
+            Exiled.Events.Handlers.Server.EndingRound += EventHandlers.OnEndingRound;
+            Exiled.Events.Handlers.Player.SpawningRagdoll += EventHandlers.OnSpawningRagdoll;
+
+            _harmonyId = $"com.joker.035-{DateTime.Now.Ticks}";
+            _harmony = new Harmony(_harmonyId);
+            Log.Debug($"{nameof(OnEnabled)}: Patching..", Config.Debug);
+            _harmony.PatchAll();
+            Log.Debug($"{nameof(OnEnabled)}: Registering item & role..", Config.Debug);
+            Config.Scp035ItemConfig.Register();
+            Config.Scp035RoleConfig.Register();
             base.OnEnabled();
         }
 
-        /// <inheritdoc/>
+        /// <inheritdoc />
         public override void OnDisabled()
         {
-            UnSubscribeAll();
-            Methods.KillAllCoroutines();
-            harmony.UnpatchAll();
+            _harmony.UnpatchAll(_harmonyId);
+            CustomItem.UnregisterItems();
+            CustomRole.RegisterRoles();
+
+            Exiled.Events.Handlers.Server.EndingRound -= EventHandlers.OnEndingRound;
+            Exiled.Events.Handlers.Player.SpawningRagdoll -= EventHandlers.OnSpawningRagdoll;
+            EventHandlers = null;
             Instance = null;
+
             base.OnDisabled();
-        }
-
-        private void SubscribeAll()
-        {
-            PlayerEvents = new PlayerEvents(this);
-            PlayerHandlers.ChangingRole += PlayerEvents.OnChangingRole;
-            PlayerHandlers.Destroying += PlayerEvents.OnDestroying;
-            PlayerHandlers.Died += PlayerEvents.OnDied;
-            PlayerHandlers.EnteringPocketDimension += PlayerEvents.OnEnteringPocketDimension;
-            PlayerHandlers.Escaping += PlayerEvents.OnEscaping;
-            PlayerHandlers.Hurting += PlayerEvents.OnHurting;
-            PlayerHandlers.ActivatingGenerator += PlayerEvents.OnActivatingGenerator;
-            PlayerHandlers.ItemUsed += PlayerEvents.OnItemUsed;
-            PlayerHandlers.PickingUpItem += PlayerEvents.OnPickingUpItem;
-            PlayerHandlers.Shot += PlayerEvents.OnShot;
-            PlayerHandlers.UsingItem += PlayerEvents.OnUsingItem;
-
-            Scp096Events = new Scp096Events();
-            Scp096Handlers.AddingTarget += Scp096Events.OnAddingTarget;
-
-            Scp106Events = new Scp106Events(this);
-            Scp106Handlers.Containing += Scp106Events.OnContaining;
-
-            ServerEvents = new ServerEvents(this);
-            if (Instance.Config.CheckWinConditions)
-                ServerHandlers.EndingRound += ServerEvents.OnEndingRound;
-
-            ServerHandlers.RoundStarted += ServerEvents.OnRoundStarted;
-            ServerHandlers.WaitingForPlayers += ServerEvents.OnWaitingForPlayers;
-        }
-
-        private void UnSubscribeAll()
-        {
-            PlayerHandlers.ChangingRole -= PlayerEvents.OnChangingRole;
-            PlayerHandlers.Destroying -= PlayerEvents.OnDestroying;
-            PlayerHandlers.Died -= PlayerEvents.OnDied;
-            PlayerHandlers.EnteringPocketDimension -= PlayerEvents.OnEnteringPocketDimension;
-            PlayerHandlers.Escaping -= PlayerEvents.OnEscaping;
-            PlayerHandlers.Hurting -= PlayerEvents.OnHurting;
-            PlayerHandlers.ActivatingGenerator -= PlayerEvents.OnActivatingGenerator;
-            PlayerHandlers.ItemUsed -= PlayerEvents.OnItemUsed;
-            PlayerHandlers.PickingUpItem -= PlayerEvents.OnPickingUpItem;
-            PlayerHandlers.Shot -= PlayerEvents.OnShot;
-            PlayerHandlers.UsingItem -= PlayerEvents.OnUsingItem;
-            PlayerEvents = null;
-
-            Scp096Handlers.AddingTarget -= Scp096Events.OnAddingTarget;
-            Scp096Events = null;
-
-            Scp106Handlers.Containing -= Scp106Events.OnContaining;
-            Scp106Events = null;
-
-            ServerHandlers.EndingRound -= ServerEvents.OnEndingRound;
-            ServerHandlers.RoundStarted -= ServerEvents.OnRoundStarted;
-            ServerHandlers.WaitingForPlayers -= ServerEvents.OnWaitingForPlayers;
-            ServerEvents = null;
         }
     }
 }
