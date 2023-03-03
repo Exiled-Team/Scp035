@@ -20,12 +20,12 @@ namespace Scp035
         /// Item configs for 035.
         /// </summary>
         [Description("Configs for the item players interact with to become SCP-035.")]
-        public Scp035Item Scp035ItemConfig { get; set; } = new Scp035Item();
+        public Scp035Item Scp035ItemConfig { get; set; } = new();
 
         /// <summary>
         /// Role configs for 035.
         /// </summary>
         [Description("Configs for the SCP-035 role players turn into.")]
-        public Scp035Role Scp035RoleConfig { get; set; } = new Scp035Role();
+        public Scp035Role Scp035RoleConfig { get; set; } = new();
     }
 }

@@ -3,16 +3,18 @@ namespace Scp035
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Spawn;
-    using Exiled.CustomItems.API;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomRoles.API.Features;
-    using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using Exiled.Loader;
     using MEC;
+    using PlayerRoles;
     using UnityEngine;
     using YamlDotNet.Serialization;
     
@@ -34,15 +36,15 @@ namespace Scp035
         public override float Weight { get; set; } = 0.75f;
 
         /// <inheritdoc />
-        public override SpawnProperties SpawnProperties { get; set; } = new SpawnProperties
+        public override SpawnProperties SpawnProperties { get; set; } = new()
         {
             Limit = 1,
             DynamicSpawnPoints = new List<DynamicSpawnPoint>
             {
-                new DynamicSpawnPoint
+                new()
                 {
                     Chance = 35,
-                    Location = SpawnLocation.InsideLocker,
+                    Location = SpawnLocationType.InsideLocker,
                 }
             }
         };
@@ -54,9 +56,9 @@ namespace Scp035
         /// <summary>
         /// Gets or sets a list of <see cref="ItemSpawn"/> values used to determine what <see cref="ItemType"/> the item will have when it spawns.
         /// </summary>
-        protected List<ItemSpawn> Types { get; set; } = new List<ItemSpawn>
+        protected List<ItemSpawn> Types { get; set; } = new()
         {
-            new ItemSpawn(ItemType.Coin, 10),
+            new(ItemType.Coin, 10),
             new ItemSpawn(ItemType.Medkit, 20),
             new ItemSpawn(ItemType.Adrenaline, 30),
             new ItemSpawn(ItemType.SCP018, 60),
@@ -72,12 +74,12 @@ namespace Scp035
         /// <summary>
         /// A list of players already transformed into SCP-035.
         /// </summary>
-        public static readonly List<Player> ChangedPlayers = new List<Player>();
-
+        public static readonly List<Player> ChangedPlayers = new();
+        
         /// <inheritdoc />
-        public override Pickup Spawn(Vector3 position)
+        public override Pickup Spawn(Vector3 position, Player? owner = null)
         {
-            Pickup pickup = Item.Create(RandomType()).Spawn(position);
+            Pickup pickup = Pickup.CreateAndSpawn(RandomType(), position, default);
             pickup.Weight = Weight;
             TrackedSerials.Add(pickup.Serial);
             return pickup;
@@ -99,12 +101,12 @@ namespace Scp035
 
         private IEnumerator<float> ChangeTo035(Player player)
         {
-            RoleType playerRole = player.Role;
+            RoleTypeId playerRole = player.Role;
             yield return Timing.WaitForSeconds(TransformationDelay);
 
             if (player.Role != playerRole)
             {
-                Log.Debug($"{nameof(ChangeTo035)}: {player.Nickname} picked up 035 as {playerRole} but they are now {player.Role}, cancelling change.", Plugin.Instance.Config.Debug);
+                Log.Debug($"{nameof(ChangeTo035)}: {player.Nickname} picked up 035 as {playerRole} but they are now {player.Role}, cancelling change.");
                 yield break;
             }
             
@@ -130,7 +132,7 @@ namespace Scp035
                 return;
             }
 
-            Log.Debug($"{ev.Player.Nickname} dropped 035 before their change, cancelling.", Plugin.Instance.Config.Debug);
+            Log.Debug($"{ev.Player.Nickname} dropped 035 before their change, cancelling.");
             Timing.KillCoroutines($"035change-{ev.Player.UserId}");
         }
     }

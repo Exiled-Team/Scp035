@@ -2,26 +2,28 @@ namespace Scp035
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Assets._Scripts.Dissonance;
+    using CustomPlayerEffects;
     using Exiled.API.Enums;
     using Exiled.API.Extensions;
     using Exiled.API.Features;
     using Exiled.API.Features.Attributes;
     using Exiled.API.Features.Items;
+    using Exiled.API.Features.Pickups;
     using Exiled.API.Features.Spawn;
     using Exiled.CustomItems.API.Features;
     using Exiled.CustomRoles.API.Features;
-    using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
     using MEC;
     using PlayerStatsSystem;
     using UnityEngine;
+    using VoiceChat;
     using YamlDotNet.Serialization;
-    using RoleType = RoleType;
+    using RoleTypeId = PlayerRoles.RoleTypeId;
 
     /// <summary>
     /// The <see cref="CustomRole"/> handler for SCP-035.
     /// </summary>
-    [CustomRole(RoleType.Tutorial)]
+    [CustomRole(RoleTypeId.Tutorial)]
     public class Scp035Role : CustomRole
     {
         /// <inheritdoc />
@@ -30,7 +32,7 @@ namespace Scp035
         /// <summary>
         /// Gets or sets the role that is visible to players on the server aside from the player playing this role.
         /// </summary>
-        public RoleType VisibleRole { get; set; } = RoleType.Scp049;
+        public RoleTypeId VisibleRole { get; set; } = RoleTypeId.Scp049;
 
         /// <inheritdoc />
         public override int MaxHealth { get; set; } = 500;
@@ -51,12 +53,12 @@ namespace Scp035
         /// <summary>
         /// Gets or sets a multiplier used to modify the player's movement speed (running and walking).
         /// </summary>
-        public float MovementMultiplier { get; set; } = 0.75f;
+        public byte MovementMultiplier { get; set; } = 1;
 
         /// <summary>
         /// Gets a list of item names that the player is unable to pickup while playing this role.
         /// </summary>
-        public List<string> BlacklistedItems { get; set; } = new List<string>
+        public List<string> BlacklistedItems { get; set; } = new()
         {
             "SR-119",
             "GL-119",
@@ -72,16 +74,16 @@ namespace Scp035
         /// <summary>
         /// Gets or sets the custom scale factor for players when they are this role.
         /// </summary>
-        public override Vector3 Scale { get; set; } = new Vector3(1.25f, 0.75f, 1f);
+        public override Vector3 Scale { get; set; } = new(1.25f, 0.75f, 1f);
 
         // The following properties are only defined so that we can add the YamlIgnore attribute to them so they cannot be changed via configs.
         /// <inheritdoc />
         [YamlIgnore]
-        public override RoleType Role { get; set; } = RoleType.Tutorial;
+        public override RoleTypeId Role { get; set; } = RoleTypeId.Tutorial;
 
         /// <inheritdoc />
         [YamlIgnore]
-        public override List<CustomAbility> CustomAbilities { get; set; } = new List<CustomAbility>();
+        public override List<CustomAbility> CustomAbilities { get; set; } = new();
 
         /// <inheritdoc />
         [YamlIgnore]
@@ -90,21 +92,16 @@ namespace Scp035
         /// <inheritdoc />
         protected override void RoleAdded(Player player)
         {
-            player.UnitName = "Scp035";
-
             Timing.CallDelayed(1.5f, () =>
             {
                 player.ChangeAppearance(VisibleRole);
-                player.ChangeWalkingSpeed(MovementMultiplier);
-                player.ChangeRunningSpeed(MovementMultiplier);
+                StatusEffectBase? movement = player.GetEffect(EffectType.MovementBoost);
+                movement.Intensity = MovementMultiplier;
                 player.IsGodModeEnabled = false;
             });
 
             player.Scale = Scale;
-            DissonanceUserSetup dissonance = player.GameObject.GetComponent<DissonanceUserSetup>();
-            dissonance.EnableListening(TriggerType.Role, Assets._Scripts.Dissonance.RoleType.SCP);
-            dissonance.EnableSpeaking(TriggerType.Role, Assets._Scripts.Dissonance.RoleType.SCP);
-            dissonance.SCPChat = true;
+            player.VoiceChannel = VoiceChatChannel.ScpChat;
             
             foreach (Item item in player.Items.ToList())
                 if (CustomItem.TryGet(item, out CustomItem customItem))
@@ -128,11 +125,6 @@ namespace Scp035
             Timing.KillCoroutines($"{player.UserId}-corrosion");
             player.Scale = Vector3.one;
             Scp035Item.ChangedPlayers.Remove(player);
-            Timing.CallDelayed(1.5f, () =>
-            {
-                player.ChangeWalkingSpeed(1f);
-                player.ChangeRunningSpeed(1f);
-            });
 
             base.RoleRemoved(player);
         }
@@ -157,13 +149,13 @@ namespace Scp035
         
         private void OnDying(DyingEventArgs ev)
         {
-            if (Check(ev.Target))
-                Plugin.Instance.StopRagdollsList.Add(ev.Target);
+            if (Check(ev.Player))
+                Plugin.Instance.StopRagdollsList.Add(ev.Player);
         }
         
         private void OnHurting(HurtingEventArgs ev)
         {
-            if (ev.Attacker != null && Check(ev.Attacker) && ev.Target.Role.Side == Side.Scp)
+            if (ev.Attacker != null && Check(ev.Attacker) && ev.Player.Role.Side == Side.Scp)
                 ev.IsAllowed = Server.FriendlyFire || ev.Attacker.IsFriendlyFireEnabled;
         }
         

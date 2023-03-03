@@ -3,7 +3,9 @@ namespace Scp035
     using Exiled.API.Enums;
     using Exiled.API.Features;
     using Exiled.CustomRoles.API.Features;
-    using Exiled.Events.EventArgs;
+    using Exiled.Events.EventArgs.Player;
+    using Exiled.Events.EventArgs.Server;
+    using PlayerRoles;
 
     /// <summary>
     /// Handles general events for this plugin.
@@ -16,7 +18,7 @@ namespace Scp035
 
         internal void OnSpawningRagdoll(SpawningRagdollEventArgs ev)
         {
-            if (_plugin.StopRagdollsList.Contains(ev.Owner))
+            if (_plugin.StopRagdollsList.Contains(ev.Player))
                 ev.IsAllowed = false;
         }
 
@@ -28,7 +30,7 @@ namespace Scp035
 
             if (role == null)
             {
-                Log.Debug($"{nameof(OnEndingRound)}: Custom role is null, returning.", _plugin.Config.Debug);
+                Log.Debug($"{nameof(OnEndingRound)}: Custom role is null, returning.");
                 return;
             }
 
@@ -36,32 +38,31 @@ namespace Scp035
             {
                 if (player == null)
                 {
-                    Log.Debug($"{nameof(OnEndingRound)}: Skipping a null player.", _plugin.Config.Debug);
+                    Log.Debug($"{nameof(OnEndingRound)}: Skipping a null player.");
                     continue;
                 }
 
                 if (role.Check(player) || player.Role.Side == Side.Scp)
                 {
-                    Log.Debug($"{nameof(OnEndingRound)}: Found an SCP player.", _plugin.Config.Debug);
+                    Log.Debug($"{nameof(OnEndingRound)}: Found an SCP player.");
                     scps = true;
                 }
-                else if (player.Role.Side == Side.Mtf || player.Role == RoleType.ClassD)
+                else if (player.Role.Side == Side.Mtf || player.Role == RoleTypeId.ClassD)
                 {
-                    Log.Debug($"{nameof(OnEndingRound)}: Found a Human player.", _plugin.Config.Debug);
+                    Log.Debug($"{nameof(OnEndingRound)}: Found a Human player.");
                     human = true;
                 }
 
                 if (scps && human)
                 {
-                    Log.Debug($"{nameof(OnEndingRound)}: Both humans and scps detected.", _plugin.Config.Debug);
+                    Log.Debug($"{nameof(OnEndingRound)}: Both humans and scps detected.");
                     break;
                 }
             }
 
-            Log.Debug($"{nameof(OnEndingRound)}: Should event be blocked: {(human && scps)} -- Should round end: {(human && scps)}", _plugin.Config.Debug);
+            Log.Debug($"{nameof(OnEndingRound)}: Should event be blocked: {(human && scps)} -- Should round end: {(human && scps)}");
             if (human && scps)
             {
-                ev.IsAllowed = false;
                 ev.IsRoundEnded = false;
             }
         }

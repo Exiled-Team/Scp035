@@ -4,14 +4,14 @@ namespace Scp035.Patches
     using System.Collections.Generic;
     using System.Reflection.Emit;
     using Exiled.API.Features;
-    using Exiled.CustomRoles;
     using Exiled.CustomRoles.API.Features;
     using HarmonyLib;
     using NorthwoodLib.Pools;
+    using PlayerRoles.PlayableScps.Scp079;
     using UnityEngine;
     using static HarmonyLib.AccessTools;
 
-    [HarmonyPatch(typeof(Recontainer079), nameof(Recontainer079.OnClassChanged))]
+    //[HarmonyPatch(typeof(Scp079Recontainer), nameof(Scp079Recontainer.OnServerRoleChanged))]
     internal class Recontain079Fix
     {
         private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator generator)

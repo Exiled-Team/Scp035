@@ -28,17 +28,17 @@ namespace Scp035
         public override string Prefix { get; } = "Scp035";
 
         /// <inheritdoc />
-        public override Version Version { get; } = new Version(4, 0, 3);
+        public override Version Version { get; } = new(5, 0, 0);
 
         /// <inheritdoc />
-        public override Version RequiredExiledVersion { get; } = new Version(5, 0, 0);
+        public override Version RequiredExiledVersion { get; } = new(6, 0, 0);
 
         /// <summary>
         /// Gets the reference to this plugin's Event Handler class.
         /// </summary>
         public EventHandlers EventHandlers { get; private set; }
 
-        internal List<Player> StopRagdollsList = new List<Player>();
+        internal List<Player> StopRagdollsList = new();
         private Harmony _harmony;
         private string _harmonyId;
 
@@ -52,9 +52,9 @@ namespace Scp035
 
             _harmonyId = $"com.joker.035-{DateTime.Now.Ticks}";
             _harmony = new Harmony(_harmonyId);
-            Log.Debug($"{nameof(OnEnabled)}: Patching..", Config.Debug);
+            Log.Debug($"{nameof(OnEnabled)}: Patching..");
             _harmony.PatchAll();
-            Log.Debug($"{nameof(OnEnabled)}: Registering item & role..", Config.Debug);
+            Log.Debug($"{nameof(OnEnabled)}: Registering item & role..");
             Config.Scp035ItemConfig.Register();
             Config.Scp035RoleConfig.Register();
             base.OnEnabled();

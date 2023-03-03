@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-      <TargetFramework>net472</TargetFramework>
+      <TargetFramework>net48</TargetFramework>
       <AssemblyName>Scp035</AssemblyName>
 
       <Authors>Build</Authors>
@@ -12,12 +12,14 @@
       <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
       <CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
+      <LangVersion>default</LangVersion>
+      <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="EXILED" Version="5.0.0-beta.1" />
+      <PackageReference Include="EXILED" Version="6.0.0-beta.26" />
       <PackageReference Include="Lib.Harmony" Version="2.2.0" />
-      <PackageReference Include="YamlDotNet" Version="9.1.4" />
+      <PackageReference Include="YamlDotNet" Version="12.0.2" />
     </ItemGroup>
 
     <ItemGroup>
