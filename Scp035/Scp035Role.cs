@@ -14,6 +14,7 @@ namespace Scp035
     using Exiled.CustomRoles.API.Features;
     using Exiled.Events.EventArgs.Player;
     using MEC;
+    using PlayerRoles;
     using PlayerStatsSystem;
     using UnityEngine;
     using VoiceChat;
@@ -90,13 +91,78 @@ namespace Scp035
         public override SpawnProperties SpawnProperties { get; set; } = null;
 
         /// <inheritdoc />
+        /// Hacky override to bypass bug in Exiled.CustomRoles
+        public override void AddRole(Player player)
+        {
+            Vector3 oldPos = player.Position;
+            Log.Debug(this.Name + ": Adding role to " + player.Nickname + ".");
+            if (this.Role != RoleTypeId.None)
+                player.Role.Set(this.Role, RoleSpawnFlags.None);
+            Timing.CallDelayed(1.5f, (System.Action)(() =>
+            {
+                Vector3 spawnPosition = this.GetSpawnPosition();
+                Log.Debug(string.Format("{0}: Found {1} to spawn {2}", (object)nameof(AddRole), (object)spawnPosition,
+                    (object)player.Nickname));
+                player.Position = oldPos;
+                if (spawnPosition != Vector3.zero)
+                {
+                    Log.Debug("AddRole: Setting " + player.Nickname + " position..");
+                    player.Position = spawnPosition + Vector3.up * 1.5f;
+                }
+
+                if (!this.KeepInventoryOnSpawn)
+                {
+                    Log.Debug(this.Name + ": Clearing " + player.Nickname + "'s inventory.");
+                    player.ClearInventory();
+                }
+
+                foreach (string itemName in this.Inventory)
+                {
+                    Log.Debug(this.Name + ": Adding " + itemName + " to inventory.");
+                    this.TryAddItem(player, itemName);
+                }
+
+                foreach (AmmoType key in this.Ammo.Keys)
+                {
+                    Log.Debug(string.Format("{0}: Adding {1} {2} to inventory.", (object)this.Name,
+                        (object)this.Ammo[key], (object)key));
+                    player.SetAmmo(key, this.Ammo[key]);
+                }
+
+                Log.Debug(this.Name + ": Setting health values.");
+                player.Health = (float)this.MaxHealth;
+                player.MaxHealth = (float)this.MaxHealth;
+                player.Scale = this.Scale;
+            }));
+            Log.Debug(this.Name + ": Setting player info");
+            player.CustomInfo = this.CustomInfo;
+            player.InfoArea &= ~PlayerInfoArea.Role;
+            if (this.CustomAbilities != null)
+            {
+                foreach (CustomAbility customAbility in this.CustomAbilities)
+                    customAbility.AddAbility(player);
+            }
+
+            this.ShowMessage(player);
+            this.RoleAdded(player);
+            this.TrackedPlayers.Add(player);
+            player.UniqueRole = this.Name;
+            player.TryAddCustomRoleFriendlyFire(this.Name, this.CustomRoleFFMultiplier);
+        }
+
+
+        /// <inheritdoc />
         protected override void RoleAdded(Player player)
         {
             Timing.CallDelayed(1.5f, () =>
             {
                 player.ChangeAppearance(VisibleRole);
-                StatusEffectBase? movement = player.GetEffect(EffectType.MovementBoost);
-                movement.Intensity = MovementMultiplier;
+                if (MovementMultiplier > 0)
+                {
+                    StatusEffectBase? movement = player.GetEffect(EffectType.MovementBoost);
+                    movement.Intensity = MovementMultiplier;
+                }
+
                 player.IsGodModeEnabled = false;
             });
 
@@ -109,8 +175,6 @@ namespace Scp035
                     customItem.Spawn(player.Position, item);
                     player.RemoveItem(item);
                 }
-            
-            player.DropItems();
 
             Timing.RunCoroutine(Appearance(player), $"{player.UserId}-appearance");
             Timing.RunCoroutine(Corrosion(player), $"{player.UserId}-corrosion");

@@ -14,6 +14,8 @@
       <GenerateDocumentationFile>true</GenerateDocumentationFile>
       <LangVersion>default</LangVersion>
       <Nullable>enable</Nullable>
+      <AssemblyVersion>5.0.1</AssemblyVersion>
+      <FileVersion>5.0.1</FileVersion>
     </PropertyGroup>
 
     <ItemGroup>
