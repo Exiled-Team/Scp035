@@ -56,7 +56,7 @@ namespace Scp035
         /// <summary>
         /// Gets or sets a list of <see cref="ItemSpawn"/> values used to determine what <see cref="ItemType"/> the item will have when it spawns.
         /// </summary>
-        protected List<ItemSpawn> Types { get; set; } = new()
+        public List<ItemSpawn> Types { get; set; } = new()
         {
             new(ItemType.Coin, 10),
             new ItemSpawn(ItemType.Medkit, 20),
@@ -69,7 +69,7 @@ namespace Scp035
         /// Gets or sets how long the item takes to transform the player into SCP-035.
         /// </summary>
         [Description("How long (in seconds) it takes a player to transform into SCP-035 when they pickup the item. If they drop the item before this timer ends, they will not transform.")]
-        protected float TransformationDelay { get; set; } = 5f;
+        public float TransformationDelay { get; set; } = 5f;
 
         /// <summary>
         /// A list of players already transformed into SCP-035.
